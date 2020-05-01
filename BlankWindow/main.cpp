@@ -1,18 +1,20 @@
-#include <SDL2/SDL.h>
-#include <spdlog/spdlog.h>
+#include <iostream>
+#include "MyApp.h"
 
 const char* const APP_NAME = "BlankWindow";
 
 int main(void) {
-  spdlog::info("{0}: app start...", APP_NAME);
+  MyApp app;
+  try {
+    app.init();
+    app.createWindow(1280, 720, APP_NAME);
+    app.createRenderer<MyRenderer>();
 
-  int ret = SDL_Init(SDL_INIT_VIDEO);
-  if (ret < 0) {
-    spdlog::critical("SDL_Init FAILED.");
-    return -1;
+    app.mainLoop();
+    
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << '\n';
   }
 
-  SDL_Quit();
-  spdlog::info("{0}: app shutdown", APP_NAME);
   return 0;
 }
