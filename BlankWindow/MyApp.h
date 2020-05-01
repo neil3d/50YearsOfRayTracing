@@ -28,6 +28,9 @@ class MyApp final {
   }
 
  private:
+  void _render(SDL_Surface* pSurface);
+
+ private:
   MyRenderer::Ptr mRenderer;
   SDL_Window* mMainWindow = nullptr;
 
