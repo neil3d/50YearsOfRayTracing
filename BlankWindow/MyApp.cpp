@@ -18,20 +18,17 @@ void MyApp::mainLoop() {
   SDL_Event event = {};
   while (event.type != SDL_QUIT) {
     if (!SDL_PollEvent(&event)) {
-      // update surface
-      SDL_Surface* pSurface = nullptr;
-      pSurface = SDL_GetWindowSurface(mMainWindow);
-      if (pSurface) {
-        _render(pSurface);
-        SDL_UpdateWindowSurface(mMainWindow);
-      } else {
-        spdlog::error("SDL_Surface is nullptr.");
-      }
+      _tick();
     }
   }  // end of while
 }
 
 void MyApp::shutdown() {
+  if (mRenderer) {
+    mRenderer->_shutdown();
+    mRenderer.reset();
+  }
+
   if (mMainWindow) {
     SDL_DestroyWindow(mMainWindow);
     mMainWindow = nullptr;
@@ -39,15 +36,8 @@ void MyApp::shutdown() {
   SDL_Quit();
 }
 
-void MyApp::_render(SDL_Surface* pSurface) {
-  int ret = SDL_LockSurface(pSurface);
-  if (ret < 0) {
-    spdlog::error("SDL_LockSurface FAILED.");
-    return;
-  }
-
-  uint32_t clearColor = SDL_MapRGBA(pSurface->format, 128, 128, 128, 255);
-  SDL_memset(pSurface->pixels, clearColor, pSurface->h * pSurface->pitch);
-
-  SDL_UnlockSurface(pSurface);
+uint32_t MyApp::presentCallback(uint32_t interval, void* param) {
+  MyRenderer* renderer = static_cast<MyRenderer*>(param);
+  renderer->_present();
+  return interval;
 }

@@ -15,24 +15,26 @@ class MyApp final {
   void shutdown();
 
   template <typename T>
-  MyRenderer::Ptr createRenderer() {
+  MyRenderer::Ptr createRenderer(int presentInterval) {
     if (!mMainWindow)
       throw MyException("MyApp.createRenderer: create window first.");
 
-    int w = 0, h = 0;
-    SDL_GetWindowSize(mMainWindow, &w, &h);
-
     mRenderer = std::make_shared<T>();
-    mRenderer->_init(w, h);
+    mRenderer->_init(mMainWindow);
+    mTimerID =
+        SDL_AddTimer(presentInterval, MyApp::presentCallback, mRenderer.get());
     return mRenderer;
   }
 
  private:
-  void _render(SDL_Surface* pSurface);
+  static uint32_t presentCallback(uint32_t interval, void* param);
+
+  void _tick() {}
 
  private:
   MyRenderer::Ptr mRenderer;
   SDL_Window* mMainWindow = nullptr;
+  SDL_TimerID mTimerID = 0;
 
  public:
   MyApp(const MyApp&) = delete;

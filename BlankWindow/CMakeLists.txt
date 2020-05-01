@@ -16,6 +16,7 @@ add_executable(BlankWindow
                 MyApp.h
                 MyApp.cpp
                 MyRenderer.h
+                MyRenderer.cpp
                 MyException.h
                 )
 

@@ -8,7 +8,7 @@ int main(void) {
   try {
     app.init();
     app.createWindow(1280, 720, APP_NAME);
-    app.createRenderer<MyRenderer>();
+    app.createRenderer<MyRenderer>(2000);
 
     app.mainLoop();
     
