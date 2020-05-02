@@ -26,12 +26,14 @@ class MyRenderer {
 
  protected:
   void _writePixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  void _clearFrameBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
  protected:
   int mFrameWidth = 0;
   int mFrameHeight = 0;
 
  private:
+  SDL_Window* mWindow = nullptr;
   SDL_Surface* mSurface = nullptr;
   std::atomic<bool> mRuning = {true};
 

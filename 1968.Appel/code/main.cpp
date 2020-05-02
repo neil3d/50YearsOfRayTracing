@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "MyApp.h"
+#include "RayCastingRenderer.h"
 
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
 
@@ -9,7 +10,7 @@ int main(void) {
   try {
     app.init();
     app.createWindow(1280, 720, APP_NAME);
-    app.createRenderer<MyRenderer>(2000);
+    app.createRenderer<RayCastingRenderer>(2000);
 
     app.mainLoop();
 

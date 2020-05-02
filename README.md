@@ -11,3 +11,4 @@
 |  --  |  --  |  --  |
 |  1968.Appel  | Arthur Appel |  Some techniques for shading machine renderings of solids    |
 |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
+|  1986.Kajiya  | James T. Kajiya | The rendering equation  |

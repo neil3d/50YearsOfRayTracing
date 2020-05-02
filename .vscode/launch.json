@@ -8,7 +8,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/BlankWindow",
+            "program": "${workspaceFolder}/build/1968.Appel/code/appel",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
