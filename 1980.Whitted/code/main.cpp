@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "MyApp.h"
 #include "WhittedRayTracer.h"
+#include "framework/MyApp.h"
 
 const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
 

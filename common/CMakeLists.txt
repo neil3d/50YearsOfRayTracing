@@ -12,11 +12,11 @@ find_package(glm CONFIG REQUIRED)
 
 # target
 add_library(${PROJECT_NAME} STATIC
-                MyApp.h
-                MyApp.cpp
-                MyException.h
-                MyRenderer.h
-                MyRenderer.cpp
+                framework/MyApp.h
+                framework/MyApp.cpp
+                framework/MyException.h
+                framework/MyRenderer.h
+                framework/MyRenderer.cpp
                 )
 
 target_include_directories( ${PROJECT_NAME}

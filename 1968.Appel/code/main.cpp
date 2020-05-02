@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "MyApp.h"
 #include "RayCastingRenderer.h"
+#include "framework/MyApp.h"
 
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
 

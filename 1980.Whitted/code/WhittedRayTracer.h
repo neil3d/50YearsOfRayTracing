@@ -1,5 +1,5 @@
 #pragma once
-#include "MyRenderer.h"
+#include "framework/MyRenderer.h"
 
 class WhittedRayTracer : public MyRenderer {
  public:

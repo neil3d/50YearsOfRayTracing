@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 
-#include "MyScene.h"
+#include "../scene/MyScene.h"
 
 class MyRenderer {
  public:
