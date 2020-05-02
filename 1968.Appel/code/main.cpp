@@ -13,6 +13,8 @@ int main(void) {
     app.createWindow(640, 400, APP_NAME);
     auto renderer = app.createRenderer<RayCastingRenderer>(2000);
     auto scene = std::make_shared<SpheresScene>();
+    scene->init();
+    
     renderer->renderScene(scene, glm::vec4(1, 1, 1, 1));
 
     app.mainLoop();

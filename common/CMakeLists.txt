@@ -11,20 +11,19 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
 # target
-add_library(${PROJECT_NAME} STATIC
-                framework/MyApp.h
-                framework/MyApp.cpp
-                framework/MyException.h
-                framework/MyRenderer.h
-                framework/MyRenderer.cpp
-                math/AABBox.h
-                math/Ray.h
-                scene/MyScene.h
-                scene/MySceneObject.h
-                scene/SpheresScene.h
+aux_source_directory(./framework FRAMEWORK_SRC)
+aux_source_directory(./material MATERIAL_SRC)
+aux_source_directory(./math MATH_SRC)
+aux_source_directory(./scene SCENE_SRC)
+
+add_library(${PROJECT_NAME} STATIC 
+                ${FRAMEWORK_SRC}
+                ${MATERIAL_SRC}
+                ${MATH_SRC}
+                ${SCENE_SRC}
                 )
 
-target_include_directories( ${PROJECT_NAME}
+target_include_directories(${PROJECT_NAME}
                 PUBLIC ${PROJECT_SOURCE_DIR}
             )
 
