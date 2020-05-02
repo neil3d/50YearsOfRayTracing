@@ -33,10 +33,10 @@ class MyRenderer {
 
  private:
   SDL_Surface* mSurface = nullptr;
-  std::atomic<bool> mRuning = true;
+  std::atomic<bool> mRuning = {true};
 
   std::mutex mMutex;
-  std::atomic<uint32_t> mPixelCount = 0;
+  std::atomic<uint32_t> mPixelCount = {0};
   std::vector<uint32_t> mFrameBuffer;
 
  public:

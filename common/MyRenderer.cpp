@@ -20,6 +20,8 @@ void MyRenderer::_init(SDL_Window* pWnd) {
   SDL_UnlockSurface(mSurface);
 }
 
+void MyRenderer::_shutdown() {}
+
 void MyRenderer::_present() {
   int ret = SDL_LockSurface(mSurface);
   if (ret < 0) {
