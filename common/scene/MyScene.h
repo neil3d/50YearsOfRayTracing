@@ -1,5 +1,13 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <vector>
+#include <list>
+#include <memory>
 
-class MyScene {};
+#include "MySceneObject.h"
+
+class MyScene {
+ public:
+  typedef std::shared_ptr<MyScene> Ptr;
+
+ protected:
+  std::list<MySceneObject::Ptr> mObjects;
+};

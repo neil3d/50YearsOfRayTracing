@@ -3,8 +3,7 @@
 
 class RayCastingRenderer : public MyRenderer {
  public:
-  virtual void _init(SDL_Window* pWnd) override;
-  virtual void _renderThread() override;
+  virtual void _renderThread(MyScene::Ptr scene) override;
 
  private:
   void _drawSinglePixel(int x, int y);

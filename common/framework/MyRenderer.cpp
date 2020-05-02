@@ -6,6 +6,20 @@
 
 #include "MyException.h"
 
+void MyRenderer::renderScene(MyScene::Ptr scene, const glm::vec4& clearColor) {
+  // stop current
+  if (mRenderingThread.joinable()) {
+    mRuning = false;
+    mRenderingThread.join();
+  }
+
+  // start new
+  mRuning = true;
+  mPixelCount = 0;
+  _clearFrameBuffer(clearColor);
+  mRenderingThread = std::thread([this, scene] { this->_renderThread(scene); });
+}
+
 float MyRenderer::getProgress() const {
   int total = mFrameWidth * mFrameHeight;
   int count = mPixelCount;
@@ -51,11 +65,7 @@ void MyRenderer::_present() {
   SDL_UnlockSurface(mSurface);
 }
 
-void MyRenderer::_asyncRender() {
-  mRenderingThread = std::thread([this] { this->_renderThread(); });
-}
-
-void MyRenderer::_renderThread() {
+void MyRenderer::_renderThread(MyScene::Ptr scene) {
   glm::vec4 topColor(1.0f, 1, 1, 1);
   glm::vec4 bottomColor(0.5f, 0.7f, 1.0f, 1);
 
@@ -88,10 +98,16 @@ void MyRenderer::_writePixel(int x, int y, const glm::vec4& color) {
   mFrameBuffer[index] = colorValue;
 }
 
-void MyRenderer::_clearFrameBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+void MyRenderer::_clearFrameBuffer(const glm::vec4& colorf) {
   if (!mSurface) {
     spdlog::error("MyRenderer._clearFrameBuffer: INVALID surface.");
   }
+
+  uint8_t r = 255.5f * colorf.r;
+  uint8_t g = 255.5f * colorf.g;
+  uint8_t b = 255.5f * colorf.b;
+  uint8_t a = 255.5f * colorf.a;
+
   uint32_t color = SDL_MapRGBA(mSurface->format, r, g, b, a);
   {
     std::lock_guard lock(mMutex);

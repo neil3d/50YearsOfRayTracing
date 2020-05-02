@@ -17,19 +17,18 @@ class MyRenderer {
   virtual ~MyRenderer() = default;
 
  public:
+  void renderScene(MyScene::Ptr scene, const glm::vec4& clearColor);
   float getProgress() const;
 
  public:
   virtual void _init(SDL_Window* pWnd);
   virtual void _present();
   virtual void _shutdown();
-  virtual void _renderThread();
+  virtual void _renderThread(MyScene::Ptr scene);
 
  protected:
-  void _asyncRender();
-
   void _writePixel(int x, int y, const glm::vec4& color);
-  void _clearFrameBuffer(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  void _clearFrameBuffer(const glm::vec4& color);
 
  protected:
   int mFrameWidth = 0;

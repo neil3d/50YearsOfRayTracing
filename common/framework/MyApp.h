@@ -28,8 +28,6 @@ class MyApp final {
   }
 
  private:
-  static uint32_t presentCallback(uint32_t interval, void* param);
-
   void _tick();
 
  private:

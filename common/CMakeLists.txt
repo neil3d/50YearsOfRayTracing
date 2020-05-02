@@ -17,6 +17,11 @@ add_library(${PROJECT_NAME} STATIC
                 framework/MyException.h
                 framework/MyRenderer.h
                 framework/MyRenderer.cpp
+                math/AABBox.h
+                math/Ray.h
+                scene/MyScene.h
+                scene/MySceneObject.h
+                scene/SpheresScene.h
                 )
 
 target_include_directories( ${PROJECT_NAME}

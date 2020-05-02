@@ -1,17 +1,9 @@
 #include "RayCastingRenderer.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 
-void RayCastingRenderer::_init(SDL_Window* pWnd) {
-  MyRenderer::_init(pWnd);
-  _clearFrameBuffer(255, 255, 255, 255);
-  _present();
-
-  SDL_Delay(100);
-  _asyncRender();
-}
-
-void RayCastingRenderer::_renderThread() {
+void RayCastingRenderer::_renderThread(MyScene::Ptr scene) {
   for (int y = 0; y < mFrameHeight; y++)
     for (int x = 0; x < mFrameWidth; x++) {
       if (mRuning) {
@@ -22,7 +14,14 @@ void RayCastingRenderer::_renderThread() {
 }
 
 void RayCastingRenderer::_drawSinglePixel(int x, int y) {
-  glm::vec4 color;
+  glm::vec3 normal = glm::sphericalRand(1.0f);
+  normal = glm::normalize(normal);
 
-  _writePixel(x, y, color);
+  glm::vec3 light(1, 1, 0);
+  light = glm::normalize(light);
+
+  float c = glm::dot(normal, light);
+  glm::vec4 color(c, c, c, 1.0f);
+
+  //_writePixel(x, y, color);
 }

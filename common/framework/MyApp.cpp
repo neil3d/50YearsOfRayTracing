@@ -39,12 +39,6 @@ void MyApp::shutdown() {
   SDL_Quit();
 }
 
-uint32_t MyApp::presentCallback(uint32_t interval, void* param) {
-  MyRenderer* renderer = static_cast<MyRenderer*>(param);
-  renderer->_present();
-  return interval;
-}
-
 void MyApp::_tick() {
   if (!mRenderer) return;
 
