@@ -1,7 +1,11 @@
+#pragma once
 #include "MyRenderer.h"
 
 class RayCastingRenderer : public MyRenderer {
-    public:
+ public:
   virtual void _init(SDL_Window* pWnd) override;
+  virtual void _renderThread() override;
 
+ private:
+  void _drawSinglePixel(int x, int y);
 };

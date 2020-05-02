@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "MyApp.h"
+#include "WhittedRayTracer.h"
 
 const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
 
@@ -9,7 +10,7 @@ int main(void) {
   try {
     app.init();
     app.createWindow(1280, 720, APP_NAME);
-    app.createRenderer<MyRenderer>(2000);
+    app.createRenderer<WhittedRayTracer>(2000);
 
     app.mainLoop();
 
