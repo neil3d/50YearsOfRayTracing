@@ -3,7 +3,7 @@
 
 class Sphere : public MySceneObject {
  public:
-  Sphere(const std::string& szName) : MySceneObject(szName) {}
+  using MySceneObject::MySceneObject;
 
   Sphere& setCenter(const glm::vec3& center) {
     mCenter = center;

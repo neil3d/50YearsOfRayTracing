@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 
-void RayCastingRenderer::_renderThread(MyScene::Ptr scene) {
+void RayCastingRenderer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
   for (int y = 0; y < mFrameHeight; y++)
     for (int x = 0; x < mFrameWidth; x++) {
       if (mRuning) {

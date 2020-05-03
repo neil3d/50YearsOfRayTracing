@@ -3,5 +3,5 @@
 
 class WhittedRayTracer : public MyRenderer {
  public:
-  virtual void _renderThread(MyScene::Ptr scene) override;
+  virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 };

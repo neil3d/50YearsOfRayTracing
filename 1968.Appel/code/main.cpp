@@ -2,6 +2,7 @@
 
 #include "RayCastingRenderer.h"
 #include "framework/MyApp.h"
+#include "framework/PinholeCamera.h"
 #include "scene/SpheresScene.h"
 
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
@@ -14,8 +15,10 @@ int main(void) {
     auto renderer = app.createRenderer<RayCastingRenderer>(2000);
     auto scene = std::make_shared<SpheresScene>();
     scene->init();
-    
-    renderer->renderScene(scene, glm::vec4(1, 1, 1, 1));
+
+    auto camera = std::make_shared<PinholeCamera>();
+
+    renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 
     app.mainLoop();
 

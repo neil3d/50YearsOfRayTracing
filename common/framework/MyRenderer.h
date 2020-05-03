@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "../scene/MyScene.h"
+#include "MyCamera.h"
 
 class MyRenderer {
  public:
@@ -17,14 +18,15 @@ class MyRenderer {
   virtual ~MyRenderer() = default;
 
  public:
-  void renderScene(MyScene::Ptr scene, const glm::vec4& clearColor);
+  void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
+                   const glm::vec4& clearColor);
   float getProgress() const;
 
  public:
   virtual void _init(SDL_Window* pWnd);
   virtual void _present();
   virtual void _shutdown();
-  virtual void _renderThread(MyScene::Ptr scene);
+  virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera);
 
  protected:
   void _writePixel(int x, int y, const glm::vec4& color);

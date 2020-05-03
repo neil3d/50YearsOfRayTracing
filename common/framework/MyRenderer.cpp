@@ -6,7 +6,8 @@
 
 #include "MyException.h"
 
-void MyRenderer::renderScene(MyScene::Ptr scene, const glm::vec4& clearColor) {
+void MyRenderer::renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
+                             const glm::vec4& clearColor) {
   // stop current
   if (mRenderingThread.joinable()) {
     mRuning = false;
@@ -17,7 +18,8 @@ void MyRenderer::renderScene(MyScene::Ptr scene, const glm::vec4& clearColor) {
   mRuning = true;
   mPixelCount = 0;
   _clearFrameBuffer(clearColor);
-  mRenderingThread = std::thread([this, scene] { this->_renderThread(scene); });
+  mRenderingThread = std::thread(
+      [this, scene, camera] { this->_renderThread(scene, camera); });
 }
 
 float MyRenderer::getProgress() const {
@@ -65,7 +67,7 @@ void MyRenderer::_present() {
   SDL_UnlockSurface(mSurface);
 }
 
-void MyRenderer::_renderThread(MyScene::Ptr scene) {
+void MyRenderer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
   glm::vec4 topColor(1.0f, 1, 1, 1);
   glm::vec4 bottomColor(0.5f, 0.7f, 1.0f, 1);
 
