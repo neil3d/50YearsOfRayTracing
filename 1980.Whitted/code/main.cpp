@@ -11,7 +11,7 @@ int main(void) {
   try {
     app.init();
     app.createWindow(1280, 720, APP_NAME);
-    app.createRenderer<WhittedRayTracer>(2000);
+    app.createRenderer<WhittedRayTracer>();
 
     app.mainLoop();
 

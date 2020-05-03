@@ -14,18 +14,18 @@ int main(void) {
   try {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
-    auto renderer = app.createRenderer<RayCastingRenderer>(100);
+    auto renderer = app.createRenderer<RayCastingRenderer>();
     auto scene = std::make_shared<SpheresScene>();
     scene->init();
 
-    glm::vec3 eyePos(0, 1.5f, -5);
+    glm::vec3 eyePos(0, 1.25f, 5);
     glm::vec3 lookAt(0, 0, 0);
     auto camera = std::make_shared<PinholeCamera>();
     camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setPerspective(45, 1, 1000);
 
-    renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
+    renderer->renderScene(scene, camera, glm::vec4(0, 0, 0, 1));
 
     app.mainLoop();
 

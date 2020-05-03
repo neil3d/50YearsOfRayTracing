@@ -34,25 +34,23 @@ Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
 }
 
 void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
-  Ray eyeRay = _generateEyeRay(x, y);
+  constexpr float fMax = std::numeric_limits<float>::max();
+
   HitRecord hitRec;
-  bool bHit =
-      pScene->hit(eyeRay, 0.0001f, std::numeric_limits<float>::max(), hitRec);
+  Ray eyeRay = _generateEyeRay(x, y);
+  bool bHit = pScene->hit(eyeRay, 0.0001f, fMax, hitRec);
+
+  if (!bHit) return;
 
   glm::vec4 color;
-  if (bHit) {
-    Ray shadowRay = _generateShadowRay(hitRec.p);
-    HitRecord hitRec2;
-    bool bShadow = pScene->hit(shadowRay, 0.0001f,
-                               std::numeric_limits<float>::max(), hitRec2);
-    if (bShadow) {
-      color = glm::vec4(0.05f, 0.05f, 0.05f, 1);
-    } else {
-      float c = std::max(0.0f, glm::dot(hitRec.normal, mLightDir));
-      color = glm::vec4(c, c, c, 1);
-    }
-  } else {
+  Ray shadowRay = _generateShadowRay(hitRec.p);
+  HitRecord hitRec2;
+  bool bShadow = pScene->hit(shadowRay, 0.0001f, fMax, hitRec2);
+  if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
+  } else {
+    float c = std::max(0.0f, glm::dot(hitRec.normal, mLightDir));
+    color = glm::vec4(c, c, c, 1);
   }
 
   _writePixel(x, y, color);

@@ -17,6 +17,7 @@ void MyRenderer::renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
   // start new
   mRuning = true;
   mPixelCount = 0;
+  mPresentLine = 0;
   _clearFrameBuffer(clearColor);
   mRenderingThread = std::thread(
       [this, scene, camera] { this->_renderThread(scene, camera); });
@@ -49,6 +50,11 @@ void MyRenderer::_shutdown() {
   if (mRenderingThread.joinable()) mRenderingThread.join();
 }
 
+bool MyRenderer::nextPresentReady() const {
+  int line = mPixelCount / mFrameWidth;
+  return line > mPresentLine;
+}
+
 void MyRenderer::_present() {
   int ret = SDL_LockSurface(mSurface);
   if (ret < 0) {
@@ -65,6 +71,8 @@ void MyRenderer::_present() {
   }
 
   SDL_UnlockSurface(mSurface);
+
+  mPresentLine = mPixelCount / mFrameWidth;
 }
 
 void MyRenderer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {

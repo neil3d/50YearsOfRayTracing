@@ -20,6 +20,7 @@ class MyRenderer {
  public:
   void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                    const glm::vec4& clearColor);
+  bool nextPresentReady() const;
   float getProgress() const;
 
  public:
@@ -35,6 +36,7 @@ class MyRenderer {
  protected:
   int mFrameWidth = 0;
   int mFrameHeight = 0;
+  int mPresentLine = 0;
 
   SDL_Surface* mSurface = nullptr;
   std::atomic<bool> mRuning = {true};
