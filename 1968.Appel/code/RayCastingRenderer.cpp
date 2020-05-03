@@ -8,6 +8,8 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
   mEyePos = camera->getEyePos();
   camera->getNearPlane(mNearPlaneH, mNearPlaneV, mNearPlaneLeftBottom);
 
+  mLightDir = glm::normalize(glm::vec3(1, -1, 0));
+
   MyScene* pScene = scene.get();
   for (int y = 0; y < mFrameHeight; y++)
     for (int x = 0; x < mFrameWidth; x++) {
@@ -27,16 +29,22 @@ Ray RayCastingRenderer::_generateEyeRay(int x, int y) {
              mNearPlaneLeftBottom + s * mNearPlaneH + t * mNearPlaneV - origin);
 }
 
+Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
+  return Ray(point, mLightDir * -1.0f);
+}
+
 void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   Ray eyeRay = _generateEyeRay(x, y);
-
   HitRecord hitRec;
   bool bHit =
       pScene->hit(eyeRay, 0.0, std::numeric_limits<float>::max(), hitRec);
 
-  glm::vec4 color(0, 0, 0, 1);
+  glm::vec4 color;
   if (bHit) {
+    float c = std::max(0.0f, glm::dot(hitRec.normal, mLightDir));
+    color = glm::vec4(c, c, c, 1);
   } else {
+    color = glm::vec4(1, 1, 1, 1);
   }
 
   _writePixel(x, y, color);

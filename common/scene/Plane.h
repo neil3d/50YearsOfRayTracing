@@ -10,6 +10,6 @@ class Plane : public MySceneObject {
 
  private:
   // (p-p0).n = 0
-  glm::vec3 mP0 = {0, 0.5f, 0};
+  glm::vec3 mP0 = {0, 0, 0};
   glm::vec3 mNormal = {0, 1, 0};
 };
