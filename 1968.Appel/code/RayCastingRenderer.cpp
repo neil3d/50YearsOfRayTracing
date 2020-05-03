@@ -3,25 +3,41 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 
-void RayCastingRenderer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
+void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
+                                       MyCamera::Ptr camera) {
+  mEyePos = camera->getEyePos();
+  camera->getNearPlane(mNearPlaneH, mNearPlaneV, mNearPlaneLeftBottom);
+
+  MyScene* pScene = scene.get();
   for (int y = 0; y < mFrameHeight; y++)
     for (int x = 0; x < mFrameWidth; x++) {
       if (mRuning) {
-        _drawSinglePixel(x, y);
+        _drawSinglePixel(x, y, pScene);
       } else
         break;
     }  // end of for(x)
 }
 
-void RayCastingRenderer::_drawSinglePixel(int x, int y) {
-  glm::vec3 normal = glm::sphericalRand(1.0f);
-  normal = glm::normalize(normal);
+Ray RayCastingRenderer::_generateEyeRay(int x, int y) {
+  float s = (float)x / (float)(mFrameWidth);
+  float t = (float)y / (float)(mFrameHeight);
 
-  glm::vec3 light(1, 1, 0);
-  light = glm::normalize(light);
+  glm::vec3 origin = mEyePos;
+  return Ray(origin,
+             mNearPlaneLeftBottom + s * mNearPlaneH + t * mNearPlaneV - origin);
+}
 
-  float c = glm::dot(normal, light);
-  glm::vec4 color(c, c, c, 1.0f);
+void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
+  Ray eyeRay = _generateEyeRay(x, y);
 
-  //_writePixel(x, y, color);
+  HitRecord hitRec;
+  bool bHit =
+      pScene->hit(eyeRay, 0.0, std::numeric_limits<float>::max(), hitRec);
+
+  glm::vec4 color(0, 0, 0, 1);
+  if (bHit) {
+  } else {
+  }
+
+  _writePixel(x, y, color);
 }
