@@ -4,8 +4,7 @@
 #include "Plane.h"
 
 void SpheresScene::init() {
-  auto& ground = createObject<Plane>("ground");
-
-  auto& sphereA = createObject<Sphere>("sphereA");
-  sphereA.setCenter(glm::vec3(0, 1, 0)).setRadius(1.0f);
+  createObject<Plane>("ground");
+  createObject<Sphere>("sphereA").setCenter(glm::vec3(0, 1, 0)).setRadius(1.0f);
+  createObject<Sphere>("sphereB").setCenter(glm::vec3(1.5f, 0.5f, 0)).setRadius(0.5f);
 }

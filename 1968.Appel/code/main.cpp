@@ -6,8 +6,8 @@
 #include "scene/SpheresScene.h"
 
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
-const uint32_t WINDOW_WIDTH = 640;
-const uint32_t WINDOW_HEIGHT = 400;
+const uint32_t WINDOW_WIDTH = 1280;
+const uint32_t WINDOW_HEIGHT = 720;
 
 int main(void) {
   MyApp app;
@@ -18,10 +18,12 @@ int main(void) {
     auto scene = std::make_shared<SpheresScene>();
     scene->init();
 
+    glm::vec3 eyePos(0, 1.5f, -5);
+    glm::vec3 lookAt(0, 0, 0);
     auto camera = std::make_shared<PinholeCamera>();
     camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
-        .setView(glm::vec3(0, 0, 8), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
-        .setPerspective(45, 0.1f, 10);
+        .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
+        .setPerspective(45, 1, 1000);
 
     renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 

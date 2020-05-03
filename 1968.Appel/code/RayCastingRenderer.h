@@ -16,5 +16,5 @@ class RayCastingRenderer : public MyRenderer {
 
   // cache camera param
   glm::vec3 mEyePos;
-  glm::vec3 mNearPlaneH, mNearPlaneV, mNearPlaneLeftBottom;
+  glm::vec3 mNearPlaneH, mNearPlaneV, mNearPlaneLeftTop;
 };
