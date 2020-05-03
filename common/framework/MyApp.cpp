@@ -39,6 +39,10 @@ void MyApp::shutdown() {
 
 void MyApp::_tick() {
   if (!mRenderer) return;
+  if (mRenderer->isDone()) {
+    SDL_Delay(10);
+    return;
+  }
 
   if (mRenderer->nextPresentReady()) {
     // show rendering result

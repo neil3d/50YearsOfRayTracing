@@ -8,15 +8,13 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
   mEyePos = camera->getEyePos();
   camera->getNearPlane(mNearPlaneH, mNearPlaneV, mNearPlaneLeftTop);
 
-  mLightDir = glm::normalize(glm::vec3(1, 1, 0));
-
   MyScene* pScene = scene.get();
   for (int y = 0; y < mFrameHeight; y++)
     for (int x = 0; x < mFrameWidth; x++) {
-      if (mRuning) {
-        _drawSinglePixel(x, y, pScene);
-      } else
-        break;
+      if (!mRuning) break;
+
+      _drawSinglePixel(x, y, pScene);
+      mPixelCount++;
     }  // end of for(x)
 }
 
@@ -30,7 +28,8 @@ Ray RayCastingRenderer::_generateEyeRay(int x, int y) {
 }
 
 Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
-  return Ray(point, mLightDir);
+  glm::vec3 L = glm::normalize(mLightPos - point);
+  return Ray(point, L);
 }
 
 void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
@@ -49,7 +48,8 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
   } else {
-    float c = std::max(0.0f, glm::dot(hitRec.normal, mLightDir));
+    glm::vec3 L = glm::normalize(mLightPos - hitRec.p);
+    float c = std::max(0.0f, glm::dot(hitRec.normal, L));
     color = glm::vec4(c, c, c, 1);
   }
 

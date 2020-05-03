@@ -55,6 +55,8 @@ bool MyRenderer::nextPresentReady() const {
   return line > mPresentLine;
 }
 
+bool MyRenderer::isDone() const { return mPresentLine == mFrameHeight; }
+
 void MyRenderer::_present() {
   int ret = SDL_LockSurface(mSurface);
   if (ret < 0) {
@@ -100,7 +102,6 @@ void MyRenderer::_writePixel(int x, int y, const glm::vec4& color) {
   uint8_t b = 255.5f * color.b;
   uint8_t a = 255.5f * color.a;
 
-  mPixelCount++;
   uint32_t index = y * mFrameWidth + x;
   uint32_t colorValue = SDL_MapRGBA(mSurface->format, r, g, b, a);
 

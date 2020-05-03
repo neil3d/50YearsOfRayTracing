@@ -21,6 +21,7 @@ class MyRenderer {
   void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                    const glm::vec4& clearColor);
   bool nextPresentReady() const;
+  bool isDone() const;
   float getProgress() const;
 
  public:

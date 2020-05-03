@@ -8,11 +8,11 @@ class RayCastingRenderer : public MyRenderer {
  private:
   Ray _generateEyeRay(int x, int y);
   Ray _generateShadowRay(const glm::vec3& point);
-  
+
   void _drawSinglePixel(int x, int y, MyScene* pScene);
 
   // light
-  glm::vec3 mLightDir;
+  glm::vec3 mLightPos = {10, 10, 0};
 
   // cache camera param
   glm::vec3 mEyePos;
