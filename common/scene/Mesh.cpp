@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include <tiny_obj_loader.h>
 
 Mesh& Mesh::loadWavefrontObj(const std::string& szFileName) { return *this; }
 

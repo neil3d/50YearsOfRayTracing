@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(tinyobjloader CONFIG REQUIRED)
 
 # target
 aux_source_directory(./framework FRAMEWORK_SRC)
@@ -32,5 +33,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
                         SDL2::SDL2main SDL2::SDL2-static
                         spdlog::spdlog spdlog::spdlog_header_only
                         glm
+                        tinyobjloader::tinyobjloader
                     )
 

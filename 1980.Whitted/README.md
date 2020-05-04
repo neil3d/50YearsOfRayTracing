@@ -20,6 +20,15 @@ where
 
 ### Improved Model
 
+$$
+I = I_a + k_d \sum_{j=1}^{j=ls} (\vec{N} \cdot \vec{L_j}) + k_s S + k_t T
+$$
+
+where
+- $S$ = the intensity of light incident from the $\vec{R}$ direction
+- $k_t$ = the transmission coefficient
+- $T$ = the intensity of light from the $\vec{P}$ direction.
+
 ### Visible Surface Processor
 
 - bounding volume
