@@ -17,3 +17,5 @@
 $$
 H_j = 1 — Cosine L
 $$
+
+![Figure 6](./images/figure_06.png)

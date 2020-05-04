@@ -29,7 +29,11 @@ where
 - $k_t$ = the transmission coefficient
 - $T$ = the intensity of light from the $\vec{P}$ direction.
 
+![Figure 1](./images/figure_01.png)
+
 ### Visible Surface Processor
 
 - bounding volume
 - anti-aliasing
+
+![Figure 5](./images/figure_05.png)
