@@ -6,7 +6,7 @@
 void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
                                        MyCamera::Ptr camera) {
   mEyePos = camera->getEyePos();
-  camera->getNearPlane(mNearPlaneH, mNearPlaneV, mNearPlaneLeftTop);
+  camera->getFocalPlane(mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop);
 
   MyScene* pScene = scene.get();
   for (int y = 0; y < mFrameHeight; y++)
@@ -19,12 +19,12 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
 }
 
 Ray RayCastingRenderer::_generateEyeRay(int x, int y) {
-  float s = (float)x / (float)(mFrameWidth);
-  float t = (float)y / (float)(mFrameHeight);
+  float s = (x + 0.5f) / (float)(mFrameWidth);
+  float t = (y + 0.5f) / (float)(mFrameHeight);
 
   glm::vec3 origin = mEyePos;
   return Ray(origin,
-             mNearPlaneLeftTop + s * mNearPlaneH - t * mNearPlaneV - origin);
+             mFocalPlaneLeftTop + s * mFocalPlaneH - t * mFocalPlaneV - origin);
 }
 
 Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
@@ -37,14 +37,15 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
 
   HitRecord hitRec;
   Ray eyeRay = _generateEyeRay(x, y);
-  bool bHit = pScene->hit(eyeRay, 0.0001f, fMax, hitRec);
+  bool bHit = pScene->hit(eyeRay, 0, fMax, hitRec);
 
   if (!bHit) return;
 
   glm::vec4 color;
   Ray shadowRay = _generateShadowRay(hitRec.p);
   HitRecord hitRec2;
-  bool bShadow = pScene->hit(shadowRay, 0.0001f, fMax, hitRec2);
+  constexpr float SHADOW_E = 0.1f;
+  bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRec2);
   if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
   } else {

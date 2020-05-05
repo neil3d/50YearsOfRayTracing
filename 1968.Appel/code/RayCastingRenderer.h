@@ -12,9 +12,9 @@ class RayCastingRenderer : public MyRenderer {
   void _drawSinglePixel(int x, int y, MyScene* pScene);
 
   // light
-  glm::vec3 mLightPos = {10, 10, 0};
+  glm::vec3 mLightPos = {-10, 10, 0};
 
-  // cache camera param
+  // cache camera frame
   glm::vec3 mEyePos;
-  glm::vec3 mNearPlaneH, mNearPlaneV, mNearPlaneLeftTop;
+  glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;
 };

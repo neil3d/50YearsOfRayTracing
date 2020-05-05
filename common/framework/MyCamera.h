@@ -16,11 +16,13 @@ class MyCamera {
     return *this;
   }
 
-  MyCamera& setPerspective(float fov, float zNear, float zFar) {
-    mFov = glm::radians(fov);
-    mZNear = zNear;
-    mZFar = zFar;
+  MyCamera& setFOV(float fovInDegree) {
+    mFov = glm::radians(fovInDegree);
+    return *this;
+  }
 
+  MyCamera& setFocalLength(float d) {
+    mFocalLength = d;
     return *this;
   }
 
@@ -29,12 +31,12 @@ class MyCamera {
     return *this;
   }
 
-  void getNearPlane(glm::vec3& outH, glm::vec3& outV,
+  void getFocalPlane(glm::vec3& outH, glm::vec3& outV,
                     glm::vec3& outLeftTop) const {
-    float halfHeight = tanf(mFov * 0.5f) * mZNear;
+    float halfHeight = tanf(mFov * 0.5f) * mFocalLength;
     float halfWidth = mAspect * halfHeight;
 
-    glm::vec3 center = mEyePos + mForward * mZNear;
+    glm::vec3 center = mEyePos + mForward * mFocalLength;
     outLeftTop = center - halfWidth * mRight + halfHeight * mUp;
     outH = 2 * halfWidth * mRight;
     outV = 2 * halfHeight * mUp;
@@ -45,6 +47,6 @@ class MyCamera {
  private:
   glm::vec3 mEyePos;
   glm::vec3 mForward, mRight, mUp;
-  float mFov, mZNear, mZFar;
+  float mFov, mFocalLength;
   float mAspect;
 };
