@@ -9,7 +9,7 @@ class MyCamera {
   MyCamera& setView(glm::vec3 eyePos, glm::vec3 lookAt, glm::vec3 up) {
     mEyePos = eyePos;
 
-    mForward = glm::normalize(eyePos - lookAt);
+    mForward = glm::normalize(lookAt - eyePos);
     mRight = glm::normalize(glm::cross(up, mForward));
     mUp = glm::cross(mForward, mRight);
 
@@ -34,7 +34,7 @@ class MyCamera {
     float halfHeight = tanf(mFov * 0.5f) * mZNear;
     float halfWidth = mAspect * halfHeight;
 
-    glm::vec3 center = mEyePos - mForward * mZNear;
+    glm::vec3 center = mEyePos + mForward * mZNear;
     outLeftTop = center - halfWidth * mRight + halfHeight * mUp;
     outH = 2 * halfWidth * mRight;
     outV = 2 * halfHeight * mUp;
