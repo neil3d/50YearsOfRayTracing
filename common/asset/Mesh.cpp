@@ -20,10 +20,8 @@ void Mesh::loadFromFile(const std::string& szFileName) {
   if (!warn.empty()) spdlog::warn(warn);
   if (!err.empty()) spdlog::error(err);
 
-  if (!ret) {
+  if (!ret) 
     throw MyException(std::string("Failed to load/parse: ") + szFileName);
-    return *this;
-  }
 
   // copy attributes
   mVertices.resize(attrib.vertices.size() / 3);
@@ -58,5 +56,6 @@ void Mesh::loadFromFile(const std::string& szFileName) {
 
   // build bounding box
 
-  return *this;
+  // build BVH
+
 }
