@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 
+#include "../geometry/AABBox.h"
 #include "MyAssetObject.h"
-#include "../math/AABBox.h"
 
 class Mesh : public MyAssetObject {
  public:

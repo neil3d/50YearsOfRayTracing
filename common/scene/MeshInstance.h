@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../asset/Mesh.h"
-#include "../math/Transform.h"
+#include "../geometry/Transform.h"
 #include "MySceneObject.h"
 
 class MeshInstance : public MySceneObject {

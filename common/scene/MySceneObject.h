@@ -2,8 +2,8 @@
 #include <memory>
 #include <string>
 
+#include "../geometry/Ray.h"
 #include "../material/MyMaterial.h"
-#include "../math/Ray.h"
 #include "HitRecord.h"
 
 class MySceneObject {
