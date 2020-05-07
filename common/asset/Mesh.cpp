@@ -7,7 +7,7 @@
 
 static_assert(sizeof(tinyobj::real_t) == sizeof(float));
 
-Mesh& Mesh::loadWavefrontObj(const std::string& szFileName) {
+void Mesh::loadFromFile(const std::string& szFileName) {
   tinyobj::attrib_t attrib;
   std::vector<tinyobj::shape_t> shapes;
   std::vector<tinyobj::material_t> materials;
@@ -59,31 +59,4 @@ Mesh& Mesh::loadWavefrontObj(const std::string& szFileName) {
   // build bounding box
 
   return *this;
-}
-
-Mesh& Mesh::setPosition(glm::vec3 pos) {
-  mTransform.setPosition(pos);
-  return *this;
-}
-
-Mesh& Mesh::setScale(glm::vec3 scale) {
-  mTransform.setScale(scale);
-  return *this;
-}
-
-Mesh& Mesh::setRotation(float pitch, float yaw, float roll) {
-  mTransform.setRotation(pitch, yaw, roll);
-  return *this;
-}
-
-bool Mesh::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
-  // tranform ray to local space
-  Ray localRay = ray;
-
-  // bouding box check
-  if (!mBoundingBox.hit(localRay, tMin, tMax)) return false;
-
-  // trangle list check
-
-  return false;
 }

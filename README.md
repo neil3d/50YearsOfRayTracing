@@ -9,7 +9,7 @@
 
 |  文件夹  |  作者    |  文章标题    |
 |  --  |  --  |  --  |
-|  1968.Appel  | Arthur Appel |  Some techniques for shading machine renderings of solids    |
+|  1968.Appel   | Arthur Appel |  Some techniques for shading machine renderings of solids    |
 |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
 |  1984.Cook    | Robert L. Cook, Thomas Porter, Loren Carpenter    | Distributed ray tracing  |
 |  1986.Kajiya  | James T. Kajiya | The rendering equation  |
