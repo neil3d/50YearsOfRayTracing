@@ -3,7 +3,7 @@
 #include "RayCastingRenderer.h"
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
-#include "scene/SpheresScene.h"
+#include "Scene.h"
 
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
 const uint32_t WINDOW_WIDTH = 1280;
@@ -15,7 +15,7 @@ int main(void) {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<RayCastingRenderer>();
-    auto scene = std::make_shared<SpheresScene>();
+    auto scene = std::make_shared<Scene>();
     scene->init();
 
     glm::vec3 eyePos(0, 1.5f, -5);
