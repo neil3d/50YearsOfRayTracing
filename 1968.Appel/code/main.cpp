@@ -19,7 +19,7 @@ int main(void) {
     scene->init();
 
     glm::vec3 eyePos(0, 1.5f, -5);
-    glm::vec3 lookAt(0, 0, 0);
+    glm::vec3 lookAt(0, 0.5f, 0);
     auto camera = std::make_shared<PinholeCamera>();
     camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))

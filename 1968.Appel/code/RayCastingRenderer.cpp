@@ -18,7 +18,7 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
     }  // end of for(x)
 }
 
-Ray RayCastingRenderer::_generateEyeRay(int x, int y) {
+Ray RayCastingRenderer::_generateViewRay(int x, int y) {
   float s = (x + 0.5f) / (float)(mFrameWidth);
   float t = (y + 0.5f) / (float)(mFrameHeight);
 
@@ -36,16 +36,16 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   constexpr float fMax = std::numeric_limits<float>::max();
 
   HitRecord hitRec;
-  Ray eyeRay = _generateEyeRay(x, y);
-  bool bHit = pScene->hit(eyeRay, 0, fMax, hitRec);
+  Ray viewRay = _generateViewRay(x, y);
+  bool bHit = pScene->hit(viewRay, 0, fMax, hitRec);
 
   if (!bHit) return;
 
   glm::vec4 color;
   Ray shadowRay = _generateShadowRay(hitRec.p);
-  HitRecord hitRec2;
+  HitRecord hitRecS;
   constexpr float SHADOW_E = 0.1f;
-  bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRec2);
+  bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
   if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
   } else {
