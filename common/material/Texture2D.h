@@ -1,5 +1,8 @@
 #pragma once
-#include "../asset/MyAssetObject.h"
+#include "../asset/Image.h"
 #include "MyTexture.h"
 
-class Texture2D : public MyTexture, public MyAssetObject {};
+class Texture2D : public MyTexture {
+ private:
+  Image::Ptr mImage;
+};
