@@ -14,7 +14,6 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
     }  // end of for(x)
 }
 
-
 Ray WhittedRayTracer::_generateViewRay(int x, int y) {
   float s = (x + 0.5f) / (float)(mFrameWidth);
   float t = (y + 0.5f) / (float)(mFrameHeight);
@@ -36,7 +35,14 @@ void WhittedRayTracer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   Ray viewRay = _generateViewRay(x, y);
   bool bHit = pScene->hit(viewRay, 0, fMax, hitRec);
 
-  if (!bHit) return;
+  if (!bHit) {
+    // blue-white linear gradient background
+    const glm::vec4 topColor(1.0f, 1, 1, 1);
+    const glm::vec4 bottomColor(0.5f, 0.7f, 1.0f, 1);
+    float t = viewRay.direction.y;
+    _writePixel(x, y, topColor * t + bottomColor * (1.0f - t));
+    return;
+  }
 
   glm::vec4 color;
   Ray shadowRay = _generateShadowRay(hitRec.p);
