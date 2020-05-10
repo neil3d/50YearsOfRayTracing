@@ -34,6 +34,6 @@ class Scene : public MyScene {
     ;
 
     mLights.emplace_back(std::make_shared<PointLight>(glm::vec3(-10, 10, 0)));
-    mLights.emplace_back(std::make_shared<PointLight>(glm::vec3(10, 20, 0)));
+    //mLights.emplace_back(std::make_shared<PointLight>(glm::vec3(10, 20, 0)));
   }
 };

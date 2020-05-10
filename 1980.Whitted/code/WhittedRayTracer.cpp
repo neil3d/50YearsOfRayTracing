@@ -44,10 +44,10 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
 
     if (!bShadow) {
-      Ia += light->intensity(hitRec.p, hitRec.normal, ray.direction, mtl->Kd,
+      Ia += light->shadingIntensity(hitRec.p, hitRec.normal, ray.direction, mtl->Kd,
                              mtl->Ks, mtl->n);
     } else {
-      Ia += light->Ia;
+      Ia += light->ambient;
     }
 
   }  // end of for each light
@@ -57,7 +57,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   if (mtl) {
     if (mtl->Ks > 0) {
       Ray reflectionRay =
-          _generatereflectionRay(ray.direction, hitRec.p, hitRec.normal);
+          _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
       glm::vec3 rColor = _rayShading(reflectionRay, pScene, depth + 1);
       color += rColor * mtl->Ks;
     }
@@ -81,7 +81,7 @@ Ray WhittedRayTracer::_generateViewRay(int x, int y) {
              mFocalPlaneLeftTop + s * mFocalPlaneH - t * mFocalPlaneV - origin);
 }
 
-Ray WhittedRayTracer::_generatereflectionRay(const glm::vec3& dir,
+Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
                                              const glm::vec3& point,
                                              const glm::vec3& normal) {
   glm::vec3 outDir = glm::reflect(dir, normal);

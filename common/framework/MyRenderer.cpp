@@ -97,10 +97,10 @@ void MyRenderer::_writePixel(int x, int y, const glm::vec4& color) {
     return;
   }
 
-  uint8_t r = 255.5f * color.r;
-  uint8_t g = 255.5f * color.g;
-  uint8_t b = 255.5f * color.b;
-  uint8_t a = 255.5f * color.a;
+  uint8_t r = 255.5f * std::clamp(color.r, 0.0f, 1.0f);
+  uint8_t g = 255.5f * std::clamp(color.g, 0.0f, 1.0f);
+  uint8_t b = 255.5f * std::clamp(color.b, 0.0f, 1.0f);
+  uint8_t a = 255.5f * std::clamp(color.a, 0.0f, 1.0f);
 
   uint32_t index = y * mFrameWidth + x;
   uint32_t colorValue = SDL_MapRGBA(mSurface->format, r, g, b, a);

@@ -20,5 +20,5 @@ class Material : public MyMaterial {
   float Kd = 0.5f;  // diffuse reflection constant
   float Ks = 0.4f;  // the specular reflection coefficient
   float Kt = 0.1f;  // the transmission coefficient
-  float n = 32.0f;   // an exponent that depends on the glossiness of the surface
+  float n = 100.0f;   // an exponent that depends on the glossiness of the surface
 };
