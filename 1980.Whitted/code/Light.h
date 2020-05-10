@@ -14,7 +14,7 @@ struct MyLight {
 
 struct PointLight : public MyLight {
   glm::vec3 pos;
-  float range = 18;
+  float range = 15;
 
   PointLight(const glm::vec3& inPos) : pos(inPos) {}
 
@@ -41,7 +41,7 @@ struct PointLight : public MyLight {
       falloff = r * r;
     }
 
-    return ambient + intensity * falloff * I;
+    return ambient * falloff + intensity * falloff * I;
   }
 };
 

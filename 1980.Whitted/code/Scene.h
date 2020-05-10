@@ -16,34 +16,37 @@ class Scene : public MyScene {
   }
 
   virtual void init() override {
-    float c = 0.7f;
+    float c = 0.9f;
 
     // create objects
     createObject<Plane>("ground")
         .createMaterial<Material>()
-        .setCheckerTexture();
+        .setCheckerTexture()
+        .setParam(0.6f, 0.0f, 0.0f, 60, 1.0f);
 
     createObject<Sphere>("sphereA")
         .setCenter(glm::vec3(0, 1, 0))
         .setRadius(1)
         .createMaterial<Material>()
-        .setColor(glm::vec3(0, c, 0));
+        .setColor(glm::vec3(0, c, c))
+        .setParam(0.7f, 0.3f, 0.0f, 120, 1.0f);
 
     createObject<Sphere>("sphereB")
-        .setCenter(glm::vec3(2, 1, 0))
-        .setRadius(0.5f)
+        .setCenter(glm::vec3(-1.25f, 2, -2))
+        .setRadius(1.25f)
         .createMaterial<Material>()
-        .setColor(glm::vec3(0, 0, c));
-    ;
+        .setColor(glm::vec3(c, c, c))
+        .setParam(0.3f, 0.0f, 0.7f, 60, 1.025f);
 
     // create lights
-    auto pointLgt = std::make_shared<PointLight>(glm::vec3(-10, 10, 0));
+    auto pointLgt = std::make_shared<PointLight>(glm::vec3(-10, 10, -5));
     pointLgt->intensity = 1.5f;
+    pointLgt->ambient = 0.2f;
 
     auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(-1, -5, 2));
     dirLgt->intensity = 0.5f;
 
     mLights.emplace_back(pointLgt);
-    mLights.emplace_back(dirLgt);
+    // mLights.emplace_back(dirLgt);
   }
 };

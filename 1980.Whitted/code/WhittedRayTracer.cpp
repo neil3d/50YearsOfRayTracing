@@ -44,8 +44,8 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
 
     if (!bShadow) {
-      Ia += light->shadingIntensity(hitRec.p, hitRec.normal, ray.direction, mtl->Kd,
-                             mtl->Ks, mtl->n);
+      Ia += light->shadingIntensity(hitRec.p, hitRec.normal, ray.direction,
+                                    mtl->Kd, mtl->Ks, mtl->n);
     } else {
       Ia += light->ambient;
     }
@@ -56,17 +56,19 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   // recursive
   if (mtl) {
     if (mtl->Ks > 0) {
-      Ray reflectionRay =
-          _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
-      glm::vec3 rColor = _rayShading(reflectionRay, pScene, depth + 1);
+      Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
+      glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
       color += rColor * mtl->Ks;
     }
 
-    // if (mtl->Kt > 0) {
-    //   Ray transmissionRay;
-    //   glm::vec3 tColor = _rayShading(transmissionRay, pScene, depth + 1);
-    //   color += tColor * mtl->Ks;
-    // }
+    if (mtl->Kt > 0) {
+      float Kn = mtl->Kn;
+      Ray rRay = _generateRefractationRay(ray.direction, hitRec.p,
+                                          -hitRec.normal, mtl->Kn);
+
+      glm::vec3 tColor = _rayShading(rRay, pScene, depth + 1);
+      color += tColor * mtl->Kt;
+    }
   }  // end of if(mtl)
 
   return color;
@@ -86,4 +88,42 @@ Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
                                              const glm::vec3& normal) {
   glm::vec3 outDir = glm::reflect(dir, normal);
   return Ray(point, outDir);
+}
+
+bool myRefract(const glm::vec3& v, const glm::vec3& n, float niOverNt,
+               glm::vec3& outRefracted) {
+  float dt = dot(v, n);
+  float discriminant = 1.0f - niOverNt * niOverNt * (1.0f - dt * dt);
+  if (discriminant > 0) {
+    outRefracted = niOverNt * (v - n * dt) - n * sqrt(discriminant);
+    return true;
+  }
+  return false;
+}
+
+Ray WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
+                                               const glm::vec3& point,
+                                               const glm::vec3& normal,
+                                               float Kn) {
+  glm::vec3 outwardNormal;
+  glm::vec3 reflected = glm::reflect(dir, normal);
+  float niOverNt, cosine;
+
+  if (glm::dot(dir, normal) > 0) {
+    outwardNormal = -normal;
+    niOverNt = Kn;
+    cosine = Kn * glm::dot(dir, normal);
+  } else {
+    outwardNormal = normal;
+    niOverNt = 1.0f / Kn;
+    cosine = -glm::dot(dir, normal);
+  }
+
+  glm::vec3 refracted;
+
+  if (myRefract(dir, outwardNormal, niOverNt, refracted)) {
+    return Ray(point, refracted);
+  } else {
+    return Ray(point, reflected);
+  }
 }

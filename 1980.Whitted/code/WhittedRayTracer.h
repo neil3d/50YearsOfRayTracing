@@ -7,7 +7,11 @@ class WhittedRayTracer : public MyRenderer {
 
  private:
   Ray _generateViewRay(int x, int y);
-  Ray _generateReflectionRay(const glm::vec3& dir, const glm::vec3& point, const glm::vec3& normal);
+  Ray _generateReflectionRay(const glm::vec3& dir, const glm::vec3& point,
+                             const glm::vec3& normal);
+  Ray _generateRefractationRay(const glm::vec3& dir,
+                                const glm::vec3& point, const glm::vec3& normal,
+                                float Kn);
 
   glm::vec3 _rayShading(Ray ray, MyScene* pScene, int depth);
 

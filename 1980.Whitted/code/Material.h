@@ -13,12 +13,27 @@ class Material : public MyMaterial {
  public:
   Material() {}
 
-  void setColor(const glm::vec3& color) {
+  Material& setColor(const glm::vec3& color) {
     auto ct = std::make_shared<ConstantTexture>();
     ct->setColor(color);
     albedo = ct;
+    return *this;
   }
-  void setCheckerTexture() { albedo = std::make_shared<CheckerTexture>(); }
+
+  Material& setCheckerTexture() {
+    albedo = std::make_shared<CheckerTexture>();
+    return *this;
+  }
+
+  Material& setParam(float inKd, float inKs, float inKt, float inN,
+                     float inKn) {
+    Kd = inKd;
+    Ks = inKs;
+    Kt = inKt;
+    n = inN;
+    Kn = inKn;
+    return *this;
+  }
 
   glm::vec3 sampleAlbedo(const glm::vec2& uv, const glm::vec3& p) {
     if (albedo)
@@ -31,6 +46,6 @@ class Material : public MyMaterial {
   float Kd = 0.5f;  // diffuse reflection constant
   float Ks = 0.4f;  // the specular reflection coefficient
   float Kt = 0.1f;  // the transmission coefficient
-  float n =
-      100.0f;  // an exponent that depends on the glossiness of the surface
+  float n = 99;     // an exponent that depends on the glossiness of the surface
+  float Kn = 1.34f;  // the index of refraction
 };
