@@ -6,8 +6,8 @@
 #include "Scene.h"
 
 const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
-const uint32_t WINDOW_WIDTH = 1280;
-const uint32_t WINDOW_HEIGHT = 720;
+const uint32_t WINDOW_WIDTH = 640;
+const uint32_t WINDOW_HEIGHT = 360;
 
 int main(void) {
   MyApp app;

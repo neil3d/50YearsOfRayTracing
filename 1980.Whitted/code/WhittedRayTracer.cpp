@@ -3,7 +3,7 @@
 #include "Material.h"
 
 constexpr float fMax = std::numeric_limits<float>::max();
-constexpr int MAX_DEPTH = 100;
+constexpr int MAX_DEPTH = 4;
 
 void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
   mEyePos = camera->getEyePos();
@@ -28,6 +28,8 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   bool bHit = pScene->hit(ray, 0.0001f, fMax, hitRec);
   if (!bHit) return glm::vec3(0);
 
+  const glm::vec3 AMBIENT(0.1f, 0.1f, 0.1f);
+
   glm::vec3 color(0);
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
@@ -35,11 +37,14 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   HitRecord hitRecS;
   constexpr float SHADOW_E = 0.1f;
   bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
-  if (bShadow) return glm::vec3(0);
+  //if (bShadow) return AMBIENT;
+
+  glm::vec3 albedo(1);
+  if (hitRec.mtl) albedo = mtl->sampleAlbedo(0, 0);
 
   glm::vec3 L = glm::normalize(mLightPos - hitRec.p);
   float c = std::max(0.0f, glm::dot(hitRec.normal, L));
-  color = glm::vec4(c, c, c, 1);
+  color = c * albedo;
 
   // recursive
   if (mtl) {
@@ -53,7 +58,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     if (mtl->Kt > 0) {
       Ray transmissionRay;
       glm::vec3 tColor = _rayShading(transmissionRay, pScene, depth + 1);
-      //color += tColor * mtl->Ks;
+      // color += tColor * mtl->Ks;
     }
   }  // end of if(mtl)
 
