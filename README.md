@@ -14,3 +14,21 @@
 |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
 |  1984.Cook    | Robert L. Cook, Thomas Porter, Loren Carpenter    | Distributed ray tracing  |
 |  1986.Kajiya  | James T. Kajiya | The rendering equation  |
+
+## 工程配置
+
+- 安装 vcpkg 及依赖库
+- VSCode 配置
+
+## Ray Casting - Arthur Appel, 1968
+
+- 具体代码可见子目录：**1968.Appel**
+
+![Screen Shot](./1968.Appel/images/Screen-Shot-2020-05-08.png)
+
+- 算法描述： TODO
+
+![diagram](./1968.Appel/images/wiki_ray_trace_diagram.svg)
+> 图片来自维基百科
+
+## Recursive Ray Tracing - Turner Whitted, 1980
