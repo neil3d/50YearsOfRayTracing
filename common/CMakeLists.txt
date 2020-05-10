@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(my_framework VERSION 0.1.0)
+project(ray_tracing_history VERSION 0.1.0)
+
+set(SUB_PROJECT_NAME MyFramework)
 
 # set the C++ standard to C++ 17
 set(CMAKE_CXX_STANDARD 17)
@@ -17,19 +19,19 @@ aux_source_directory(./material MATERIAL_SRC)
 aux_source_directory(./math MATH_SRC)
 aux_source_directory(./scene SCENE_SRC)
 
-add_library(${PROJECT_NAME} STATIC 
+add_library(${SUB_PROJECT_NAME} STATIC 
                 ${FRAMEWORK_SRC}
                 ${MATERIAL_SRC}
                 ${MATH_SRC}
                 ${SCENE_SRC}
                 )
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(${SUB_PROJECT_NAME}
                 PUBLIC ${PROJECT_SOURCE_DIR}
             )
 
 # libs
-target_link_libraries(${PROJECT_NAME} PUBLIC 
+target_link_libraries(${SUB_PROJECT_NAME} PUBLIC 
                         SDL2::SDL2main SDL2::SDL2-static
                         spdlog::spdlog spdlog::spdlog_header_only
                         glm
