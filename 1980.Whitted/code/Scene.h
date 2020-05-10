@@ -36,15 +36,14 @@ class Scene : public MyScene {
         .setColor(glm::vec3(1))
         .setParam(0.0f, 0.0f, 0.7f, 60, 1.034f);
 
-    // create lights
+// create lights
     auto pointLgt = std::make_shared<PointLight>(glm::vec3(-10, 10, -5));
-    pointLgt->intensity = 1.5f;
-    pointLgt->ambient = 0.2f;
+    pointLgt->intensity = 0.25f;
+    pointLgt->ambient = 0.05f;
+    mLights.emplace_back(pointLgt);
 
     auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(-1, -5, 2));
-    dirLgt->intensity = 0.5f;
-
-    // mLights.emplace_back(pointLgt);
+    dirLgt->intensity = .8f;
     mLights.emplace_back(dirLgt);
   }
 };
