@@ -8,7 +8,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/1968.Appel/code/appel",
+            "program": "${workspaceFolder}/build/1980.Whitted/code/whitted",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
