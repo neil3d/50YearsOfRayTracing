@@ -1,10 +1,12 @@
 #include "WhittedRayTracer.h"
 
+#include <algorithm>
+
 #include "Material.h"
 #include "Scene.h"
 
 constexpr float fMax = std::numeric_limits<float>::max();
-constexpr int MAX_DEPTH = 4;
+constexpr int MAX_DEPTH = 20;
 
 void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
   mEyePos = camera->getEyePos();
@@ -26,10 +28,16 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   if (depth > MAX_DEPTH) return glm::vec3(0);
 
   HitRecord hitRec;
-  bool bHit = pScene->hit(ray, 0.0001f, fMax, hitRec);
-  if (!bHit) return glm::vec3(0);
+  bool bHit = pScene->hit(ray, 0.001f, fMax, hitRec);
+  if (!bHit) {
+    // blue-white linear gradient background
+    const glm::vec3 topColor(0.7f, 0.8f,1);
+    const glm::vec3 bottomColor(0.4f, 0.6f, 1);
+    float t = ray.direction.y;
+    return topColor * t + bottomColor * (1.0f - t);
+  }
 
-  glm::vec3 color;
+  glm::vec3 color(0);
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
   glm::vec3 albedo(1);
   if (hitRec.mtl) albedo = mtl->sampleAlbedo(hitRec.uv, hitRec.p);
@@ -90,40 +98,28 @@ Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
   return Ray(point, outDir);
 }
 
-bool myRefract(const glm::vec3& v, const glm::vec3& n, float niOverNt,
-               glm::vec3& outRefracted) {
-  float dt = dot(v, n);
-  float discriminant = 1.0f - niOverNt * niOverNt * (1.0f - dt * dt);
-  if (discriminant > 0) {
-    outRefracted = niOverNt * (v - n * dt) - n * sqrt(discriminant);
-    return true;
-  }
-  return false;
-}
-
 Ray WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
                                                const glm::vec3& point,
                                                const glm::vec3& normal,
                                                float Kn) {
   glm::vec3 outwardNormal;
-  glm::vec3 reflected = glm::reflect(dir, normal);
-  float niOverNt, cosine;
+  float niOverNt;
 
   if (glm::dot(dir, normal) > 0) {
     outwardNormal = -normal;
     niOverNt = Kn;
-    cosine = Kn * glm::dot(dir, normal);
   } else {
     outwardNormal = normal;
     niOverNt = 1.0f / Kn;
-    cosine = -glm::dot(dir, normal);
   }
 
-  glm::vec3 refracted;
-
-  if (myRefract(dir, outwardNormal, niOverNt, refracted)) {
+  float dt = glm::dot(dir, outwardNormal);
+  float discriminant = 1.0f - niOverNt * niOverNt * (1.0f - dt * dt);
+  if (discriminant > 0) {
+    glm::vec3 refracted = glm::refract(dir, outwardNormal, niOverNt);
     return Ray(point, refracted);
   } else {
-    return Ray(point, reflected);
+    glm::vec3 outDir = glm::reflect(dir, normal);
+    return Ray(point, outDir);
   }
 }

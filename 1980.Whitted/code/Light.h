@@ -2,7 +2,7 @@
 #include "geometry/Ray.h"
 
 struct MyLight {
-  float ambient = 0.05f;  // ambient
+  float ambient = 0.1f;  // ambient
   float intensity = 2.0f;
 
   virtual Ray generateShadowRay(const glm::vec3& shadingPt) = 0;

@@ -28,7 +28,8 @@
 
 - 算法描述： TODO
 
-![diagram](./1968.Appel/images/wiki_ray_trace_diagram.svg)
-> 图片来自维基百科
-
 ## Recursive Ray Tracing - Turner Whitted, 1980
+
+![Screen Shot](./1980.Whitted/images/ScreenShot-2020-05-10.png)
+
+- 算法描述： TODO
