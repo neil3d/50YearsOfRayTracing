@@ -32,7 +32,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   glm::vec3 color;
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
   glm::vec3 albedo(1);
-  if (hitRec.mtl) albedo = mtl->sampleAlbedo(0, 0);
+  if (hitRec.mtl) albedo = mtl->sampleAlbedo(hitRec.uv, hitRec.p);
 
   float Ia = 0;
   Scene* scene = dynamic_cast<Scene*>(pScene);
