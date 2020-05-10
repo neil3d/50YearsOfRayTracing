@@ -1,6 +1,7 @@
 #include "WhittedRayTracer.h"
 
 #include "Material.h"
+#include "Scene.h"
 
 constexpr float fMax = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 4;
@@ -28,30 +29,29 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   bool bHit = pScene->hit(ray, 0.0001f, fMax, hitRec);
   if (!bHit) return glm::vec3(0);
 
-  const float Ia(0.15f);
-
   glm::vec3 color;
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
+  glm::vec3 albedo(1);
+  if (hitRec.mtl) albedo = mtl->sampleAlbedo(0, 0);
 
-  Ray shadowRay = _generateShadowRay(hitRec.p);
-  HitRecord hitRecS;
-  constexpr float SHADOW_E = 0.1f;
-  bool bShadow = false;  // pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
+  float Ia = 0;
+  Scene* scene = dynamic_cast<Scene*>(pScene);
+  const auto& lights = scene->getLights();
+  for (const auto& light : lights) {
+    Ray shadowRay = light->generateShadowRay(hitRec.p);
+    HitRecord hitRecS;
+    constexpr float SHADOW_E = 0.1f;
+    bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
 
-  if (!bShadow) {
-    glm::vec3 L = glm::normalize(mLightPos - hitRec.p);
-    glm::vec3 H = glm::normalize(L - ray.direction);
-    float NdotH = glm::dot(hitRec.normal, H);
+    if (!bShadow) {
+      Ia += light->intensity(hitRec.p, hitRec.normal, ray.direction, mtl->Kd,
+                             mtl->Ks, mtl->n);
+    } else {
+      Ia += light->Ia;
+    }
 
-    glm::vec3 albedo(1);
-    if (hitRec.mtl) albedo = mtl->sampleAlbedo(0, 0);
-
-    float c = Ia + mtl->Kd * std::max(0.0f, glm::dot(hitRec.normal, L)) +
-              mtl->Ks * std::powf(NdotH, mtl->n);
-    color = c * albedo;
-  } else {
-    color = glm::vec3(Ia);
-  }
+  }  // end of for each light
+  color = Ia * albedo;
 
   // recursive
   if (mtl) {
@@ -62,11 +62,11 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
       color += rColor * mtl->Ks;
     }
 
-    if (mtl->Kt > 0) {
-      Ray transmissionRay;
-      glm::vec3 tColor = _rayShading(transmissionRay, pScene, depth + 1);
-      // color += tColor * mtl->Ks;
-    }
+    // if (mtl->Kt > 0) {
+    //   Ray transmissionRay;
+    //   glm::vec3 tColor = _rayShading(transmissionRay, pScene, depth + 1);
+    //   color += tColor * mtl->Ks;
+    // }
   }  // end of if(mtl)
 
   return color;
@@ -79,11 +79,6 @@ Ray WhittedRayTracer::_generateViewRay(int x, int y) {
   glm::vec3 origin = mEyePos;
   return Ray(origin,
              mFocalPlaneLeftTop + s * mFocalPlaneH - t * mFocalPlaneV - origin);
-}
-
-Ray WhittedRayTracer::_generateShadowRay(const glm::vec3& point) {
-  glm::vec3 L = glm::normalize(mLightPos - point);
-  return Ray(point, L);
 }
 
 Ray WhittedRayTracer::_generatereflectionRay(const glm::vec3& dir,
