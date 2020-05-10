@@ -4,7 +4,7 @@
 #include "material/MyMaterial.h"
 
 /**
- * Material for Improved Model(Whitted 1980)
+ * Material for "Improved Model" (Whitted 1980)
  */
 class Material : public MyMaterial {
  public:

@@ -14,9 +14,9 @@ class MyScene {
 
   virtual void init() = 0;
 
-  template <typename T>
-  T& createObject(const std::string& szName) {
-    auto newObject = std::make_shared<T>(szName);
+  template <typename T, typename... Args>
+  T& createObject(Args&&... args) {
+    auto newObject = std::make_shared<T>(std::forward<Args>(args)...);
     mObjects.emplace_back(newObject);
     return *newObject;
   }

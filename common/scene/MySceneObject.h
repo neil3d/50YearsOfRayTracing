@@ -15,6 +15,13 @@ class MySceneObject {
   virtual bool hit(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) = 0;
 
+  template <typename T, typename ...Args>
+  T& createMaterial(Args&& ...args) {
+    auto newMtl = std::make_shared<T>(std::forward<Args>(args)...);
+    mMateril = newMtl;
+    return *newMtl;
+  }
+
  protected:
   std::string mName;
   MyMaterial::Ptr mMateril;
