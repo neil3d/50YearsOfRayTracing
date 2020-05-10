@@ -14,13 +14,11 @@ class Material : public MyMaterial {
 
   void setColor(const glm::vec3& color) { albedo->setColor(color); }
 
-  glm::vec3 sampleAlbedo(float u, float v) {
-    return albedo->sample(u, v);
-  }
+  glm::vec3 sampleAlbedo(float u, float v) { return albedo->sample(u, v); }
 
  public:
-  float Kd = 0.5f;   // diffuse reflection constant
+  float Kd = 0.5f;  // diffuse reflection constant
   float Ks = 0.4f;  // the specular reflection coefficient
   float Kt = 0.1f;  // the transmission coefficient
-  float n = 8.0f;  // an exponent that depends on the glossiness of the surface
+  float n = 32.0f;   // an exponent that depends on the glossiness of the surface
 };

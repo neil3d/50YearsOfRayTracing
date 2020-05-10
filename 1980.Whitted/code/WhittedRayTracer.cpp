@@ -28,23 +28,30 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   bool bHit = pScene->hit(ray, 0.0001f, fMax, hitRec);
   if (!bHit) return glm::vec3(0);
 
-  const glm::vec3 AMBIENT(0.1f, 0.1f, 0.1f);
+  const float Ia(0.15f);
 
-  glm::vec3 color(0);
+  glm::vec3 color;
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
   Ray shadowRay = _generateShadowRay(hitRec.p);
   HitRecord hitRecS;
   constexpr float SHADOW_E = 0.1f;
-  bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
-  //if (bShadow) return AMBIENT;
+  bool bShadow = false;  // pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
 
-  glm::vec3 albedo(1);
-  if (hitRec.mtl) albedo = mtl->sampleAlbedo(0, 0);
+  if (!bShadow) {
+    glm::vec3 L = glm::normalize(mLightPos - hitRec.p);
+    glm::vec3 H = glm::normalize(L - ray.direction);
+    float NdotH = glm::dot(hitRec.normal, H);
 
-  glm::vec3 L = glm::normalize(mLightPos - hitRec.p);
-  float c = std::max(0.0f, glm::dot(hitRec.normal, L));
-  color = c * albedo;
+    glm::vec3 albedo(1);
+    if (hitRec.mtl) albedo = mtl->sampleAlbedo(0, 0);
+
+    float c = Ia + mtl->Kd * std::max(0.0f, glm::dot(hitRec.normal, L)) +
+              mtl->Ks * std::powf(NdotH, mtl->n);
+    color = c * albedo;
+  } else {
+    color = glm::vec3(Ia);
+  }
 
   // recursive
   if (mtl) {
