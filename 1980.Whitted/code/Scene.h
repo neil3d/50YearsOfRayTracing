@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Material.h"
 #include "scene/MyScene.h"
+#include "scene/Parallelogram.h"
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
 
@@ -17,7 +18,10 @@ class Scene : public MyScene {
 
   virtual void init() override {
     // create objects
-    createObject<Plane>("ground")
+    constexpr float S = 15;
+    createObject<Parallelogram>("Floor")
+        .setParam(glm::vec3(S, 0, 0), glm::vec3(0, 0, S),
+                  glm::vec3(-S / 2, 0, -S / 2))
         .createMaterial<Material>()
         .setCheckerTexture()
         .setParam(0.6f, 0.0f, 0.0f, 60, 1.0f);
@@ -36,7 +40,7 @@ class Scene : public MyScene {
         .setColor(glm::vec3(1))
         .setParam(0.0f, 0.0f, 0.7f, 60, 1.034f);
 
-// create lights
+    // create lights
     auto pointLgt = std::make_shared<PointLight>(glm::vec3(-10, 10, -5));
     pointLgt->intensity = 0.25f;
     pointLgt->ambient = 0.05f;

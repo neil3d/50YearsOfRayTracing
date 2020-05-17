@@ -31,7 +31,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   bool bHit = pScene->hit(ray, 0.001f, fMax, hitRec);
   if (!bHit) {
     // blue-white linear gradient background
-    const glm::vec3 topColor(0.7f, 0.8f,1);
+    const glm::vec3 topColor(0.9f, 0.9f, 1);
     const glm::vec3 bottomColor(0.4f, 0.6f, 1);
     float t = ray.direction.y;
     return topColor * t + bottomColor * (1.0f - t);

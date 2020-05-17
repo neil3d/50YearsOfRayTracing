@@ -8,7 +8,7 @@ class Plane : public MySceneObject {
   virtual bool hit(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;
 
- private:
+ protected:
   // (p-p0).n = 0
   glm::vec3 mP0 = {0, 0, 0};
   glm::vec3 mNormal = {0, 1, 0};
