@@ -8,12 +8,12 @@
 
 ## 文章列表
 
-| 文件夹  |  作者    |  文章标题    |
-| --  |  --  |  --  |
-|  1968.Appel   | Arthur Appel |  Some techniques for shading machine renderings of solids    |
-|  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
-|  1984.Cook    | Robert L. Cook, Thomas Porter, Loren Carpenter    | Distributed ray tracing  |
-|  1986.Kajiya  | James T. Kajiya | The rendering equation  |
+| 算法名称 | 文件夹  |  作者    |  文章标题    |
+| -- | --  |  --  |  --  |
+| Ray Casting |  1968.Appel   | Arthur Appel |  Some techniques for shading machine renderings of solids    |
+| Recursive Ray Tracing |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
+| Distributed Ray Tracing |  1984.Cook    | Robert L. Cook  | Distributed ray tracing  |
+| Path Tracing |  1986.Kajiya  | James T. Kajiya | The rendering equation  |
 
 ## 工程配置
 

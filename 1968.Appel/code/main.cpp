@@ -26,7 +26,7 @@ int main(void) {
         .setFOV(45)
         .setFocalLength(1.0f);
 
-    renderer->renderScene(scene, camera, glm::vec4(0, 0, 0, 1));
+    renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 
     app.mainLoop();
 
