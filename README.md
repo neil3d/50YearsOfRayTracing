@@ -12,8 +12,8 @@
 | -- | --  |  --  |  --  |
 | Ray Casting |  1968.Appel   | Arthur Appel |  Some techniques for shading machine renderings of solids    |
 | Recursive Ray Tracing |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
-| Distributed Ray Tracing |  1984.Cook    | Robert L. Cook 等人 | Distributed ray tracing  |
-| Path Tracing |  1986.Kajiya  | James T. Kajiya | The rendering equation  |
+| Distributed Ray Tracing |  1984.Cook    | Robert Cook et al. | Distributed ray tracing  |
+| Path Tracing |  1986.Kajiya  | James Kajiya | The rendering equation  |
 
 ## 工程配置
 
