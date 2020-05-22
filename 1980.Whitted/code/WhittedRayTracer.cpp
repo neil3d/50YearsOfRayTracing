@@ -76,14 +76,19 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
 
     if (mtl->Kt > 0) {
       float Kn = mtl->Kn;
-      Ray rRay = _generateRefractationRay(ray.direction, hitRec.p, hitRec.normal, Kn);
+      Ray rRay;
 
       // check for inside or outside reflection
       float cosTheta = glm::dot(ray.direction, hitRec.normal);
-      if (cosTheta < 0.0f)
+      if (cosTheta < 0.0f) {
         cosTheta = -cosTheta;
-      else
+        rRay = _generateRefractationRay(ray.direction, hitRec.p, hitRec.normal,
+                                        Kn);
+      } else {
+        rRay = _generateRefractationRay(ray.direction, hitRec.p, -hitRec.normal,
+                                        1.0f/Kn);
         cosTheta = glm::dot(rRay.direction, hitRec.normal);
+      }
 
       float f = fresnelSchlick(cosTheta, 3.0f);
       glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
@@ -115,6 +120,6 @@ Ray WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
                                                const glm::vec3& point,
                                                const glm::vec3& normal,
                                                float Kn) {
-  glm::vec3 refract = glm::refract(dir, -normal, 1.0f / Kn);
+  glm::vec3 refract = glm::refract(dir, normal, Kn);
   return Ray(point, refract);
 }
