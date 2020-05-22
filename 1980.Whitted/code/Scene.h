@@ -38,16 +38,19 @@ class Scene : public MyScene {
         .setRadius(1.25f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))
-        .setParam(0.0f, 0.0f, 0.7f, 60, 1.034f);
+        .setParam(0.0f, 0.0f, 0.9f, 60, 1.33f);
 
-    // create lights
+// create lights
+#if 0
     auto pointLgt = std::make_shared<PointLight>(glm::vec3(-10, 10, -5));
-    pointLgt->intensity = 0.25f;
-    pointLgt->ambient = 0.05f;
+    pointLgt->intensity = 0.85f;
+    pointLgt->ambient = 0.15f;
     mLights.emplace_back(pointLgt);
-
-    auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(-1, -5, 2));
-    dirLgt->intensity = .8f;
+#else
+    auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(-1, -4, 2));
+    dirLgt->intensity = 0.85f;
+    dirLgt->ambient = 0.15f;
     mLights.emplace_back(dirLgt);
+#endif
   }
 };
