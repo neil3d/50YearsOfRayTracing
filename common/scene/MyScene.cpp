@@ -1,6 +1,6 @@
 #include "MyScene.h"
 
-bool MyScene::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
+bool MyScene::closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
   bool hitAnything = false;
   float closestSoFar = tMax;
   HitRecord rec;

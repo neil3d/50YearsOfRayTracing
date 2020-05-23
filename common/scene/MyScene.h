@@ -21,7 +21,7 @@ class MyScene {
     return *newObject;
   }
 
-  virtual bool hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec);
+  virtual bool closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec);
 
  protected:
   std::list<MySceneObject::Ptr> mObjects;

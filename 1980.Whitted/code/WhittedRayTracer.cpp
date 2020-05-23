@@ -36,7 +36,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   if (depth > MAX_DEPTH) return glm::vec3(0);
 
   HitRecord hitRec;
-  bool bHit = pScene->hit(ray, 0.001f, fMax, hitRec);
+  bool bHit = pScene->closestHit(ray, 0.001f, fMax, hitRec);
   if (!bHit) {
     // blue-white linear gradient background
     const glm::vec3 topColor(0.9f, 0.9f, 1);
@@ -57,7 +57,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     Ray shadowRay = light->generateShadowRay(hitRec.p);
     HitRecord hitRecS;
     constexpr float SHADOW_E = 0.1f;
-    bool bShadow = pScene->hit(shadowRay, SHADOW_E, fMax, hitRecS);
+    bool bShadow = pScene->closestHit(shadowRay, SHADOW_E, fMax, hitRecS);
 
     if (!bShadow) {
       Ia += light->shadingIntensity(hitRec.p, hitRec.normal, ray.direction,
