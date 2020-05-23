@@ -39,7 +39,7 @@ class Scene : public MyScene {
         .setRadius(1.2f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))
-        .setParam(0.1f, 0.0f, 0.75f, 80, 1.033f);
+        .setParam(0.f, 0.0f, 0.7f, 80, 1.033f);
 
 // create lights
 #if 0
@@ -49,7 +49,7 @@ class Scene : public MyScene {
     mLights.emplace_back(pointLgt);
 #else
     auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
-    dirLgt->intensity = 1.35f;
+    dirLgt->intensity = 1.05f;
     dirLgt->ambient = 0.1f;
     mLights.emplace_back(dirLgt);
 #endif
