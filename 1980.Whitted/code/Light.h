@@ -6,10 +6,9 @@ struct MyLight {
   float intensity = 2.0f;
 
   virtual Ray generateShadowRay(const glm::vec3& shadingPt) = 0;
-  virtual float blinnPhongShading(const glm::vec3& shadingPt,
-                                 const glm::vec3& normal,
-                                 const glm::vec3& viewDir, float Kd, float Ks,
-                                 float n) = 0;
+  virtual glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
+                                      const glm::vec3& normal,
+                                      const glm::vec3& viewDir, float n) = 0;
 };
 
 struct PointLight : public MyLight {
@@ -23,16 +22,14 @@ struct PointLight : public MyLight {
     return Ray(shadingPt, L);
   }
 
-  virtual float blinnPhongShading(const glm::vec3& shadingPt,
-                                 const glm::vec3& normal,
-                                 const glm::vec3& viewDir, float Kd, float Ks,
-                                 float n) override {
+  virtual glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
+                                      const glm::vec3& normal,
+                                      const glm::vec3& viewDir,
+                                      float n) override {
     glm::vec3 L = glm::normalize(pos - shadingPt);
-    glm::vec3 H = glm::normalize(L + viewDir);
+    glm::vec3 H = glm::normalize(L - viewDir);
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
-
-    float I = Kd * std::max(0.0f, NdotL) + Ks * std::powf(NdotH, n);
 
     float falloff = 1.0f;
     float d = glm::distance(pos, shadingPt);
@@ -41,7 +38,9 @@ struct PointLight : public MyLight {
       falloff = r * r;
     }
 
-    return intensity * falloff * I;
+    float diffuse = std::max(0.0f, NdotL) * falloff * intensity;
+    float specular = std::powf(NdotH, n) * falloff * intensity;
+    return glm::vec3(ambient, diffuse, specular);
   }
 };
 
@@ -55,16 +54,17 @@ struct DirectionalLight : public MyLight {
     return Ray(shadingPt, L);
   }
 
-  virtual float blinnPhongShading(const glm::vec3& shadingPt,
-                                 const glm::vec3& normal,
-                                 const glm::vec3& viewDir, float Kd, float Ks,
-                                 float n) override {
+  virtual glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
+                                      const glm::vec3& normal,
+                                      const glm::vec3& viewDir,
+                                      float n) override {
     glm::vec3 L = -dir;
-    glm::vec3 H = glm::normalize(L + viewDir);
+    glm::vec3 H = glm::normalize(L - viewDir);
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
 
-    float I = Kd * std::max(0.0f, NdotL) + Ks * std::powf(NdotH, n);
-    return intensity * I;
+    float diffuse = std::max(0.0f, NdotL) * intensity;
+    float specular = std::powf(NdotH, n) * intensity;
+    return glm::vec3(ambient, diffuse, specular);
   }
 };
