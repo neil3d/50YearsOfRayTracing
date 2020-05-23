@@ -28,7 +28,7 @@ struct PointLight : public MyLight {
                                  const glm::vec3& viewDir, float Kd, float Ks,
                                  float n) override {
     glm::vec3 L = glm::normalize(pos - shadingPt);
-    glm::vec3 H = glm::normalize(L - viewDir);
+    glm::vec3 H = glm::normalize(L + viewDir);
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
 
@@ -60,7 +60,7 @@ struct DirectionalLight : public MyLight {
                                  const glm::vec3& viewDir, float Kd, float Ks,
                                  float n) override {
     glm::vec3 L = -dir;
-    glm::vec3 H = glm::normalize(L - viewDir);
+    glm::vec3 H = glm::normalize(L + viewDir);
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
 
