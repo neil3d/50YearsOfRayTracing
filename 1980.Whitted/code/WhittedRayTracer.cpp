@@ -8,6 +8,17 @@
 constexpr float fMax = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
 
+bool myRefract(const glm::vec3& v, const glm::vec3& n, float niOverNt,
+               glm::vec3& outRefracted) {
+  float dt = glm::dot(v, n);
+  float discriminant = 1.0f - niOverNt * niOverNt * (1.0f - dt * dt);
+  if (discriminant > 0) {
+    outRefracted = niOverNt * (v - n * dt) - n * sqrt(discriminant);
+    return true;
+  }
+  return false;
+}
+
 // 1994, Schlick, Christophe. "An Inexpensive BRDF Model for Physically‐based
 // Rendering"
 float mySchlick(float cosine, float Kn, float exp) {
@@ -32,18 +43,20 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
     }  // end of for(x)
 }
 
+glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
+  // blue-white linear gradient background
+  const glm::vec3 topColor(0.9f, 0.9f, 1);
+  const glm::vec3 bottomColor(0.4f, 0.6f, 1);
+  float t = ray.direction.y;
+  return topColor * t + bottomColor * (1.0f - t);
+}
+
 glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
-  if (depth > MAX_DEPTH) return glm::vec3(0);
+  if (depth > MAX_DEPTH) return _backgroundColor(ray);
 
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0.001f, fMax, hitRec);
-  if (!bHit) {
-    // blue-white linear gradient background
-    const glm::vec3 topColor(0.9f, 0.9f, 1);
-    const glm::vec3 bottomColor(0.4f, 0.6f, 1);
-    float t = ray.direction.y;
-    return topColor * t + bottomColor * (1.0f - t);
-  }
+  if (!bHit) return _backgroundColor(ray);
 
   glm::vec3 color(0);
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
@@ -68,7 +81,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     pScene->anyHit(shadowRay, SHADOW_E, fMax, shadowHitCallback);
 
     float lgt = light->blinnPhongShading(hitRec.p, hitRec.normal, ray.direction,
-                                        mtl->Kd, mtl->Ks, mtl->n);
+                                         mtl->Kd, mtl->Ks, mtl->n);
 
     Ia += light->ambient;
     Ia += lgt * attenuation;
@@ -86,25 +99,12 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     Ray rRay;
     bool bRefraction = false;
 
-    // check for inside or outside
-    float cosTheta = glm::dot(ray.direction, hitRec.normal);
-    if (cosTheta < 0.0f) {
-      cosTheta = -cosTheta;
-      Kn = 1.0f / Kn;
+    bRefraction = _generateRefractationRay(ray.direction, hitRec.p, normal, Kn,
+                                           rRay, reflectivity);
 
-    } else {
-      normal = -hitRec.normal;
-    }
-
-    bRefraction =
-        _generateRefractationRay(ray.direction, hitRec.p, normal, Kn, rRay);
-
-    reflectivity = mySchlick(cosTheta, Kn, 5.0f);
     if (bRefraction) {
       glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
       color += (1.0f - reflectivity) * mtl->Kt * rColor;
-    } else {
-      reflectivity = 1.0f;
     }
   }  // end of if(transparent object)
 
@@ -137,12 +137,33 @@ Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
 bool WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
                                                 const glm::vec3& point,
                                                 const glm::vec3& normal,
-                                                float Kn, Ray& outRay) {
-  glm::vec3 refract = glm::refract(dir, normal, Kn);
+                                                float Kn, Ray& outRay,
+                                                float& outReflectivity) {
+  glm::vec3 outwardNormal;
+  float niOverNt, cosine;
 
-  // total internal reflection
-  if (glm::length(refract) == 0.0f) return false;
+  cosine = glm::dot(dir, normal);
+  if (cosine > 0) {
+    outwardNormal = -normal;
+    niOverNt = Kn;
+  } else {
+    outwardNormal = normal;
+    niOverNt = 1.0f / Kn;
+    cosine = -cosine;
+  }
 
-  outRay = Ray(point, refract);
-  return true;
+  glm::vec3 refracted;
+  bool ret;
+
+  if (myRefract(dir, outwardNormal, niOverNt, refracted)) {
+    outReflectivity = mySchlick(cosine, Kn, 5.0f);
+    outRay = Ray(point, refracted);
+    ret = true;
+  } else {
+    // total internal reflection
+    outReflectivity = 1.0f;
+    ret = false;
+  }
+
+  return ret;
 }

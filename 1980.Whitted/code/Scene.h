@@ -39,7 +39,7 @@ class Scene : public MyScene {
         .setRadius(1.2f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))
-        .setParam(0.0f, 0.0f, 0.7f, 60, 1.025f);
+        .setParam(0.0f, 0.0f, 0.7f, 60, 1.033f);
 
 // create lights
 #if 0

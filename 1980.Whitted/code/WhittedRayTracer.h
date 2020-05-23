@@ -12,9 +12,11 @@ class WhittedRayTracer : public MyRenderer {
   bool _generateRefractationRay(const glm::vec3& dir,
                                 const glm::vec3& point, const glm::vec3& normal,
                                 float Kn,
-                                Ray& outRay);
+                                Ray& outRay, float& outReflectivity);
 
   glm::vec3 _rayShading(Ray ray, MyScene* pScene, int depth);
+
+  glm::vec3 _backgroundColor(const Ray& ray);
 
   // cache camera frame
   glm::vec3 mEyePos;
