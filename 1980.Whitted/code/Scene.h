@@ -24,7 +24,7 @@ class Scene : public MyScene {
                   glm::vec3(-S / 2, 0, -S / 2))
         .createMaterial<Material>()
         .setCheckerTexture()
-        .setParam(0.6f, 0.0f, 0.0f, 60, 1.0f);
+        .setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
 
     createObject<Sphere>("MirrorSphere")
         .setCenter(glm::vec3(0, 1, 1))
