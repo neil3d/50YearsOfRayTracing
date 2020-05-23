@@ -18,10 +18,11 @@ class Scene : public MyScene {
 
   virtual void init() override {
     // create objects
-    constexpr float S = 15;
+    constexpr float W = 8;
+    constexpr float H = 14;
     createObject<Parallelogram>("Floor")
-        .setParam(glm::vec3(S, 0, 0), glm::vec3(0, 0, S),
-                  glm::vec3(-S / 2, 0, -S / 2))
+        .setParam(glm::vec3(W, 0, 0), glm::vec3(0, 0, H),
+                  glm::vec3(-W / 2, 0, -H / 2))
         .createMaterial<Material>()
         .setCheckerTexture()
         .setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
@@ -34,11 +35,11 @@ class Scene : public MyScene {
         .setParam(0.3f, 0.7f, 0.0f, 120, 1.0f);
 
     createObject<Sphere>("GlassSphere")
-        .setCenter(glm::vec3(-1.25f, 2, -2))
-        .setRadius(1.25f)
+        .setCenter(glm::vec3(1.25f, 2, -2))
+        .setRadius(1.2f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))
-        .setParam(0.0f, 0.0f, 1.0f, 60, 1.03f);
+        .setParam(0.0f, 0.0f, 0.7f, 60, 1.03f);
 
 // create lights
 #if 0
@@ -47,9 +48,9 @@ class Scene : public MyScene {
     pointLgt->ambient = 0.15f;
     mLights.emplace_back(pointLgt);
 #else
-    auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(-1, -4, 2));
-    dirLgt->intensity = 0.85f;
-    dirLgt->ambient = 0.15f;
+    auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(-2, -4, 2));
+    dirLgt->intensity = 0.75f;
+    dirLgt->ambient = 0.25f;
     mLights.emplace_back(dirLgt);
 #endif
   }

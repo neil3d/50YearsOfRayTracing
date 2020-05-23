@@ -57,15 +57,21 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     Ray shadowRay = light->generateShadowRay(hitRec.p);
     HitRecord hitRecS;
     constexpr float SHADOW_E = 0.1f;
-    bool bShadow = pScene->closestHit(shadowRay, SHADOW_E, fMax, hitRecS);
 
-    if (!bShadow) {
-      Ia += light->shadingIntensity(hitRec.p, hitRec.normal, ray.direction,
-                                    mtl->Kd, mtl->Ks, mtl->n);
-    } else {
-      Ia += light->ambient;
-    }
+    float attenuation = 1.0f;
+    auto shadowHitCallback = [&attenuation](const HitRecord& hit) {
+      Material* mtl = dynamic_cast<Material*>(hit.mtl);
+      if (mtl) attenuation *= mtl->Kt;
+      return attenuation > 0.0f;
+    };
 
+    pScene->anyHit(shadowRay, SHADOW_E, fMax, shadowHitCallback);
+
+    float lgt = light->blinnPhongShading(hitRec.p, hitRec.normal, ray.direction,
+                                        mtl->Kd, mtl->Ks, mtl->n);
+
+    Ia += light->ambient;
+    Ia += lgt * attenuation;
   }  // end of for each light
   color = Ia * albedo;
 

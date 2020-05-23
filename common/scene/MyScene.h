@@ -21,7 +21,22 @@ class MyScene {
     return *newObject;
   }
 
-  virtual bool closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec);
+  bool closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec);
+
+  template <typename T>
+  bool anyHit(const Ray& ray, float tMin, float tMax, T callback) {
+    bool hitAnything = false;
+    HitRecord rec;
+
+    for (auto& obj : mObjects) {
+      if (obj->hit(ray, tMin, tMax, rec)) {
+        hitAnything = true;
+        if (callback(rec)) break;
+      }
+    }  // end of for
+
+    return hitAnything;
+  }
 
  protected:
   std::list<MySceneObject::Ptr> mObjects;

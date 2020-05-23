@@ -45,7 +45,10 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   Ray shadowRay = _generateShadowRay(hitRec.p);
   HitRecord hitRecS;
   constexpr float SHADOW_E = 0.1f;
-  bool bShadow = pScene->closestHit(shadowRay, SHADOW_E, fMax, hitRecS);
+
+  auto stopWithAnyHit = [](const HitRecord&) { return true; };
+
+  bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, fMax, stopWithAnyHit);
   if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
   } else {

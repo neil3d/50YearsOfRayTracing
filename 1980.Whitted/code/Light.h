@@ -6,7 +6,7 @@ struct MyLight {
   float intensity = 2.0f;
 
   virtual Ray generateShadowRay(const glm::vec3& shadingPt) = 0;
-  virtual float shadingIntensity(const glm::vec3& shadingPt,
+  virtual float blinnPhongShading(const glm::vec3& shadingPt,
                                  const glm::vec3& normal,
                                  const glm::vec3& viewDir, float Kd, float Ks,
                                  float n) = 0;
@@ -23,7 +23,7 @@ struct PointLight : public MyLight {
     return Ray(shadingPt, L);
   }
 
-  virtual float shadingIntensity(const glm::vec3& shadingPt,
+  virtual float blinnPhongShading(const glm::vec3& shadingPt,
                                  const glm::vec3& normal,
                                  const glm::vec3& viewDir, float Kd, float Ks,
                                  float n) override {
@@ -41,7 +41,7 @@ struct PointLight : public MyLight {
       falloff = r * r;
     }
 
-    return ambient * falloff + intensity * falloff * I;
+    return intensity * falloff * I;
   }
 };
 
@@ -55,7 +55,7 @@ struct DirectionalLight : public MyLight {
     return Ray(shadingPt, L);
   }
 
-  virtual float shadingIntensity(const glm::vec3& shadingPt,
+  virtual float blinnPhongShading(const glm::vec3& shadingPt,
                                  const glm::vec3& normal,
                                  const glm::vec3& viewDir, float Kd, float Ks,
                                  float n) override {
@@ -65,6 +65,6 @@ struct DirectionalLight : public MyLight {
     float NdotL = glm::dot(normal, L);
 
     float I = Kd * std::max(0.0f, NdotL) + Ks * std::powf(NdotH, n);
-    return ambient + intensity * I;
+    return intensity * I;
   }
 };
