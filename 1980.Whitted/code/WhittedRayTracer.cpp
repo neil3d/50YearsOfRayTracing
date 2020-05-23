@@ -77,7 +77,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     float attenuation = 1.0f;
     auto shadowHitCallback = [&attenuation](const HitRecord& hit) {
       Material* mtl = dynamic_cast<Material*>(hit.mtl);
-      if (mtl) attenuation *= mtl->Kt;
+      if (mtl) attenuation *= mtl->Kt * mtl->Kt;
       return attenuation > 0.0f;
     };
 
