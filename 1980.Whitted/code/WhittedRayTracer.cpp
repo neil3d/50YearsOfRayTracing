@@ -95,6 +95,9 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     // diffuse lighting
     color += mtl->Kd * lgt.y * albedo;
 
+    // specular lighting
+    color += lgt.z * albedo;
+
     // refraction
     float reflectivity = 0.0f;
     if (mtl->Kt > 0) {
@@ -119,11 +122,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
       Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
       glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
       color += rColor * Ks;
-
-      // specular lighting
-      color += Ks * lgt.z * albedo;
     }
-
   }  // end of for each light
 
   return color;
