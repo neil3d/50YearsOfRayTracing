@@ -12,11 +12,7 @@ bool Parallelogram::hit(const Ray& ray, float tMin, float tMax,
     if (a1 >= 0 && a1 <= 1) {
       float a2 = glm::dot(this->v2, vi);
       if (a2 >= 0 && a2 <= 1) {
-        outRec.t = t;
-        outRec.p = ray.getPoint(t);
-        outRec.normal = n;
-        outRec.obj = this;
-        outRec.mtl = mMateril.get();
+        outRec = _makeHitRecord(ray, t, n, glm::vec2());
         return true;
       }
     }

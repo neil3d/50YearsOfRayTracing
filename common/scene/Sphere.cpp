@@ -14,26 +14,20 @@ bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
 
   float disc = b * b - a * c;
   if (disc > 0) {
-    float temp = (-b - sqrt(b * b - a * c)) / a;
+    float temp = (-b - sqrt(disc)) / a;
 
     if (temp < closestSoFar && temp > tMin) {
       closestSoFar = temp;
-      outRec.t = temp;
-      outRec.p = ray.getPoint(temp);
-      outRec.normal = (outRec.p - center) / radius;
-      outRec.obj = this;
-      outRec.mtl = mMateril.get();
+      glm::vec3 normal = -glm::normalize(ray.getPoint(temp) - center);
+      outRec = _makeHitRecord(ray, temp, normal, glm::vec2());
       hit = true;
     }
 
-    temp = (-b + sqrt(b * b - a * c)) / a;
+    temp = (-b + sqrt(disc)) / a;
     if (temp < closestSoFar && temp > tMin) {
       closestSoFar = temp;
-      outRec.t = temp;
-      outRec.p = ray.getPoint(temp);
-      outRec.normal = (outRec.p - center) / radius;
-      outRec.obj = this;
-      outRec.mtl = mMateril.get();
+      glm::vec3 normal = glm::normalize(ray.getPoint(temp) - center);
+      outRec = _makeHitRecord(ray, temp, normal, glm::vec2());
       hit = true;
     }
   }
