@@ -45,8 +45,8 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
 
 glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
   // blue-white linear gradient background
-  const glm::vec3 topColor(0.9f, 0.9f, 1);
-  const glm::vec3 bottomColor(0.4f, 0.6f, 1);
+  const glm::vec3 topColor(0.85f, 0.85f, 0.95f);
+  const glm::vec3 bottomColor(0.5f, 0.6f, 0.98f);
   float t = ray.direction.y;
   return topColor * t + bottomColor * (1.0f - t);
 }
@@ -72,31 +72,29 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   for (const auto& light : lights) {
     Ray shadowRay = light->generateShadowRay(hitRec.p);
     HitRecord hitRecS;
-    constexpr float SHADOW_E = 0.1f;
+    constexpr float SHADOW_E = 0.001f;
 
     float attenuation = 1.0f;
     auto shadowHitCallback = [&attenuation](const HitRecord& hit) {
       Material* mtl = dynamic_cast<Material*>(hit.mtl);
-      if (mtl) attenuation *= mtl->Kt * mtl->Kt;
+      if (mtl) attenuation *= std::powf(mtl->Kt, 3);
       return attenuation > 0.0f;
     };
 
     pScene->anyHit(shadowRay, SHADOW_E, fMax, shadowHitCallback);
 
+    // lighting
     glm::vec3 lgt = light->blinnPhongShading(hitRec.p, hitRec.normal,
                                              ray.direction, mtl->n);
-
-    // apply shadow
-    lgt = attenuation * lgt;
 
     // ambient lighting
     color += lgt.x * albedo;
 
     // diffuse lighting
-    color += mtl->Kd * lgt.y * albedo;
+    color += mtl->Kd * lgt.y * attenuation * albedo;
 
     // specular lighting
-    color += lgt.z * albedo;
+    color += lgt.z * attenuation * albedo;
 
     // refraction
     float reflectivity = 0.0f;

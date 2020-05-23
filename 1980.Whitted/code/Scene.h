@@ -28,10 +28,10 @@ class Scene : public MyScene {
         .setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
 
     createObject<Sphere>("MirrorSphere")
-        .setCenter(glm::vec3(0, 1.1f, 1))
+        .setCenter(glm::vec3(0, 1.f, 1))
         .setRadius(1)
         .createMaterial<Material>()
-        .setColor(glm::vec3(0, 0.8f, 1.0f))
+        .setColor(glm::vec3(0.2f, 0.8f, 1.0f))
         .setParam(0.2f, 0.8f, 0.0f, 80, 1.0f);
 
     createObject<Sphere>("GlassSphere")
@@ -39,7 +39,7 @@ class Scene : public MyScene {
         .setRadius(1.2f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))
-        .setParam(0.0f, 0.0f, 0.7f, 80, 1.033f);
+        .setParam(0.1f, 0.0f, 0.75f, 80, 1.033f);
 
 // create lights
 #if 0
@@ -49,7 +49,7 @@ class Scene : public MyScene {
     mLights.emplace_back(pointLgt);
 #else
     auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
-    dirLgt->intensity = 1.5f;
+    dirLgt->intensity = 1.35f;
     dirLgt->ambient = 0.1f;
     mLights.emplace_back(dirLgt);
 #endif

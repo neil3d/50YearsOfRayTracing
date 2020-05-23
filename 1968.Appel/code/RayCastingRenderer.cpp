@@ -44,7 +44,7 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   glm::vec4 color;
   Ray shadowRay = _generateShadowRay(hitRec.p);
   HitRecord hitRecS;
-  constexpr float SHADOW_E = 0.1f;
+  constexpr float SHADOW_E = 0.001f;
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
 
