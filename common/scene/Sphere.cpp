@@ -1,36 +1,36 @@
 #include "Sphere.h"
 
-bool Sphere::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
-  glm::vec3 center = mCenter;  // world space center position
-  float radius = mRadius;
+static bool _solveQuadratic(float a, float b, float c, float &x0,
+                    float &x1) {
+  float discr = b * b - 4 * a * c;
+  if (discr < 0.f)
+    return false;
 
-  glm::vec3 oc = ray.origin - center;
+  if (fabsf(discr) < 0.0001f)
+    x0 = x1 = -0.5f * b / a;
+  else {
+    x0 = 0.5f*(-b+sqrtf(discr))/a;
+    x1 = 0.5f*(-b-sqrtf(discr))/a;
+  }
+  return true;
+}
+
+bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
+  // analytic solution
+  glm::vec3 oc = ray.origin - mCenter;
   float a = glm::dot(ray.direction, ray.direction);
-  float b = glm::dot(oc, ray.direction);
-  float c = glm::dot(oc, oc) - radius * radius;
+  float b = 2 * glm::dot(oc, ray.direction);
+  float c = glm::dot(oc, oc) - mRadius * mRadius;
 
-  bool hit = false;
-  float closestSoFar = tMax;
+  float t0, t1;
+  if (!_solveQuadratic(a, b, c, t0, t1)) return false;
+  float tnear = std::min(t0,t1);
 
-  float disc = b * b - a * c;
-  if (disc > 0) {
-    float temp = (-b - sqrt(disc)) / a;
-
-    if (temp < closestSoFar && temp > tMin) {
-      closestSoFar = temp;
-      glm::vec3 normal = -glm::normalize(ray.getPoint(temp) - center);
-      outRec = _makeHitRecord(ray, temp, normal, glm::vec2());
-      hit = true;
-    }
-
-    temp = (-b + sqrt(disc)) / a;
-    if (temp < closestSoFar && temp > tMin) {
-      closestSoFar = temp;
-      glm::vec3 normal = glm::normalize(ray.getPoint(temp) - center);
-      outRec = _makeHitRecord(ray, temp, normal, glm::vec2());
-      hit = true;
-    }
+  if (tnear > tMin && tnear < tMax) {
+    glm::vec3 normal = glm::normalize(ray.getPoint(tnear) - mCenter);
+    outRec = _makeHitRecord(ray, tnear, normal, glm::vec2());
+    return true;
   }
 
-  return hit;
+  return false;
 }

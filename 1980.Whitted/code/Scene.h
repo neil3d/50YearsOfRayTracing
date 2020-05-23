@@ -28,7 +28,7 @@ class Scene : public MyScene {
         .setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
 
     createObject<Sphere>("MirrorSphere")
-        .setCenter(glm::vec3(0, 1, 1))
+        .setCenter(glm::vec3(0, 1.1f, 1))
         .setRadius(1)
         .createMaterial<Material>()
         .setColor(glm::vec3(0, 1, 1))
@@ -39,7 +39,7 @@ class Scene : public MyScene {
         .setRadius(1.2f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))
-        .setParam(0.0f, 0.0f, 0.7f, 60, 1.33f);
+        .setParam(0.0f, 0.0f, 0.7f, 60, 1.025f);
 
 // create lights
 #if 0

@@ -90,9 +90,10 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     float cosTheta = glm::dot(ray.direction, hitRec.normal);
     if (cosTheta < 0.0f) {
       cosTheta = -cosTheta;
+      Kn = 1.0f / Kn;
+
     } else {
       normal = -hitRec.normal;
-      Kn = 1.0f / Kn;
     }
 
     bRefraction =
