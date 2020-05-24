@@ -97,33 +97,33 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
 
     // specular lighting
     color += lgt.z * attenuation * albedo;
-
-    // refraction
-    float reflectivity = 0.0f;
-    if (mtl->Kt > 0) {
-      float Kn = mtl->Kn;
-      glm::vec3 normal = hitRec.normal;
-
-      Ray rRay;
-      bool bRefraction = false;
-
-      bRefraction = _generateRefractationRay(ray.direction, hitRec.p, normal,
-                                             Kn, rRay, reflectivity);
-
-      if (bRefraction) {
-        glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
-        color += (1.0f - reflectivity) * mtl->Kt * rColor;
-      }
-    }  // end of if(transparent object)
-
-    // reflection
-    float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
-    if (Ks > 0) {
-      Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
-      glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
-      color += rColor * Ks;
-    }
   }  // end of for each light
+
+  // refraction
+  float reflectivity = 0.0f;
+  if (mtl->Kt > 0) {
+    float Kn = mtl->Kn;
+    glm::vec3 normal = hitRec.normal;
+
+    Ray rRay;
+    bool bRefraction = false;
+
+    bRefraction = _generateRefractationRay(ray.direction, hitRec.p, normal, Kn,
+                                           rRay, reflectivity);
+
+    if (bRefraction) {
+      glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
+      color += (1.0f - reflectivity) * mtl->Kt * rColor;
+    }
+  }  // end of if(transparent object)
+
+  // reflection
+  float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
+  if (Ks > 0) {
+    Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
+    glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
+    color += rColor * Ks;
+  }
 
   return color;
 }
