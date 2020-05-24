@@ -3,7 +3,7 @@
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
 
-class Scene : public MyScene {
+class DemoScene : public MyScene {
  public:
   virtual void init() override {
     createObject<Plane>("ground");

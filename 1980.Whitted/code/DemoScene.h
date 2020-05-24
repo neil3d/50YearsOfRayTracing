@@ -8,7 +8,7 @@
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
 
-class Scene : public MyScene {
+class DemoScene : public MyScene {
   std::vector<std::shared_ptr<MyLight>> mLights;
 
  public:

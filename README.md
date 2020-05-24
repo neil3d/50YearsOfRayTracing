@@ -28,3 +28,5 @@
 
 ![Screen Shot](./1980.Whitted/images/ScreenShot-2020-05-23.png)
 
+## Distributed Ray Tracing - Robert Cook et al., 1984
+

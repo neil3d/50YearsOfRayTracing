@@ -3,7 +3,7 @@
 #include "WhittedRayTracer.h"
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
-#include "Scene.h"
+#include "DemoScene.h"
 
 const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
 const uint32_t WINDOW_WIDTH = 640;
@@ -16,7 +16,7 @@ int main(void) {
     app.createWindow(1280, 720, APP_NAME);
 
     auto renderer = app.createRenderer<WhittedRayTracer>();
-    auto scene = std::make_shared<Scene>();
+    auto scene = std::make_shared<DemoScene>();
     scene->init();
 
     glm::vec3 eyePos(0, 1.25f, -8);

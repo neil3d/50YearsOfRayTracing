@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "Material.h"
-#include "Scene.h"
+#include "DemoScene.h"
 
 constexpr float fMax = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
@@ -59,7 +59,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   if (!bHit) return _backgroundColor(ray);
 
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
-  Scene* scene = dynamic_cast<Scene*>(pScene);
+  DemoScene* scene = dynamic_cast<DemoScene*>(pScene);
 
   // error check
   if (!mtl) return glm::vec3(1, 0, 0);
