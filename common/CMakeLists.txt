@@ -8,18 +8,21 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # find packages
+find_package(stb)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 
 # target
+aux_source_directory(./asset ASSET_SRC)
 aux_source_directory(./framework FRAMEWORK_SRC)
 aux_source_directory(./material MATERIAL_SRC)
 aux_source_directory(./math MATH_SRC)
 aux_source_directory(./scene SCENE_SRC)
 
 add_library(${SUB_PROJECT_NAME} STATIC 
+                ${ASSET_SRC}
                 ${FRAMEWORK_SRC}
                 ${MATERIAL_SRC}
                 ${MATH_SRC}

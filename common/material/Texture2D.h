@@ -7,14 +7,14 @@
  */
 
 #pragma once
-#include "../asset/Image.h"
+#include "../asset/ImageRGBA.h"
 #include "MyTexture.h"
 
 namespace RayTracingHistory {
 
 class Texture2D : public MyTexture {
  private:
-  Image::Ptr mImage;
+  ImageRGBA::Ptr mImage;
 };
 
 }  // namespace RayTracingHistory
