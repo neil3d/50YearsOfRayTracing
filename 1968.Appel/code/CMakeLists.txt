@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(ray_tracing_history)
+project(RayTracingHistory)
 
 set(SUB_PROJECT_NAME RayCastingRenderer)
 
