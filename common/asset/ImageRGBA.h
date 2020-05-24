@@ -22,7 +22,10 @@ class ImageRGBA : public MyAssetObject {
 
   virtual void loadFromFile(const std::string& szPath) override;
 
-  Pixel getPixel(const uint32_t x, const uint32_t y) {
+  uint32_t getWidth() const { return mWidth; }
+  uint32_t getHeight() const { return mHeight; }
+
+  Pixel getPixel(const uint32_t x, const uint32_t y) const {
     if (x < mWidth && y < mHeight) return mData[y * mWidth + x];
 
     return Pixel{0};
