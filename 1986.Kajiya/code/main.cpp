@@ -1,14 +1,14 @@
 #include <iostream>
 
-#include "BilliardScene.h"
-#include "DistributedRayTracer.h"
+#include "DemoScene.h"
+#include "BasicPathTracer.h"
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
 using namespace RayTracingHistory;
 
 const char* const APP_NAME =
-    "Distributed Ray tracing -  Robert Cook et al. 1984";
+    "Path Tracing -  Kajiya 1986";
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
@@ -17,9 +17,9 @@ int main(void) {
   try {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
-    auto renderer = app.createRenderer<DistributedRayTracer>();
+    auto renderer = app.createRenderer<BasicPathTracer>();
     
-    auto scene = std::make_shared<BilliardScene>();
+    auto scene = std::make_shared<DemoScene>();
     scene->init();
 
 
