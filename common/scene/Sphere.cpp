@@ -23,7 +23,7 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
   float tnear = std::min(t0, t1);
 
   if (tnear > tMin && tnear < tMax) {
-    glm::vec3 normal = glm::normalize(ray.getPoint(tnear) - mCenter);
+    glm::vec3 normal = (ray.getPoint(tnear) - mCenter)/mRadius;
     outRec = _makeHitRecord(ray, tnear, normal, glm::vec2());
     return true;
   }
