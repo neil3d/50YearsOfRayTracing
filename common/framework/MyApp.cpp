@@ -2,6 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
+namespace RayTracingHistory {
+
 void MyApp::init() {
   int ret = SDL_Init(SDL_INIT_VIDEO);
   if (ret < 0) throw MyException("SDL_Init FAILED", SDL_GetError());
@@ -58,3 +60,4 @@ void MyApp::_tick() {
     SDL_SetWindowTitle(mMainWindow, szTitle.c_str());
   }
 }
+}  // namespace RayTracingHistory

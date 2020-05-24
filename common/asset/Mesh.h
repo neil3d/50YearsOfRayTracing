@@ -1,9 +1,18 @@
+/**
+ * A Brief History of Ray tracing
+ * 
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ * 
+ * Created by yanliang.fyl, 2020
+ */ 
+
 #pragma once
 #include <glm/glm.hpp>
 
 #include "../geometry/AABBox.h"
 #include "MyAssetObject.h"
 
+namespace RayTracingHistory {
 class Mesh : public MyAssetObject {
  public:
   using MyAssetObject::MyAssetObject;
@@ -32,3 +41,4 @@ class Mesh : public MyAssetObject {
 
   AABBox mBoundingBox;
 };
+}  // namespace RayTracingHistory

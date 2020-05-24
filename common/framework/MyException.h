@@ -1,7 +1,16 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
 #pragma once
 
 #include <exception>
 #include <string>
+
+namespace RayTracingHistory {
 
 class MyException : public std::exception {
  public:
@@ -19,3 +28,4 @@ class MyException : public std::exception {
  private:
   std::string mMessage;
 };
+}  // namespace RayTracingHistory

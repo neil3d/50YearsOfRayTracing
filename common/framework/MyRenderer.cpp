@@ -6,6 +6,8 @@
 
 #include "MyException.h"
 
+namespace RayTracingHistory {
+
 void MyRenderer::renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                              const glm::vec4& clearColor) {
   // stop current
@@ -133,3 +135,4 @@ void MyRenderer::_clearFrameBuffer(const glm::vec4& colorf) {
     SDL_UnlockSurface(mSurface);
   }
 }
+}  // namespace RayTracingHistory

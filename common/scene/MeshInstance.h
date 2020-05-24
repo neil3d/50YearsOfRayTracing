@@ -1,3 +1,11 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
@@ -6,6 +14,8 @@
 #include "../asset/Mesh.h"
 #include "../geometry/Transform.h"
 #include "MySceneObject.h"
+
+namespace RayTracingHistory {
 
 class MeshInstance : public MySceneObject {
  public:
@@ -23,3 +33,4 @@ class MeshInstance : public MySceneObject {
   Transform mTransform;
   std::shared_ptr<Mesh> mMesh;
 };
+}  // namespace RayTracingHistory

@@ -1,6 +1,16 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+
+namespace RayTracingHistory {
 
 struct Transform {
   void setPosition(const glm::vec3& pos) {
@@ -50,3 +60,4 @@ struct Transform {
   glm::mat4 mat;
   glm::mat4 invMat;
 };
+}  // namespace RayTracingHistory

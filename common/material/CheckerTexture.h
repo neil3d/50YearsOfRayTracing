@@ -1,5 +1,15 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include "MyTexture.h"
+
+namespace RayTracingHistory {
 
 class CheckerTexture : public MyTexture {
   glm::vec3 mColorOdd = glm::vec3(0.8f, 0, 0);
@@ -12,3 +22,4 @@ class CheckerTexture : public MyTexture {
     return sines < 0 ? mColorOdd : mColorEven;
   }
 };
+}  // namespace RayTracingHistory

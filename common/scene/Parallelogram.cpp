@@ -1,5 +1,7 @@
 #include "Parallelogram.h"
 
+namespace RayTracingHistory {
+
 bool Parallelogram::hit(const Ray& ray, float tMin, float tMax,
                         HitRecord& outRec) {
   glm::vec3 n = glm::vec3(this->plane);
@@ -20,3 +22,4 @@ bool Parallelogram::hit(const Ray& ray, float tMin, float tMax,
 
   return false;
 }
+}  // namespace RayTracingHistory

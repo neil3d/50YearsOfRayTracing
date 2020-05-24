@@ -1,5 +1,7 @@
 #include "Sphere.h"
 
+namespace RayTracingHistory {
+
 static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
   float discr = b * b - 4 * a * c;
   if (discr < 0.f) return false;
@@ -28,3 +30,5 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
 
   return false;
 }
+
+}  // namespace RayTracingHistory

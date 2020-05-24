@@ -5,6 +5,8 @@
 #include "framework/PinholeCamera.h"
 #include "DemoScene.h"
 
+using namespace RayTracingHistory;
+
 const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
 const uint32_t WINDOW_WIDTH = 640;
 const uint32_t WINDOW_HEIGHT = 360;

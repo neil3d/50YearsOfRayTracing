@@ -3,7 +3,17 @@
 #include <memory>
 #include <string>
 
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #include "MySceneObject.h"
+
+namespace RayTracingHistory {
 
 class MyScene {
  public:
@@ -45,3 +55,5 @@ class MyScene {
   MyScene(const MyScene&) = delete;
   MyScene& operator=(const MyScene&) = delete;
 };
+
+}  // namespace RayTracingHistory

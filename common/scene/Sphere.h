@@ -1,5 +1,15 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include "MySceneObject.h"
+
+namespace RayTracingHistory {
 
 class Sphere : public MySceneObject {
  public:
@@ -22,3 +32,5 @@ class Sphere : public MySceneObject {
   glm::vec3 mCenter;
   float mRadius = 1;
 };
+
+}  // namespace RayTracingHistory

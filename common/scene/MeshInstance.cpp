@@ -2,6 +2,8 @@
 
 #include "../asset/MyAssetManager.h"
 
+namespace RayTracingHistory {
+
 MeshInstance& MeshInstance::setMeshFile(const std::string& szObjFileName) {
   mMesh = MyAssetManager::instance().loadAssetObject<Mesh>(szObjFileName);
   return *this;
@@ -34,3 +36,4 @@ bool MeshInstance::hit(const Ray& ray, float tMin, float tMax,
 
   return false;
 }
+}  // namespace RayTracingHistory

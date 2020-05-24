@@ -2,8 +2,10 @@
 
 #include <algorithm>
 
-#include "Material.h"
 #include "DemoScene.h"
+#include "Material.h"
+
+namespace RayTracingHistory {
 
 constexpr float fMax = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
@@ -175,3 +177,5 @@ bool WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
 
   return ret;
 }
+
+}  // namespace RayTracingHistory

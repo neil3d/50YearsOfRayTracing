@@ -1,3 +1,11 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <memory>
 #include <string>
@@ -5,6 +13,8 @@
 #include "../geometry/Ray.h"
 #include "../material/MyMaterial.h"
 #include "HitRecord.h"
+
+namespace RayTracingHistory {
 
 class MySceneObject {
  public:
@@ -44,3 +54,4 @@ class MySceneObject {
   MySceneObject(const MySceneObject&) = delete;
   MySceneObject& operator=(const MySceneObject&) = delete;
 };
+}  // namespace RayTracingHistory

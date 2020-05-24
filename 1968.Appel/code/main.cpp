@@ -5,6 +5,8 @@
 #include "framework/PinholeCamera.h"
 #include "DemoScene.h"
 
+using namespace RayTracingHistory;
+
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;

@@ -1,5 +1,15 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include "MySceneObject.h"
+
+namespace RayTracingHistory {
 
 class Parallelogram : public MySceneObject {
  public:
@@ -28,3 +38,4 @@ class Parallelogram : public MySceneObject {
   glm::vec3 v2;
   glm::vec3 anchor;
 };
+}  // namespace RayTracingHistory

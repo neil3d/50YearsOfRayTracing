@@ -1,6 +1,16 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
+
+namespace RayTracingHistory {
 
 class MyCamera {
  public:
@@ -32,7 +42,7 @@ class MyCamera {
   }
 
   void getFocalPlane(glm::vec3& outH, glm::vec3& outV,
-                    glm::vec3& outLeftTop) const {
+                     glm::vec3& outLeftTop) const {
     float halfHeight = tanf(mFov * 0.5f) * mFocalLength;
     float halfWidth = mAspect * halfHeight;
 
@@ -50,3 +60,4 @@ class MyCamera {
   float mFov, mFocalLength;
   float mAspect;
 };
+}  // namespace RayTracingHistory

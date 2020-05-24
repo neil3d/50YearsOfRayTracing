@@ -7,6 +7,8 @@
 
 static_assert(sizeof(tinyobj::real_t) == sizeof(float));
 
+namespace RayTracingHistory {
+
 void Mesh::loadFromFile(const std::string& szFileName) {
   tinyobj::attrib_t attrib;
   std::vector<tinyobj::shape_t> shapes;
@@ -20,7 +22,7 @@ void Mesh::loadFromFile(const std::string& szFileName) {
   if (!warn.empty()) spdlog::warn(warn);
   if (!err.empty()) spdlog::error(err);
 
-  if (!ret) 
+  if (!ret)
     throw MyException(std::string("Failed to load/parse: ") + szFileName);
 
   // copy attributes
@@ -57,5 +59,5 @@ void Mesh::loadFromFile(const std::string& szFileName) {
   // build bounding box
 
   // build BVH
-
 }
+}  // namespace RayTracingHistory

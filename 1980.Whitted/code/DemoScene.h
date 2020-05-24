@@ -1,3 +1,10 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
 #pragma once
 #include <memory>
 
@@ -7,6 +14,8 @@
 #include "scene/Parallelogram.h"
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
+
+namespace RayTracingHistory {
 
 class DemoScene : public MyScene {
   std::vector<std::shared_ptr<MyLight>> mLights;
@@ -55,3 +64,5 @@ class DemoScene : public MyScene {
 #endif
   }
 };
+
+}  // namespace RayTracingHistory

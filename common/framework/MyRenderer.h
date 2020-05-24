@@ -1,3 +1,11 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <SDL2/SDL.h>
 
@@ -10,6 +18,8 @@
 
 #include "../scene/MyScene.h"
 #include "MyCamera.h"
+
+namespace RayTracingHistory {
 
 class MyRenderer {
  public:
@@ -51,3 +61,4 @@ class MyRenderer {
   MyRenderer(const MyRenderer&) = delete;
   MyRenderer& operator=(const MyRenderer&) = delete;
 };
+}  // namespace RayTracingHistory

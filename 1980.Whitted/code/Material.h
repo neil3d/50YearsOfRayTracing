@@ -1,8 +1,19 @@
+
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <glm/glm.hpp>
 
 #include "material/CheckerTexture.h"
 #include "material/MyMaterial.h"
+
+namespace RayTracingHistory {
 
 /**
  * Material for "Improved Model" (Whitted 1980)
@@ -49,3 +60,5 @@ class Material : public MyMaterial {
   float n = 99;     // an exponent that depends on the glossiness of the surface
   float Kn = 1.34f;  // the index of refraction
 };
+
+}  // namespace RayTracingHistory

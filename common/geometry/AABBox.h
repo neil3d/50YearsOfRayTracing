@@ -1,5 +1,15 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include "Ray.h"
+
+namespace RayTracingHistory {
 
 struct AABBox {
   glm::vec3 min;
@@ -30,3 +40,4 @@ struct AABBox {
     max.z = std::max(box1.max.z, box2.max.z);
   }
 };
+}  // namespace RayTracingHistory

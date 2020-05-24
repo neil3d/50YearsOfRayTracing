@@ -5,6 +5,8 @@
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
+using namespace RayTracingHistory;
+
 const char* const APP_NAME =
     "Distributed Ray Tracer -  Robert Cook et al. 1984";
 const uint32_t WINDOW_WIDTH = 1280;

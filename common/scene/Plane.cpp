@@ -1,5 +1,7 @@
 #include "Plane.h"
 
+namespace RayTracingHistory {
+
 bool Plane::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
   float denominator = glm::dot(mNormal, ray.direction);
   if (fabsf(denominator) > 0.0001f) {
@@ -14,3 +16,4 @@ bool Plane::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
   }  // end of if
   return false;
 }
+}  // namespace RayTracingHistory

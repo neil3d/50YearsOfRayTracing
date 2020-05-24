@@ -1,6 +1,9 @@
 #include "MyScene.h"
 
-bool MyScene::closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
+namespace RayTracingHistory {
+
+bool MyScene::closestHit(const Ray& ray, float tMin, float tMax,
+                         HitRecord& outRec) {
   bool hitAnything = false;
   float closestSoFar = tMax;
   HitRecord rec;
@@ -15,3 +18,5 @@ bool MyScene::closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outR
 
   return hitAnything;
 }
+
+}  // namespace RayTracingHistory

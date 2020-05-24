@@ -1,5 +1,14 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
 #pragma once
 #include "framework/MyRenderer.h"
+
+namespace RayTracingHistory {
 
 class RayCastingRenderer : public MyRenderer {
  public:
@@ -18,3 +27,5 @@ class RayCastingRenderer : public MyRenderer {
   glm::vec3 mEyePos;
   glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;
 };
+
+}  // namespace RayTracingHistory

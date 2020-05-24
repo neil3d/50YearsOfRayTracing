@@ -1,5 +1,15 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <glm/glm.hpp>
+
+namespace RayTracingHistory {
 
 class MyTexture {
  public:
@@ -15,5 +25,9 @@ class ConstantTexture : public MyTexture {
  public:
   void setColor(const glm::vec3& color) { mColor = color; }
 
-  virtual glm::vec3 sample(const glm::vec2& uv, const glm::vec3& p) override { return mColor; }
+  virtual glm::vec3 sample(const glm::vec2& uv, const glm::vec3& p) override {
+    return mColor;
+  }
 };
+
+}  // namespace RayTracingHistory

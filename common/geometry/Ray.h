@@ -1,5 +1,15 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <glm/glm.hpp>
+
+namespace RayTracingHistory {
 
 /*
  * p(t) = origin + t*direction
@@ -17,3 +27,4 @@ struct Ray {
 
   glm::vec3 getPoint(float t) const { return origin + direction * t; }
 };
+}  // namespace RayTracingHistory

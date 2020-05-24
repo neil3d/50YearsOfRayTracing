@@ -1,9 +1,18 @@
+/**
+ * A Brief History of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/RayTracingHistory
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
 #pragma once
 #include <map>
 #include <memory>
 
 #include "MyAssetObject.h"
 
+namespace RayTracingHistory {
 class MyAssetManager {
  public:
   static MyAssetManager& instance() {
@@ -28,3 +37,4 @@ class MyAssetManager {
  private:
   std::map<std::string, std::shared_ptr<MyAssetObject>> mAssetDict;
 };
+}  // namespace RayTracingHistory

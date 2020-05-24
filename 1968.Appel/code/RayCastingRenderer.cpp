@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 
+namespace RayTracingHistory {
+
 void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
                                        MyCamera::Ptr camera) {
   mEyePos = camera->getEyePos();
@@ -59,3 +61,5 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
 
   _writePixel(x, y, color);
 }
+
+}  // namespace RayTracingHistory
