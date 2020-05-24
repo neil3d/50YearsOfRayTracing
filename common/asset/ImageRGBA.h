@@ -20,6 +20,8 @@ class ImageRGBA : public MyAssetObject {
 
   typedef std::shared_ptr<ImageRGBA> Ptr;
 
+  using MyAssetObject::MyAssetObject;
+
   virtual void loadFromFile(const std::string& szPath) override;
 
   uint32_t getWidth() const { return mWidth; }
