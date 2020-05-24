@@ -20,7 +20,7 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
     }  // end of for(x)
 }
 
-Ray RayCastingRenderer::_generateViewRay(int x, int y) {
+Ray RayCastingRenderer::_generateViewingRay(int x, int y) {
   float s = (x + 0.5f) / (float)(mFrameWidth);
   float t = (y + 0.5f) / (float)(mFrameHeight);
 
@@ -38,7 +38,7 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
   constexpr float fMax = std::numeric_limits<float>::max();
 
   HitRecord hitRec;
-  Ray viewRay = _generateViewRay(x, y);
+  Ray viewRay = _generateViewingRay(x, y);
   bool bHit = pScene->closestHit(viewRay, 0, fMax, hitRec);
 
   if (!bHit) return;

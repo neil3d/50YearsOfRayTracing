@@ -38,7 +38,7 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
     for (int x = 0; x < mFrameWidth; x++) {
       if (!mRuning) break;
 
-      Ray viewRay = _generateViewRay(x, y);
+      Ray viewRay = _generateViewingRay(x, y);
       glm::vec3 color = _rayShading(viewRay, scene.get(), 0);
       _writePixel(x, y, glm::vec4(color, 1));
       mPixelCount++;
@@ -128,7 +128,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   return color;
 }
 
-Ray WhittedRayTracer::_generateViewRay(int x, int y) {
+Ray WhittedRayTracer::_generateViewingRay(int x, int y) {
   float s = (x + 0.5f) / (float)(mFrameWidth);
   float t = (y + 0.5f) / (float)(mFrameHeight);
 
