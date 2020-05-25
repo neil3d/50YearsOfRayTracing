@@ -7,25 +7,28 @@
  */
 
 #pragma once
-#include "MySceneObject.h"
+#include "Plane.h"
 
 namespace RayTracingHistory {
 
-class Parallelogram : public MySceneObject {
+class Parallelogram : public Plane {
  public:
-  using MySceneObject::MySceneObject;
+  using Plane::Plane;
 
-  Parallelogram& setParam(glm::vec3 _v1, glm::vec3 _v2, glm::vec3 _anchor) {
-    v1 = _v1;
-    v2 = _v2;
-    anchor = _anchor;
+  Parallelogram& setEdges(glm::vec3 e1, glm::vec3 e2) {
+    edge1 = e1;
+    edge2 = e2;
 
-    glm::vec3 normal = glm::normalize(glm::cross(v2, v1));
-    float d = glm::dot(normal, anchor);
-    this->v1 *= 1.0f / glm::dot(v1, v1);
-    this->v2 *= 1.0f / glm::dot(v2, v2);
-    plane = glm::vec4(normal, d);
+    len1 = glm::length(e1);
+    len2 = glm::length(e2);
 
+    // update plane normal
+    mNormal = glm::normalize(glm::cross(e1, e2));
+    return *this;
+  }
+
+  Parallelogram& setAnchor(glm::vec3 anchor) {
+    mP0 = anchor;
     return *this;
   }
 
@@ -33,9 +36,10 @@ class Parallelogram : public MySceneObject {
                    HitRecord& outRec) override;
 
  private:
-  glm::vec4 plane;
-  glm::vec3 v1;
-  glm::vec3 v2;
-  glm::vec3 anchor;
+  glm::vec3 edge1 = {1, 0, 0};
+  float len1 = 1;
+
+  glm::vec3 edge2 = {0, 0, 1};
+  float len2 = 1;
 };
 }  // namespace RayTracingHistory

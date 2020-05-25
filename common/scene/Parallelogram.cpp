@@ -4,17 +4,15 @@ namespace RayTracingHistory {
 
 bool Parallelogram::hit(const Ray& ray, float tMin, float tMax,
                         HitRecord& outRec) {
-  glm::vec3 n = glm::vec3(this->plane);
-  float dt = glm::dot(ray.direction, n);
-  float t = (this->plane.w - glm::dot(n, ray.origin)) / dt;
-  if (t > tMin && t < tMax) {
-    glm::vec3 p = ray.origin + ray.direction * t;
-    glm::vec3 vi = p - this->anchor;
-    float a1 = glm::dot(this->v1, vi);
-    if (a1 >= 0 && a1 <= 1) {
-      float a2 = glm::dot(this->v2, vi);
-      if (a2 >= 0 && a2 <= 1) {
-        outRec = _makeHitRecord(ray, t, n, glm::vec2());
+  HitRecord pHit;
+  if (Plane::hit(ray, tMin, tMax, pHit)) {
+    // project Pt to edge
+    glm::vec3 vi = pHit.p - mP0;
+    float a1 = glm::dot(this->edge1, vi)/len1;
+    if (a1 >= 0 && a1 <= len1) {
+      float a2 = glm::dot(this->edge2, vi)/len2;
+      if (a2 >= 0 && a2 <= len2) {
+        outRec = pHit;
         return true;
       }
     }
@@ -22,4 +20,5 @@ bool Parallelogram::hit(const Ray& ray, float tMin, float tMax,
 
   return false;
 }
+
 }  // namespace RayTracingHistory
