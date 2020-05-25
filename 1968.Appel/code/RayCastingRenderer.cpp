@@ -1,7 +1,6 @@
 #include "RayCastingRenderer.h"
 
 #include <glm/glm.hpp>
-#include <glm/gtc/random.hpp>
 
 namespace RayTracingHistory {
 

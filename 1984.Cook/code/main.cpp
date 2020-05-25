@@ -18,12 +18,13 @@ int main(void) {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<DistributedRayTracer>();
-    
+
     auto scene = std::make_shared<BilliardScene>();
     scene->init();
 
+    auto camera = std::make_shared<PinholeCamera>();
 
-    // renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
+    renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 
     app.mainLoop();
 
