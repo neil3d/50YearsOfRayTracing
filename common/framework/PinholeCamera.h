@@ -16,17 +16,17 @@ class PinholeCamera : public MyCamera {
  public:
   Ray generateViewingRay(float u, float v) {
     if (!mInited) {
-      getFocalPlane(mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop);
+      getImagePlane(mImagePlaneH, mImagePlaneV, mImagePlaneLeftTop);
       mInited = true;
     }
 
     glm::vec3 origin = mEyePos;
-    return Ray(origin, mFocalPlaneLeftTop + u * mFocalPlaneH -
-                           v * mFocalPlaneV - origin);
+    return Ray(origin, mImagePlaneLeftTop + u * mImagePlaneH -
+                           v * mImagePlaneV - origin);
   }
 
  private:
   bool mInited = false;
-  glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;
+  glm::vec3 mImagePlaneH, mImagePlaneV, mImagePlaneLeftTop;
 };
 }  // namespace RayTracingHistory

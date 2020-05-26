@@ -41,7 +41,7 @@ class MyCamera {
     return *this;
   }
 
-  void getFocalPlane(glm::vec3& outH, glm::vec3& outV,
+  void getImagePlane(glm::vec3& outH, glm::vec3& outV,
                      glm::vec3& outLeftTop) const {
     float halfHeight = tanf(mFov * 0.5f) * mFocalLength;
     float halfWidth = mAspect * halfHeight;
