@@ -8,6 +8,7 @@
 
 #pragma once
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 
 struct AreaLight {
   glm::vec3 edge1, edge2;
@@ -23,5 +24,8 @@ struct AreaLight {
     corner = _corner;
   }
 
-  glm::vec3 getSamplePoint() { return glm::vec3(); }
+  glm::vec3 getSamplePoint() {
+    glm::vec2 rand = glm::diskRand(1.0f);
+    return glm::vec3();
+  }
 };

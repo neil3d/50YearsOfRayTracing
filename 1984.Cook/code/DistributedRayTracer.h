@@ -13,15 +13,19 @@
 
 namespace RayTracingHistory {
 
+class MyScene;
+class PinholeCamera;
+
 class DistributedRayTracer : public MyRenderer {
  public:
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 
  private:
-  glm::vec4 _sampleColor(float s, float t);
+  glm::vec4 _sampleColor(float s, float t, MyScene* pScene,
+                         PinholeCamera* camera);
 
  private:
-  int mSPPn = 4;  // sample per pixel = n*n
+  int mSPPn = 2;  // sample per pixel = n*n
 };
 
 }  // namespace RayTracingHistory

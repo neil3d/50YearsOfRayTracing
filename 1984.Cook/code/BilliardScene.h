@@ -19,6 +19,11 @@ class BilliardScene : public MyScene {
  public:
   virtual void init() override {
     createObject<Plane>("ground");
+
+    createObject<Sphere>("ball")
+        .setCenter(glm::vec3(0, 1.f, 1))
+        .setRadius(1);
+        
   }
 };
 }  // namespace RayTracingHistory

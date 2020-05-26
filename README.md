@@ -30,3 +30,7 @@
 
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 
+## TODO
+
+- [ ] refraction fix
+- [ ] scene object instancing
