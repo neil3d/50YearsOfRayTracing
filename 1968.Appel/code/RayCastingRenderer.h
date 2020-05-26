@@ -10,22 +10,20 @@
 
 namespace RayTracingHistory {
 
+class PinholeCamera;
+
 class RayCastingRenderer : public MyRenderer {
  public:
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 
  private:
-  Ray _generateViewingRay(int x, int y);
   Ray _generateShadowRay(const glm::vec3& point);
 
-  void _drawSinglePixel(int x, int y, MyScene* pScene);
+  glm::vec4 _renderPixel(float u, float v, MyScene* pScene, PinholeCamera* camera);
 
   // light
   glm::vec3 mLightPos = {-10, 10, 0};
 
-  // cache camera frame
-  glm::vec3 mEyePos;
-  glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;
 };
 
 }  // namespace RayTracingHistory

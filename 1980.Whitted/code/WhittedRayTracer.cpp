@@ -4,6 +4,7 @@
 
 #include "DemoScene.h"
 #include "Material.h"
+#include "framework/PinholeCamera.h"
 
 namespace RayTracingHistory {
 
@@ -30,19 +31,21 @@ float mySchlick(float cosine, float Kn, float exp) {
 }
 
 void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
-  mEyePos = camera->getEyePos();
-  camera->getFocalPlane(mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop);
-
+  PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
-  for (int y = 0; y < mFrameHeight; y++)
-    for (int x = 0; x < mFrameWidth; x++) {
+
+  int W = mFrameWidth;
+  int H = mFrameHeight;
+
+  for (int y = 0; y < H; y++)
+    for (int x = 0; x < W; x++) {
       if (!mRuning) break;
 
-      Ray viewRay = _generateViewingRay(x, y);
+      Ray viewRay = pCamera->generateViewingRay((x+0.5f)/W, (y+0.5f)/H);
       glm::vec3 color = _rayShading(viewRay, scene.get(), 0);
 
       // gama
-      constexpr float GAMA = 1.0f/1.25f;
+      constexpr float GAMA = 1.0f / 1.25f;
       color.x = std::powf(color.x, GAMA);
       color.y = std::powf(color.y, GAMA);
       color.z = std::powf(color.z, GAMA);
@@ -133,15 +136,6 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   }
 
   return color;
-}
-
-Ray WhittedRayTracer::_generateViewingRay(int x, int y) {
-  float s = (x + 0.5f) / (float)(mFrameWidth);
-  float t = (y + 0.5f) / (float)(mFrameHeight);
-
-  glm::vec3 origin = mEyePos;
-  return Ray(origin,
-             mFocalPlaneLeftTop + s * mFocalPlaneH - t * mFocalPlaneV - origin);
 }
 
 Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,

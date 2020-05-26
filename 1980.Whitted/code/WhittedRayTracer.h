@@ -16,7 +16,6 @@ class WhittedRayTracer : public MyRenderer {
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 
  private:
-  Ray _generateViewingRay(int x, int y);
   Ray _generateReflectionRay(const glm::vec3& dir, const glm::vec3& point,
                              const glm::vec3& normal);
   bool _generateRefractationRay(const glm::vec3& dir, const glm::vec3& point,
@@ -27,9 +26,6 @@ class WhittedRayTracer : public MyRenderer {
 
   glm::vec3 _backgroundColor(const Ray& ray);
 
-  // cache camera frame
-  glm::vec3 mEyePos;
-  glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;
 };
 
 }  // namespace RayTracingHistory

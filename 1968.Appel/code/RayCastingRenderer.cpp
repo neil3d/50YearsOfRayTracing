@@ -2,30 +2,28 @@
 
 #include <glm/glm.hpp>
 
+#include "framework/PinholeCamera.h"
+
 namespace RayTracingHistory {
 
 void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
                                        MyCamera::Ptr camera) {
-  mEyePos = camera->getEyePos();
-  camera->getFocalPlane(mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop);
-
+  PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
-  for (int y = 0; y < mFrameHeight; y++)
-    for (int x = 0; x < mFrameWidth; x++) {
+
+  int W = mFrameWidth;
+  int H = mFrameHeight;
+
+  for (int y = 0; y < H; y++)
+    for (int x = 0; x < W; x++) {
       if (!mRuning) break;
 
-      _drawSinglePixel(x, y, pScene);
+      glm::vec4 color = _renderPixel((x+0.5f)/W, (y+0.5f)/H, pScene, pCamera);
       mPixelCount++;
+
+      _writePixel(x, y, color);
+
     }  // end of for(x)
-}
-
-Ray RayCastingRenderer::_generateViewingRay(int x, int y) {
-  float s = (x + 0.5f) / (float)(mFrameWidth);
-  float t = (y + 0.5f) / (float)(mFrameHeight);
-
-  glm::vec3 origin = mEyePos;
-  return Ray(origin,
-             mFocalPlaneLeftTop + s * mFocalPlaneH - t * mFocalPlaneV - origin);
 }
 
 Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
@@ -33,16 +31,17 @@ Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
   return Ray(point, L);
 }
 
-void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
+glm::vec4 RayCastingRenderer::_renderPixel(float u, float v, MyScene* pScene,
+                                           PinholeCamera* camera) {
   constexpr float fMax = std::numeric_limits<float>::max();
 
   HitRecord hitRec;
-  Ray viewRay = _generateViewingRay(x, y);
+  Ray viewRay = camera->generateViewingRay(u, v);
   bool bHit = pScene->closestHit(viewRay, 0, fMax, hitRec);
 
-  if (!bHit) return;
+  glm::vec4 color(0,0,0,1);
+  if (!bHit) return color;
 
-  glm::vec4 color;
   Ray shadowRay = _generateShadowRay(hitRec.p);
   HitRecord hitRecS;
   constexpr float SHADOW_E = 0.001f;
@@ -58,7 +57,7 @@ void RayCastingRenderer::_drawSinglePixel(int x, int y, MyScene* pScene) {
     color = glm::vec4(c, c, c, 1);
   }
 
-  _writePixel(x, y, color);
+  return color;
 }
 
 }  // namespace RayTracingHistory

@@ -54,7 +54,7 @@ class MyCamera {
 
   glm::vec3 getEyePos() const { return mEyePos; }
 
- private:
+ protected:
   glm::vec3 mEyePos;
   glm::vec3 mForward, mRight, mUp;
   float mFov, mFocalLength;
