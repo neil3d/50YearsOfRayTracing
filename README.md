@@ -29,6 +29,7 @@
 
 ## Recursive Ray Tracing - Turner Whitted, 1980
 
+- [x] Blinn–Phong shading
 - [x] Reflection
 - [ ] Refraction
 
