@@ -17,6 +17,8 @@ namespace RayTracingHistory {
 
 class BilliardScene : public MyScene {
  public:
-  virtual void init() override {}
+  virtual void init() override {
+    createObject<Plane>("ground");
+  }
 };
 }  // namespace RayTracingHistory

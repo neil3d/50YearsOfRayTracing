@@ -5,6 +5,7 @@ project(RayTracingHistory)
 set(SUB_PROJECT_NAME DistributedRayTracer)
 
 add_executable(${SUB_PROJECT_NAME} main.cpp
+                AreaLight.h
                 BallMaterial.h
                 BilliardScene.h
                 DistributedRayTracer.h

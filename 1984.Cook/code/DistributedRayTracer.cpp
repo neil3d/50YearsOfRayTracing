@@ -3,12 +3,14 @@
 #include <spdlog/spdlog.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 
 namespace RayTracingHistory {
 
 void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
                                          MyCamera::Ptr camera) {
   int n = mSPPn;
+  float invN = 1.0f / n;
   float invSPP = 1.0f / (n * n);
 
   for (int y = 0; y < mFrameHeight; y++)
@@ -19,8 +21,9 @@ void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
       // jittering/stratified sampling
       for (int p = 0; p < n; p++) {
         for (int q = 0; q < n; q++) {
-          float xp = x + (p + rand()) / n;
-          float yp = y + (q + rand()) / n;
+          glm::vec2 rand = glm::diskRand(1.0f);
+          float xp = x + (p + rand.x) * invN;
+          float yp = y + (q + rand.y) * invN;
 
           color += _sampleColor(xp / mFrameWidth, yp / mFrameHeight);
         }  // end of for(q)
