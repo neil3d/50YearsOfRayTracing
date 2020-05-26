@@ -42,7 +42,7 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
       glm::vec3 color = _rayShading(viewRay, scene.get(), 0);
 
       // gama
-      constexpr float GAMA = 1.0f/1.8f;
+      constexpr float GAMA = 1.0f/1.25f;
       color.x = std::powf(color.x, GAMA);
       color.y = std::powf(color.y, GAMA);
       color.z = std::powf(color.z, GAMA);
