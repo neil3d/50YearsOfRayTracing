@@ -22,15 +22,26 @@
 
 ## Ray Casting - Arthur Appel, 1968
 
+- [x] Lambertian shading
+- [x] Sharp shadow
+
 ![Screen Shot](./1968.Appel/images/Screen-Shot-2020-05-08.png)
 
 ## Recursive Ray Tracing - Turner Whitted, 1980
+
+- [x] Reflection
+- [ ] Refraction
 
 ![Screen Shot](./1980.Whitted/images/ScreenShot-2020-05-26.png)
 
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 
-## TODO
+- [ ] Soft shadow
+- [ ] Depth of field
+- [ ] Gloss
+- [ ] Motion blur
 
-- [ ] refraction fix
+
+## MyFramework
+
 - [ ] scene object instancing
