@@ -40,7 +40,7 @@ class DemoScene : public MyScene {
         .setCenter(glm::vec3(0, 1.f, 1))
         .setRadius(1)
         .createMaterial<Material>()
-        .setColor(glm::vec3(0.2f, 0.8f, 1.0f))
+        .setColor(glm::vec3(0.4f, 0.9f, 1.0f))
         .setParam(0.2f, 0.8f, 0.0f, 80, 1.0f);
 
     createObject<Sphere>("GlassSphere")
@@ -58,8 +58,8 @@ class DemoScene : public MyScene {
     mLights.emplace_back(pointLgt);
 #else
     auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
-    dirLgt->intensity = 1.05f;
-    dirLgt->ambient = 0.1f;
+    dirLgt->intensity = 1.15f;
+    dirLgt->ambient = 0.15f;
     mLights.emplace_back(dirLgt);
 #endif
   }

@@ -40,6 +40,13 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
 
       Ray viewRay = _generateViewingRay(x, y);
       glm::vec3 color = _rayShading(viewRay, scene.get(), 0);
+
+      // gama
+      constexpr float GAMA = 1.0f/2.2f;
+      color.x = std::powf(color.x, GAMA);
+      color.y = std::powf(color.y, GAMA);
+      color.z = std::powf(color.z, GAMA);
+
       _writePixel(x, y, glm::vec4(color, 1));
       mPixelCount++;
     }  // end of for(x)
@@ -79,7 +86,7 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     float attenuation = 1.0f;
     auto shadowHitCallback = [&attenuation](const HitRecord& hit) {
       Material* mtl = dynamic_cast<Material*>(hit.mtl);
-      if (mtl) attenuation *= std::powf(mtl->Kt, 3);
+      if (mtl) attenuation *= std::powf(mtl->Kt, 2.5f);
       return attenuation > 0.0f;
     };
 
