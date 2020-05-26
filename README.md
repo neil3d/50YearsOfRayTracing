@@ -26,7 +26,7 @@
 
 ## Recursive Ray Tracing - Turner Whitted, 1980
 
-![Screen Shot](./1980.Whitted/images/ScreenShot-2020-05-23.png)
+![Screen Shot](./1980.Whitted/images/ScreenShot-2020-05-26.png)
 
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 
