@@ -13,7 +13,7 @@
 
 namespace RayTracingHistory {
 
-class MyScene;
+class BilliardScene;
 class PinholeCamera;
 
 class DistributedRayTracer : public MyRenderer {
@@ -21,11 +21,9 @@ class DistributedRayTracer : public MyRenderer {
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 
  private:
-  glm::vec4 _sampleColor(float s, float t, MyScene* pScene,
-                         PinholeCamera* camera);
+  glm::vec3 _traceRay(const Ray& ray, BilliardScene* pScene, int depth, const glm::vec2 xi);
 
  private:
-  int mSPPn = 2;  // sample per pixel = n*n
 };
 
 }  // namespace RayTracingHistory
