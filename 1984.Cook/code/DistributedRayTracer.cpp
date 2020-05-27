@@ -13,10 +13,10 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_N = 8;
+constexpr int SPP_N = 3;
 
 std::string DistributedRayTracer::getInfo() const {
-  return std::string(" SPP: ") + std::to_string(SPP_N * SPP_N);
+  return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
 }
 
 void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,

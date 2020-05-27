@@ -54,7 +54,6 @@ void MyApp::_tick() {
     // show progress
     float progress = mRenderer->getProgress();
     std::string szTitle = mWindowTitle;
-    szTitle.append(" - ");
     szTitle.append(mRenderer->getInfo());
     szTitle.append(" - ");
     szTitle.append(std::to_string(progress * 100.0f));
