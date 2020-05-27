@@ -19,7 +19,7 @@ class RayCastingRenderer : public MyRenderer {
  private:
   Ray _generateShadowRay(const glm::vec3& point);
 
-  glm::vec4 _renderPixel(float u, float v, MyScene* pScene, PinholeCamera* camera);
+  glm::vec4 _castRay(float u, float v, MyScene* pScene, PinholeCamera* camera);
 
   // light
   glm::vec3 mLightPos = {-10, 10, 0};

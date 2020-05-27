@@ -41,8 +41,8 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
     for (int x = 0; x < W; x++) {
       if (!mRuning) break;
 
-      Ray viewRay = pCamera->generateViewingRay((x+0.5f)/W, (y+0.5f)/H);
-      glm::vec3 color = _rayShading(viewRay, scene.get(), 0);
+      Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);
+      glm::vec3 color = _traceRay(eyeRay, scene.get(), 0);
 
       // gama
       constexpr float GAMA = 1.0f / 1.25f;
@@ -63,7 +63,7 @@ glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
   return topColor * t + bottomColor * (1.0f - t);
 }
 
-glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
+glm::vec3 WhittedRayTracer::_traceRay(Ray ray, MyScene* pScene, int depth) {
   if (depth > MAX_DEPTH) return _backgroundColor(ray);
 
   HitRecord hitRec;
@@ -77,9 +77,46 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
   if (!mtl) return glm::vec3(1, 0, 0);
   if (!scene) return glm::vec3(0, 1, 0);
 
+  glm::vec3 color = _shade(ray.direction, hitRec, pScene);
+
+  // refraction
+  float reflectivity = 0.0f;
+  if (mtl->Kt > 0) {
+    float Kn = mtl->Kn;
+    glm::vec3 normal = hitRec.normal;
+
+    Ray rRay;
+    bool bRefraction = false;
+
+    bRefraction = _generateRefractationRay(ray.direction, hitRec.p, normal, Kn,
+                                           rRay, reflectivity);
+
+    if (bRefraction) {
+      glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1);
+      color += (1.0f - reflectivity) * mtl->Kt * rColor;
+    }
+  }  // end of if(transparent object)
+
+  // reflection
+  float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
+  if (Ks > 0) {
+    Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
+    glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1);
+    color += rColor * Ks;
+  }
+
+  return color;
+}
+
+glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
+                                   const HitRecord& hitRec, MyScene* pScene) {
+  DemoScene* scene = dynamic_cast<DemoScene*>(pScene);
+  Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
+
   glm::vec3 albedo = mtl->sampleAlbedo(hitRec.uv, hitRec.p);
 
   glm::vec3 color(0);
+
   const auto& lights = scene->getLights();
   for (const auto& light : lights) {
     Ray shadowRay = light->generateShadowRay(hitRec.p);
@@ -96,8 +133,8 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     pScene->anyHit(shadowRay, SHADOW_E, fMax, shadowHitCallback);
 
     // lighting
-    glm::vec3 lgt = light->blinnPhongShading(hitRec.p, hitRec.normal,
-                                             ray.direction, mtl->n);
+    glm::vec3 lgt =
+        light->blinnPhongShading(hitRec.p, hitRec.normal, dir, mtl->n);
 
     // ambient lighting
     color += lgt.x * albedo;
@@ -108,32 +145,6 @@ glm::vec3 WhittedRayTracer::_rayShading(Ray ray, MyScene* pScene, int depth) {
     // specular lighting
     color += lgt.z * attenuation * albedo;
   }  // end of for each light
-
-  // refraction
-  float reflectivity = 0.0f;
-  if (mtl->Kt > 0) {
-    float Kn = mtl->Kn;
-    glm::vec3 normal = hitRec.normal;
-
-    Ray rRay;
-    bool bRefraction = false;
-
-    bRefraction = _generateRefractationRay(ray.direction, hitRec.p, normal, Kn,
-                                           rRay, reflectivity);
-
-    if (bRefraction) {
-      glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
-      color += (1.0f - reflectivity) * mtl->Kt * rColor;
-    }
-  }  // end of if(transparent object)
-
-  // reflection
-  float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
-  if (Ks > 0) {
-    Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
-    glm::vec3 rColor = _rayShading(rRay, pScene, depth + 1);
-    color += rColor * Ks;
-  }
 
   return color;
 }

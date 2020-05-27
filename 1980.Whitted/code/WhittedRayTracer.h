@@ -22,7 +22,9 @@ class WhittedRayTracer : public MyRenderer {
                                 const glm::vec3& normal, float Kn, Ray& outRay,
                                 float& outReflectivity);
 
-  glm::vec3 _rayShading(Ray ray, MyScene* pScene, int depth);
+  glm::vec3 _traceRay(Ray ray, MyScene* pScene, int depth);
+
+  glm::vec3 _shade(const glm::vec3& dir,const HitRecord& shadingPoint, MyScene* pScene);
 
   glm::vec3 _backgroundColor(const Ray& ray);
 

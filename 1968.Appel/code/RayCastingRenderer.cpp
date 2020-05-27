@@ -18,7 +18,7 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
     for (int x = 0; x < W; x++) {
       if (!mRuning) break;
 
-      glm::vec4 color = _renderPixel((x+0.5f)/W, (y+0.5f)/H, pScene, pCamera);
+      glm::vec4 color = _castRay((x+0.5f)/W, (y+0.5f)/H, pScene, pCamera);
       mPixelCount++;
 
       _writePixel(x, y, color);
@@ -31,7 +31,7 @@ Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
   return Ray(point, L);
 }
 
-glm::vec4 RayCastingRenderer::_renderPixel(float u, float v, MyScene* pScene,
+glm::vec4 RayCastingRenderer::_castRay(float u, float v, MyScene* pScene,
                                            PinholeCamera* camera) {
   constexpr float fMax = std::numeric_limits<float>::max();
 
