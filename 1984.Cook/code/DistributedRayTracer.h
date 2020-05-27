@@ -23,6 +23,8 @@ class DistributedRayTracer : public MyRenderer {
  private:
   glm::vec3 _traceRay(const Ray& ray, BilliardScene* pScene, int depth, const glm::vec2 xi);
 
+  glm::vec3 _shade(const glm::vec3& dir,const HitRecord& shadingPoint, BilliardScene* pScene,const glm::vec2 xi);
+
  private:
 };
 

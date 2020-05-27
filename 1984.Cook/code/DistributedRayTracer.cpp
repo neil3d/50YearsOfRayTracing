@@ -65,11 +65,34 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0, FLOAT_MAX, hitRec);
   if (bHit) {
-    return hitRec.normal * glm::vec3(1, 1, -1);
+    return _shade(ray.direction, hitRec, pScene, xi);
   }
 
-  const glm::vec3 topColor(0.85f, 0.85f, 0.95f);
+  const glm::vec3 topColor(0.8f, 0.8f, 0.95f);
   return topColor;
+}
+
+glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
+                                       const HitRecord& shadingPoint,
+                                       BilliardScene* pScene,
+                                       const glm::vec2 xi) {
+  const auto& light = pScene->getMainLight();
+
+  Ray shadowRay = light.jitteredShadowRay(shadingPoint.p, xi);
+  HitRecord hitRecS;
+  constexpr float SHADOW_E = 0.001f;
+
+  auto stopWithAnyHit = [](const HitRecord&) { return true; };
+
+  glm::vec3 color;
+  bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
+  if (bShadow) {
+    color = glm::vec3(0, 0, 0);
+  } else {
+    float c = 0.8f;
+    color = glm::vec3(c, c, c);
+  }
+  return color;
 }
 
 }  // namespace RayTracingHistory
