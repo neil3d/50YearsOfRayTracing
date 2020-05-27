@@ -7,11 +7,11 @@
  */
 
 #pragma once
-#include "framework/MyRenderer.h"
+#include "framework/DirectRenderer.h"
 
 namespace RayTracingHistory {
 
-class WhittedRayTracer : public MyRenderer {
+class WhittedRayTracer : public DirectRenderer {
  public:
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 

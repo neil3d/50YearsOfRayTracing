@@ -19,8 +19,8 @@ std::string DistributedRayTracer::getInfo() const {
   return std::string(" SPP: ") + std::to_string(SPP_N * SPP_N);
 }
 
-void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
-                                         MyCamera::Ptr camera) {
+void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
+                                             MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   BilliardScene* pScene = dynamic_cast<BilliardScene*>(scene.get());
 
@@ -32,8 +32,8 @@ void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
   std::random_device randDevice;
   std::mt19937 stdRand(randDevice());
 
-  for (int y = 0; y < mFrameHeight; y++)
-    for (int x = 0; x < mFrameWidth; x++) {
+  for (int y = tile.top; y < tile.bottom; y++)
+    for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
 
       // jittering/stratified sampling

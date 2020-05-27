@@ -28,10 +28,10 @@ class MyRenderer {
   virtual ~MyRenderer() = default;
 
  public:
-  void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
-                   const glm::vec4& clearColor);
+  virtual void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
+                   const glm::vec4& clearColor) = 0;
   bool nextPresentReady() const;
-  bool isDone() const;
+  virtual bool isDone() const;
   float getProgress() const;
 
   virtual std::string getInfo() const { return ""; }
@@ -39,8 +39,7 @@ class MyRenderer {
  public:
   virtual void _init(SDL_Window* pWnd);
   virtual void _present();
-  virtual void _shutdown();
-  virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera);
+  virtual void _shutdown() = 0;
 
  protected:
   void _writePixel(int x, int y, const glm::vec4& color);
@@ -55,7 +54,6 @@ class MyRenderer {
   std::atomic<bool> mRuning = {true};
 
   std::mutex mMutex;
-  std::thread mRenderingThread;
   std::atomic<uint32_t> mPixelCount = {0};
   std::vector<uint32_t> mFrameBuffer;
 

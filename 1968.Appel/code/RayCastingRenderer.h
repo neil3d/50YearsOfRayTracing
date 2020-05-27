@@ -6,13 +6,13 @@
  * Created by yanliang.fyl, 2020
  */
 #pragma once
-#include "framework/MyRenderer.h"
+#include "framework/DirectRenderer.h"
 
 namespace RayTracingHistory {
 
 class PinholeCamera;
 
-class RayCastingRenderer : public MyRenderer {
+class RayCastingRenderer : public DirectRenderer {
  public:
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 
