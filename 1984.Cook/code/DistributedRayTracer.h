@@ -19,6 +19,7 @@ class PinholeCamera;
 class DistributedRayTracer : public MyRenderer {
  public:
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
+  virtual std::string getInfo() const override;
 
  private:
   glm::vec3 _traceRay(const Ray& ray, BilliardScene* pScene, int depth, const glm::vec2 xi);

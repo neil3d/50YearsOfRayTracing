@@ -55,6 +55,8 @@ void MyApp::_tick() {
     float progress = mRenderer->getProgress();
     std::string szTitle = mWindowTitle;
     szTitle.append(" - ");
+    szTitle.append(mRenderer->getInfo());
+    szTitle.append(" - ");
     szTitle.append(std::to_string(progress * 100.0f));
     szTitle.append("%");
     SDL_SetWindowTitle(mMainWindow, szTitle.c_str());

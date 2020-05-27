@@ -34,6 +34,8 @@ class MyRenderer {
   bool isDone() const;
   float getProgress() const;
 
+  virtual std::string getInfo() const { return ""; }
+
  public:
   virtual void _init(SDL_Window* pWnd);
   virtual void _present();
