@@ -13,7 +13,7 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_N = 4;
+constexpr int SPP_N = 8;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" SPP: ") + std::to_string(SPP_N * SPP_N);
@@ -93,7 +93,9 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
   if (bShadow) {
     color = glm::vec3(0, 0, 0);
   } else {
-    float c = 0.8f;
+    glm::vec3 lgt = light.blinnPhongShading(shadingPoint.p, shadingPoint.normal,
+                                            dir, 30, xi);
+    float c = lgt.x + lgt.y + lgt.z;
     color = glm::vec3(c, c, c);
   }
   return color;

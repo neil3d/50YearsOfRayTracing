@@ -15,10 +15,11 @@ struct MyLight {
   float ambient = 0.1f;  // ambient
   float intensity = 2.0f;
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt) = 0;
+  virtual Ray generateShadowRay(const glm::vec3& shadingPt) const = 0;
   virtual glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
                                       const glm::vec3& normal,
-                                      const glm::vec3& viewDir, float n) = 0;
+                                      const glm::vec3& viewDir,
+                                      float n) const = 0;
 };
 
 struct PointLight : public MyLight {
@@ -27,7 +28,7 @@ struct PointLight : public MyLight {
 
   PointLight(const glm::vec3& inPos) : pos(inPos) {}
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt) override {
+  virtual Ray generateShadowRay(const glm::vec3& shadingPt) const override {
     glm::vec3 L = glm::normalize(pos - shadingPt);
     return Ray(shadingPt, L);
   }
@@ -35,7 +36,7 @@ struct PointLight : public MyLight {
   virtual glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
                                       const glm::vec3& normal,
                                       const glm::vec3& viewDir,
-                                      float n) override {
+                                      float n) const override {
     glm::vec3 L = glm::normalize(pos - shadingPt);
     glm::vec3 H = glm::normalize(L - viewDir);
     float NdotH = glm::dot(normal, H);
@@ -59,7 +60,7 @@ struct DirectionalLight : public MyLight {
 
   DirectionalLight(const glm::vec3& inDir) : dir(glm::normalize(inDir)) {}
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt) override {
+  virtual Ray generateShadowRay(const glm::vec3& shadingPt) const override {
     glm::vec3 L = -dir;
     return Ray(shadingPt, L);
   }
@@ -67,7 +68,7 @@ struct DirectionalLight : public MyLight {
   virtual glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
                                       const glm::vec3& normal,
                                       const glm::vec3& viewDir,
-                                      float n) override {
+                                      float n) const override {
     glm::vec3 L = -dir;
     glm::vec3 H = glm::normalize(L - viewDir);
     float NdotH = glm::dot(normal, H);

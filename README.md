@@ -37,11 +37,12 @@
 
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 
-- [ ] Soft shadow
+- [x] Soft shadow
 - [ ] Depth of field
 - [ ] Gloss
 - [ ] Motion blur
 
+![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-27.png)
 
 ## Path Tracing 
 

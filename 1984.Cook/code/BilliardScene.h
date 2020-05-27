@@ -25,9 +25,9 @@ class BilliardScene : public MyScene {
   virtual void init() override {
     // setup a main light
     mLight
-        .setParallelogram(glm::vec3(4, 0, 0), glm::vec3(0, 0, 4),
+        .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
                           glm::vec3(0, 10, 0))
-        .setAmbient(0.1f)
+        .setAmbient(0.2f)
         .setIntensity(0.9f);
 
     // setup scene objects
