@@ -12,6 +12,46 @@
 
 namespace RayTracingHistory {
 
-class ThinLensCamera : public MyCamera {};
+class ThinLensCamera : public MyCamera {
+ public:
+  ThinLensCamera& setAperture(float val) {
+    mAperture = val;
+    return *this;
+  }
+
+  ThinLensCamera& setFocusDist(float val) {
+    mFocusDist = val;
+    return *this;
+  }
+
+  Ray jitteredViewingRay(float u, float v, const glm::vec2& xi) {
+    if (!mInited) {
+      _initFocalPlane();
+      mInited = true;
+    }
+
+    glm::vec3 offset = mAperture * xi.x * mRight+ mAperture * xi.y * mUp;
+    glm::vec3 origin = mEyePos + offset;
+    return Ray(origin, mFocalPlaneLeftTop + u * mFocalPlaneH -
+                           v * mFocalPlaneV - origin);
+  }
+
+ private:
+  void _initFocalPlane() {
+    float halfHeight = tanf(mFov * 0.5f) * mFocusDist;
+    float halfWidth = mAspect * halfHeight;
+
+    glm::vec3 center = mEyePos + mForward * mFocusDist;
+    mFocalPlaneLeftTop = center - halfWidth * mRight + halfHeight * mUp;
+    mFocalPlaneH = 2 * halfWidth * mRight;
+    mFocalPlaneV = 2 * halfHeight * mUp;
+  }
+
+ private:
+  bool mInited = false;
+  float mAperture = 0.001f;
+  float mFocusDist = 4.0f;
+  glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;
+};
 
 }  // namespace RayTracingHistory

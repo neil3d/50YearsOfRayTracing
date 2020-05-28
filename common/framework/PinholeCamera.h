@@ -21,7 +21,7 @@ class PinholeCamera : public MyCamera {
 
   Ray generateViewingRay(float u, float v) {
     if (!mInited) {
-      _getImagePlane(mImagePlaneH, mImagePlaneV, mImagePlaneLeftTop);
+      _initImagePlane();
       mInited = true;
     }
 
@@ -31,15 +31,14 @@ class PinholeCamera : public MyCamera {
   }
 
  private:
-  void _getImagePlane(glm::vec3& outH, glm::vec3& outV,
-                      glm::vec3& outLeftTop) const {
+  void _initImagePlane() {
     float halfHeight = tanf(mFov * 0.5f) * mZNear;
     float halfWidth = mAspect * halfHeight;
 
     glm::vec3 center = mEyePos + mForward * mZNear;
-    outLeftTop = center - halfWidth * mRight + halfHeight * mUp;
-    outH = 2 * halfWidth * mRight;
-    outV = 2 * halfHeight * mUp;
+    mImagePlaneLeftTop = center - halfWidth * mRight + halfHeight * mUp;
+    mImagePlaneH = 2 * halfWidth * mRight;
+    mImagePlaneV = 2 * halfHeight * mUp;
   }
 
  private:

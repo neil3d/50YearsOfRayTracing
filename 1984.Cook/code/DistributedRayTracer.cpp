@@ -9,11 +9,11 @@
 #include <random>
 
 #include "BilliardScene.h"
-#include "framework/PinholeCamera.h"
+#include "framework/ThinLensCamera.h"
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_N = 3;
+constexpr int SPP_N = 8;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
@@ -21,7 +21,7 @@ std::string DistributedRayTracer::getInfo() const {
 
 void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
-  PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
+  ThinLensCamera* pCamera = static_cast<ThinLensCamera*>(camera.get());
   BilliardScene* pScene = dynamic_cast<BilliardScene*>(scene.get());
 
   constexpr int n = SPP_N;
@@ -53,8 +53,9 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         const glm::vec2& pixelXi = jitteredPointsR[i];
         const glm::vec2& sampleXi = jitteredPointsS[i];
 
-        Ray viewingRay = pCamera->generateViewingRay(
-            (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight);
+        Ray viewingRay = pCamera->jitteredViewingRay(
+            (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight,
+            sampleXi);
 
         color += _traceRay(viewingRay, pScene, 0, sampleXi);
       }

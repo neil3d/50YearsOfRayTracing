@@ -38,11 +38,11 @@
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 
 - [x] Soft shadow
-- [ ] Depth of field
+- [x] Depth of field
 - [ ] Gloss
 - [ ] Motion blur
 
-![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-27.png)
+![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-28.png)
 
 ## Path Tracing 
 
@@ -51,3 +51,4 @@
 ## MyFramework
 
 - [ ] scene object instancing
+- [ ] triangle mesh with BVH

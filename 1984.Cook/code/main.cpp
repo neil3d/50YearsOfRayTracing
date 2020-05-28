@@ -3,7 +3,7 @@
 #include "BilliardScene.h"
 #include "DistributedRayTracer.h"
 #include "framework/MyApp.h"
-#include "framework/PinholeCamera.h"
+#include "framework/ThinLensCamera.h"
 
 using namespace RayTracingHistory;
 
@@ -24,8 +24,9 @@ int main(void) {
 
     glm::vec3 eyePos(0, 1.25f, -8);
     glm::vec3 lookAt(0, 1, 0);
-    auto camera = std::make_shared<PinholeCamera>();
-    camera->setZNear(1.0f)
+    auto camera = std::make_shared<ThinLensCamera>();
+    camera->setAperture(0.2f)
+        .setFocusDist(glm::distance(eyePos, lookAt))
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);

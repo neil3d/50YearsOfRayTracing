@@ -34,7 +34,8 @@ class BilliardScene : public MyScene {
     createObject<Plane>("ground");
 
     createObject<Sphere>("ball1").setCenter(glm::vec3(0, 1, 0)).setRadius(1);
-    createObject<Sphere>("ball2").setCenter(glm::vec3(2.5f, 1, 0)).setRadius(1);
+    createObject<Sphere>("ball2").setCenter(glm::vec3(2.5f, 1, 5)).setRadius(1);
+    createObject<Sphere>("ball3").setCenter(glm::vec3(-2.5f, 1, 3)).setRadius(1);
 
   }
 };
