@@ -25,10 +25,10 @@ int main(void) {
     glm::vec3 eyePos(0, 1.25f, -8);
     glm::vec3 lookAt(0, 1, 0);
     auto camera = std::make_shared<PinholeCamera>();
-    camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
+    camera->setZNear(1.0f)
+        .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
-        .setFOV(45)
-        .setFocalLength(1.0f);
+        .setFOV(45);
 
     renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 

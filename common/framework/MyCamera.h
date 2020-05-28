@@ -31,25 +31,9 @@ class MyCamera {
     return *this;
   }
 
-  MyCamera& setFocalLength(float d) {
-    mFocalLength = d;
-    return *this;
-  }
-
   MyCamera& setAspect(float aspect) {
     mAspect = aspect;
     return *this;
-  }
-
-  void getImagePlane(glm::vec3& outH, glm::vec3& outV,
-                     glm::vec3& outLeftTop) const {
-    float halfHeight = tanf(mFov * 0.5f) * mFocalLength;
-    float halfWidth = mAspect * halfHeight;
-
-    glm::vec3 center = mEyePos + mForward * mFocalLength;
-    outLeftTop = center - halfWidth * mRight + halfHeight * mUp;
-    outH = 2 * halfWidth * mRight;
-    outV = 2 * halfHeight * mUp;
   }
 
   glm::vec3 getEyePos() const { return mEyePos; }
@@ -57,7 +41,7 @@ class MyCamera {
  protected:
   glm::vec3 mEyePos;
   glm::vec3 mForward, mRight, mUp;
-  float mFov, mFocalLength;
+  float mFov;
   float mAspect;
 };
 }  // namespace RayTracingHistory
