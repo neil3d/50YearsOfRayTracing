@@ -30,10 +30,10 @@ class ThinLensCamera : public MyCamera {
       mInited = true;
     }
 
-    glm::vec3 offset = mAperture * xi.x * mRight+ mAperture * xi.y * mUp;
+    glm::vec3 offset = mAperture * xi.x * mRight + mAperture * xi.y * mUp;
     glm::vec3 origin = mEyePos + offset;
-    return Ray(origin, mFocalPlaneLeftTop + u * mFocalPlaneH -
-                           v * mFocalPlaneV - origin);
+    glm::vec3 focus = mFocalPlaneLeftTop + u * mFocalPlaneH - v * mFocalPlaneV;
+    return Ray(origin, focus - origin);
   }
 
  private:
