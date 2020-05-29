@@ -14,7 +14,8 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_N = 3;
+constexpr int MAX_DEPTH = 32;
+constexpr int SPP_N = 5;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
@@ -61,21 +62,36 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         color += _traceRay(viewingRay, pScene, 0, sampleXi);
       }
 
-      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f));
+      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), 1.5f);
       mPixelCount++;
     }  // end of for(x)
 }
 
 glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
                                           int depth, const glm::vec2 xi) {
+  const glm::vec3 bgColor(0.5f, 0.5f, 0.5f);
+
+  if (depth > MAX_DEPTH) return bgColor;
+
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0, FLOAT_MAX, hitRec);
-  if (bHit) {
-    return _shade(ray.direction, hitRec, pScene, xi);
+  if (!bHit) return bgColor;
+
+  glm::vec3 color = _shade(ray.direction, hitRec, pScene, xi);
+
+  // reflection
+  Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
+
+  float Ks = 0.5f;
+  if (mtl) Ks = mtl->Ks;
+  if (Ks > 0) {
+    Ray rRay = _jitteredReflectionRay(ray.direction, hitRec.p, hitRec.normal,
+                                      xi, mtl->gloss);
+    glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1, xi);
+    color += rColor * Ks;
   }
 
-  const glm::vec3 topColor(0.8f, 0.8f, 0.95f);
-  return topColor;
+  return color;
 }
 
 glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
@@ -100,11 +116,38 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
     float a = light.ambient;
     color = a * albedo;
   } else {
-    float lgt = light.lighting(shadingPoint.p, shadingPoint.normal,
-                                            dir, xi);
+    float lgt = light.lighting(shadingPoint.p, shadingPoint.normal, dir, xi);
     color = lgt * albedo;
   }
   return color;
+}
+
+Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,
+                                                 const glm::vec3& point,
+                                                 const glm::vec3& normal,
+                                                 const glm::vec2 xi,
+                                                 float glossy) {
+  // constructing orthonormal bases
+  glm::vec3 T = normal;
+
+  if (normal.x < normal.y && normal.x < normal.z) {
+    T.x = 1.0f;
+  } else if (normal.y < normal.x && normal.y < normal.z) {
+    T.y = 1.0f;
+  } else
+    T.z = 1.0f;
+
+  T = glm::normalize(T);
+  float u = -glossy / 2 + xi.x * glossy;
+  float v = -glossy / 2 + xi.y * glossy;
+  glm::vec3 U = glossy * glm::cross(T, normal);
+  glm::vec3 V = glossy * glm::cross(normal, U);
+
+  // jittered director
+  glm::vec3 R = glm::reflect(dir, normal);
+  glm::vec3 Rp = R + u * U + v * V;
+
+  return Ray(point + normal * 0.001f, Rp);
 }
 
 }  // namespace RayTracingHistory

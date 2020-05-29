@@ -29,6 +29,10 @@ class DistributedRayTracer : public TiledRenderer {
   glm::vec3 _shade(const glm::vec3& dir, const HitRecord& shadingPoint,
                    BilliardScene* pScene, const glm::vec2 xi);
 
+  Ray _jitteredReflectionRay(const glm::vec3& dir, const glm::vec3& point,
+                             const glm::vec3& normal, const glm::vec2 xi,
+                             float glossy);
+
  private:
 };
 

@@ -29,7 +29,7 @@ class MyRenderer {
 
  public:
   virtual void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
-                   const glm::vec4& clearColor) = 0;
+                           const glm::vec4& clearColor) = 0;
   bool nextPresentReady() const;
   virtual bool isDone() const;
   float getProgress() const;
@@ -42,7 +42,7 @@ class MyRenderer {
   virtual void _shutdown() = 0;
 
  protected:
-  void _writePixel(int x, int y, const glm::vec4& color);
+  void _writePixel(int x, int y, glm::vec4 color, float gama);
   void _clearFrameBuffer(const glm::vec4& color);
 
  protected:

@@ -45,7 +45,7 @@ class DirectRenderer : public MyRenderer {
       for (int x = 0; x < mFrameWidth; x++) {
         if (mRuning) {
           float r = (float)y / mFrameHeight;
-          _writePixel(x, y, bottomColor * r + topColor * (1.0f - r));
+          _writePixel(x, y, bottomColor * r + topColor * (1.0f - r), 1.0f);
         } else
           break;
       }  // end of for(x)

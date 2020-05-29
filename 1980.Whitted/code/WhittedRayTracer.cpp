@@ -44,13 +44,8 @@ void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
       Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);
       glm::vec3 color = _traceRay(eyeRay, scene.get(), 0);
 
-      // gama
       constexpr float GAMA = 1.0f / 1.25f;
-      color.x = std::powf(color.x, GAMA);
-      color.y = std::powf(color.y, GAMA);
-      color.z = std::powf(color.z, GAMA);
-
-      _writePixel(x, y, glm::vec4(color, 1));
+      _writePixel(x, y, glm::vec4(color, 1), GAMA);
       mPixelCount++;
     }  // end of for(x)
 }

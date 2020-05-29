@@ -57,11 +57,16 @@ void MyRenderer::_present() {
   mPresentLine = mPixelCount / mFrameWidth;
 }
 
-void MyRenderer::_writePixel(int x, int y, const glm::vec4& color) {
+void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {
   if (x >= mFrameWidth || y >= mFrameHeight) {
     spdlog::error("bad pixel coordinates");
     return;
   }
+
+  // gama
+  color.x = std::powf(color.x, gama);
+  color.y = std::powf(color.y, gama);
+  color.z = std::powf(color.z, gama);
 
   uint8_t r = 255.5f * std::clamp(color.r, 0.0f, 1.0f);
   uint8_t g = 255.5f * std::clamp(color.g, 0.0f, 1.0f);

@@ -19,9 +19,15 @@ class Material : public MyMaterial {
 
  public:
   float gloss = 0.0f;
+  float Ks = 0.4f;  // the specular reflection coefficient
 
   Material& setGloss(float g) {
     gloss = g;
+    return *this;
+  }
+
+  Material& setCoefficient(float _Ks) {
+    Ks = _Ks;
     return *this;
   }
 

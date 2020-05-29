@@ -21,7 +21,7 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
       glm::vec4 color = _castRay((x+0.5f)/W, (y+0.5f)/H, pScene, pCamera);
       mPixelCount++;
 
-      _writePixel(x, y, color);
+      _writePixel(x, y, color, 1.25f);
 
     }  // end of for(x)
 }
