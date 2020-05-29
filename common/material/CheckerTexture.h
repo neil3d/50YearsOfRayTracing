@@ -21,5 +21,10 @@ class CheckerTexture : public MyTexture {
     float sines = sinf(p.x * mP) * cosf(p.z * mP);
     return sines < 0 ? mColorOdd : mColorEven;
   }
+
+  void setColor(const glm::vec3& colorOdd, const glm::vec3& colorEven){
+    mColorOdd = colorOdd;
+    mColorEven = colorEven;
+  }
 };
 }  // namespace RayTracingHistory

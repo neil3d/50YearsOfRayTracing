@@ -3,7 +3,7 @@
 namespace RayTracingHistory {
 
 bool MyScene::closestHit(const Ray& ray, float tMin, float tMax,
-                         HitRecord& outRec) {
+                         HitRecord& outRec) const {
   bool hitAnything = false;
   float closestSoFar = tMax;
   HitRecord rec;

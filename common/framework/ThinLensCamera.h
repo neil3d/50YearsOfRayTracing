@@ -24,20 +24,14 @@ class ThinLensCamera : public MyCamera {
     return *this;
   }
 
-  Ray jitteredViewingRay(float u, float v, const glm::vec2& xi) {
-    if (!mInited) {
-      _initFocalPlane();
-      mInited = true;
-    }
-
+  Ray jitteredViewingRay(float u, float v, const glm::vec2& xi) const {
     glm::vec3 offset = mAperture * xi.x * mRight + mAperture * xi.y * mUp;
     glm::vec3 origin = mEyePos + offset;
     glm::vec3 focus = mFocalPlaneLeftTop + u * mFocalPlaneH - v * mFocalPlaneV;
     return Ray(origin, focus - origin);
   }
 
- private:
-  void _initFocalPlane() {
+  void init() {
     float halfHeight = tanf(mFov * 0.5f) * mFocusDist;
     float halfWidth = mAspect * halfHeight;
 
@@ -48,7 +42,6 @@ class ThinLensCamera : public MyCamera {
   }
 
  private:
-  bool mInited = false;
   float mAperture = 0.001f;
   float mFocusDist = 4.0f;
   glm::vec3 mFocalPlaneH, mFocalPlaneV, mFocalPlaneLeftTop;

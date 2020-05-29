@@ -9,11 +9,12 @@
 #include <random>
 
 #include "BilliardScene.h"
+#include "Material.h"
 #include "framework/ThinLensCamera.h"
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_N = 8;
+constexpr int SPP_N = 3;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
@@ -82,6 +83,7 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
                                        BilliardScene* pScene,
                                        const glm::vec2 xi) {
   const auto& light = pScene->getMainLight();
+  Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 
   Ray shadowRay = light.jitteredShadowRay(shadingPoint.p, xi);
   HitRecord hitRecS;
@@ -89,15 +91,19 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
 
+  glm::vec3 albedo(1);
+  if (mtl) albedo = mtl->sampleAlbedo(shadingPoint.uv, shadingPoint.p);
+
   glm::vec3 color;
   bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
   if (bShadow) {
-    color = glm::vec3(0, 0, 0);
+    float a = light.ambient;
+    color = a * albedo;
   } else {
     glm::vec3 lgt = light.blinnPhongShading(shadingPoint.p, shadingPoint.normal,
                                             dir, 30, xi);
     float c = lgt.x + lgt.y + lgt.z;
-    color = glm::vec3(c, c, c);
+    color = c * albedo;
   }
   return color;
 }

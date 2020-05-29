@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "AreaLight.h"
+#include "Material.h"
 #include "scene/MyScene.h"
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
@@ -27,16 +28,28 @@ class BilliardScene : public MyScene {
     mLight
         .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
                           glm::vec3(0, 10, 0))
-        .setAmbient(0.2f)
+        .setAmbient(0.1f)
         .setIntensity(0.9f);
 
     // setup scene objects
-    createObject<Plane>("ground");
+    createObject<Plane>("ground").createMaterial<Material>().setCheckerTexture(
+        glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
-    createObject<Sphere>("ball1").setCenter(glm::vec3(0, 1, 0)).setRadius(1);
-    createObject<Sphere>("ball2").setCenter(glm::vec3(2.5f, 1, 5)).setRadius(1);
-    createObject<Sphere>("ball3").setCenter(glm::vec3(-2.5f, 1, 3)).setRadius(1);
-
+    createObject<Sphere>("ball1")
+        .setCenter(glm::vec3(0, 1, 0))
+        .setRadius(1)
+        .createMaterial<Material>()
+        .setColor(glm::vec3(1));
+    createObject<Sphere>("ball2")
+        .setCenter(glm::vec3(2.5f, 1, 6))
+        .setRadius(1)
+        .createMaterial<Material>()
+        .setColor(glm::vec3(1));
+    createObject<Sphere>("ball3")
+        .setCenter(glm::vec3(-2.5f, 1, -4))
+        .setRadius(1)
+        .createMaterial<Material>()
+        .setColor(glm::vec3(1));
   }
 };
 }  // namespace RayTracingHistory

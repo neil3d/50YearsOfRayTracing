@@ -31,10 +31,10 @@ class MyScene {
     return *newObject;
   }
 
-  bool closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec);
+  bool closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) const;
 
   template <typename T>
-  bool anyHit(const Ray& ray, float tMin, float tMax, T callback) {
+  bool anyHit(const Ray& ray, float tMin, float tMax, T callback) const {
     bool hitAnything = false;
     HitRecord rec;
 

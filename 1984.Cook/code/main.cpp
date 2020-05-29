@@ -25,11 +25,12 @@ int main(void) {
     glm::vec3 eyePos(0, 1.25f, -8);
     glm::vec3 lookAt(0, 1, 0);
     auto camera = std::make_shared<ThinLensCamera>();
-    camera->setAperture(0.2f)
+    camera->setAperture(0.1f)
         .setFocusDist(glm::distance(eyePos, lookAt))
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);
+    camera->init();
 
     renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 
