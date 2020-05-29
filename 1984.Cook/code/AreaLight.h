@@ -20,6 +20,7 @@ struct AreaLight {
 
   float ambient = 0.1f;
   float intensity = 2.0f;
+  float range = 10;
 
   Ray jitteredShadowRay(const glm::vec3& shadingPt, const glm::vec2& xi) const {
     glm::vec3 pos = corner + xi.x * edge1 + xi.y * edge2;
@@ -36,7 +37,14 @@ struct AreaLight {
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
 
-    float diffuse = std::max(0.0f, NdotL);
+    float falloff = 1.0f;
+    float d = glm::distance(pos, shadingPt);
+    if (d > range) {
+      float r = range / d;
+      falloff = r * r;
+    }
+
+    float diffuse = std::max(0.0f, NdotL) * falloff;
     return intensity * (ambient + diffuse);
   }
 

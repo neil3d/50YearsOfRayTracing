@@ -39,10 +39,10 @@
 
 - [x] Soft shadow
 - [x] Depth of field
-- [ ] Gloss
+- [x] Gloss
 - [ ] Motion blur
 
-![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-28.png)
+![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-29.png)
 
 ## Path Tracing 
 

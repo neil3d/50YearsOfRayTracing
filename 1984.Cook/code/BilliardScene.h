@@ -27,40 +27,40 @@ class BilliardScene : public MyScene {
     // setup a main light
     mLight
         .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
-                          glm::vec3(0, 10, 0))
+                          glm::vec3(0, 15, 0))
         .setAmbient(0.05f)
-        .setIntensity(0.8f);
+        .setIntensity(1.8f);
 
     // setup scene objects
     createObject<Plane>("ground")
         .createMaterial<Material>()
-        .setGloss(0.125)
-        .setCoefficient(0.9f)
-        .setCheckerTexture(glm::vec3(0, 0, 0), glm::vec3(0.45f, 0.45f, 0.45f));
+        .setGloss(0.2)
+        .setCoefficient(0.6f)
+        .setCheckerTexture(glm::vec3(0, 0, 0), glm::vec3(0.4f, 0.4f, 0.4f));
 
     createObject<Sphere>("ball0")
         .setCenter(glm::vec3(0, 1, 0))
         .setRadius(1)
         .createMaterial<Material>()
-        .setGloss(0)
+        .setGloss(0.66f)
         .setCoefficient(0.65f)
         .setColor(glm::vec3(1));
     createObject<Sphere>("ball1")
         .setCenter(glm::vec3(2.55f, 1, 0))
         .setRadius(1)
         .createMaterial<Material>()
-        .setGloss(0.65f)
+        .setGloss(0.05f)
         .setCoefficient(0.65f)
         .setColor(glm::vec3(1));
     createObject<Sphere>("ball2")
-        .setCenter(glm::vec3(2.5f, 1, 6))
+        .setCenter(glm::vec3(-2.25f, 1, 8))
         .setRadius(1)
         .createMaterial<Material>()
-        .setGloss(0.125f)
-        .setCoefficient(0.5f)
+        .setGloss(0.85f)
+        .setCoefficient(0.25f)
         .setColor(glm::vec3(1));
     createObject<Sphere>("ball3")
-        .setCenter(glm::vec3(-2.5f, 1, -4))
+        .setCenter(glm::vec3(-2.5f, 1, -5))
         .setRadius(1)
         .createMaterial<Material>()
         .setGloss(0.125f)

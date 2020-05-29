@@ -15,7 +15,7 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
-constexpr int SPP_N = 5;
+constexpr int SPP_N = 4;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
@@ -62,16 +62,16 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         color += _traceRay(viewingRay, pScene, 0, sampleXi);
       }
 
-      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), 1.5f);
+      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), 1.8f);
       mPixelCount++;
     }  // end of for(x)
 }
 
 glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
                                           int depth, const glm::vec2 xi) {
-  const glm::vec3 bgColor(0.5f, 0.5f, 0.5f);
+  const glm::vec3 bgColor(0.4f, 0.4f, 0.4f);
 
-  if (depth > MAX_DEPTH) return bgColor;
+  if (depth > MAX_DEPTH) return glm::vec3(0);
 
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0, FLOAT_MAX, hitRec);
@@ -113,7 +113,7 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
   glm::vec3 color;
   bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
   if (bShadow) {
-    float a = light.ambient;
+    float a = 0;  // light.ambient;
     color = a * albedo;
   } else {
     float lgt = light.lighting(shadingPoint.p, shadingPoint.normal, dir, xi);
@@ -127,7 +127,7 @@ Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,
                                                  const glm::vec3& normal,
                                                  const glm::vec2 xi,
                                                  float glossy) {
-  // constructing orthonormal bases
+  // choose any vector T not collinear with normal
   glm::vec3 T = normal;
 
   if (normal.x < normal.y && normal.x < normal.z) {
@@ -137,13 +137,14 @@ Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,
   } else
     T.z = 1.0f;
 
+  // constructing orthonormal bases
   T = glm::normalize(T);
   float u = -glossy / 2 + xi.x * glossy;
   float v = -glossy / 2 + xi.y * glossy;
   glm::vec3 U = glossy * glm::cross(T, normal);
   glm::vec3 V = glossy * glm::cross(normal, U);
 
-  // jittered director
+  // jittered direction
   glm::vec3 R = glm::reflect(dir, normal);
   glm::vec3 Rp = R + u * U + v * V;
 
