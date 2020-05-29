@@ -18,7 +18,12 @@ class Material : public MyMaterial {
   std::shared_ptr<MyTexture> albedo;
 
  public:
-  Material() {}
+  float gloss = 0.0f;
+
+  Material& setGloss(float g) {
+    gloss = g;
+    return *this;
+  }
 
   Material& setColor(const glm::vec3& color) {
     auto ct = std::make_shared<ConstantTexture>();

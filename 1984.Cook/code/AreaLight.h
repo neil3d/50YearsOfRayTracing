@@ -27,9 +27,8 @@ struct AreaLight {
     return Ray(shadingPt, L);
   }
 
-  glm::vec3 blinnPhongShading(const glm::vec3& shadingPt,
-                              const glm::vec3& normal, const glm::vec3& viewDir,
-                              float n, const glm::vec2& xi) const {
+  float lighting(const glm::vec3& shadingPt, const glm::vec3& normal,
+                 const glm::vec3& viewDir, const glm::vec2& xi) const {
     glm::vec3 pos = corner + xi.x * edge1 + xi.y * edge2;
 
     glm::vec3 L = glm::normalize(pos - shadingPt);
@@ -37,10 +36,8 @@ struct AreaLight {
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
 
-    float falloff = 1.0f;
-    float diffuse = std::max(0.0f, NdotL) * falloff;
-    float specular = std::powf(NdotH, n) * falloff;
-    return intensity * glm::vec3(ambient, diffuse, specular);
+    float diffuse = std::max(0.0f, NdotL);
+    return intensity * (ambient + diffuse);
   }
 
   AreaLight& setParallelogram(const glm::vec3& _edge1, const glm::vec3& _edge2,

@@ -100,10 +100,9 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
     float a = light.ambient;
     color = a * albedo;
   } else {
-    glm::vec3 lgt = light.blinnPhongShading(shadingPoint.p, shadingPoint.normal,
-                                            dir, 30, xi);
-    float c = lgt.x + lgt.y + lgt.z;
-    color = c * albedo;
+    float lgt = light.lighting(shadingPoint.p, shadingPoint.normal,
+                                            dir, xi);
+    color = lgt * albedo;
   }
   return color;
 }
