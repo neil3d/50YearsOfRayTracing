@@ -52,3 +52,4 @@
 
 - [ ] scene object instancing
 - [ ] triangle mesh with BVH
+- [ ] bilinear texture filter

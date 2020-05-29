@@ -11,8 +11,8 @@ void Texture2D::loadImage(const std::string& szFilePath) {
 glm::vec3 Texture2D::sample(const glm::vec2& uv, const glm::vec3& p) {
   if (!mImage) return glm::vec3(1, 0, 0);
 
-  float u = u - floor(u);
-  float v = v - floor(v);
+  float u = uv.x - floor(uv.x);
+  float v = uv.y - floor(uv.y);
 
   int w = mImage->getWidth();
   int h = mImage->getHeight();

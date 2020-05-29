@@ -11,6 +11,7 @@
 
 #include "material/CheckerTexture.h"
 #include "material/MyMaterial.h"
+#include "material/Texture2D.h"
 
 namespace RayTracingHistory {
 
@@ -28,6 +29,13 @@ class Material : public MyMaterial {
 
   Material& setCoefficient(float _Ks) {
     Ks = _Ks;
+    return *this;
+  }
+
+  Material& setTexture2D(const std::string& szFile) {
+    auto tex = std::make_shared<Texture2D>();
+    tex->loadImage(szFile);
+    albedo = tex;
     return *this;
   }
 
