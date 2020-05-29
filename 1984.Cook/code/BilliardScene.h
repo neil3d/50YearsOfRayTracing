@@ -29,7 +29,7 @@ class BilliardScene : public MyScene {
         .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
                           glm::vec3(0, 15, 0))
         .setAmbient(0.05f)
-        .setIntensity(1.8f);
+        .setIntensity(2.f);
 
     // setup scene objects
     createObject<Plane>("ground")

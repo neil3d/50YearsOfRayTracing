@@ -16,6 +16,7 @@ namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
 constexpr int SPP_N = 4;
+constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
@@ -62,14 +63,14 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         color += _traceRay(viewingRay, pScene, 0, sampleXi);
       }
 
-      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), 1.8f);
+      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), GAMA);
       mPixelCount++;
     }  // end of for(x)
 }
 
 glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
                                           int depth, const glm::vec2 xi) {
-  const glm::vec3 bgColor(0.4f, 0.4f, 0.4f);
+  const glm::vec3 bgColor(0.25f, 0.25f, 0.25f);
 
   if (depth > MAX_DEPTH) return glm::vec3(0);
 
