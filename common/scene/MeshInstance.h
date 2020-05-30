@@ -30,7 +30,6 @@ class MeshInstance : public MySceneObject {
                    HitRecord& outRec) override;
 
  private:
-  Transform mTransform;
   std::shared_ptr<Mesh> mMesh;
 };
 }  // namespace RayTracingHistory

@@ -11,6 +11,7 @@
 #include <string>
 
 #include "../geometry/Ray.h"
+#include "../geometry/Transform.h"
 #include "../material/MyMaterial.h"
 #include "HitRecord.h"
 
@@ -28,8 +29,18 @@ class MySceneObject {
   template <typename T, typename... Args>
   T& createMaterial(Args&&... args) {
     auto newMtl = std::make_shared<T>(std::forward<Args>(args)...);
-    mMateril = newMtl;
+    mMaterial = newMtl;
     return *newMtl;
+  }
+
+  MySceneObject& setPosition(const glm::vec3& pos) {
+    mTransform.setPosition(pos);
+    return *this;
+  }
+
+  MySceneObject& setRotation(float pitch, float yaw, float roll) {
+    mTransform.setRotation(pitch, yaw, roll);
+    return *this;
   }
 
  protected:
@@ -41,14 +52,15 @@ class MySceneObject {
     hit.normal = normal;
     hit.uv = uv;
 
-    hit.mtl = mMateril.get();
+    hit.mtl = mMaterial.get();
     hit.obj = this;
     return hit;
   }
 
  protected:
   std::string mName;
-  MyMaterial::Ptr mMateril;
+  Transform mTransform;
+  MyMaterial::Ptr mMaterial;
 
  public:
   MySceneObject(const MySceneObject&) = delete;

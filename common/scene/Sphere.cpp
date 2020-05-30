@@ -12,8 +12,9 @@ static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
 }
 
 bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
+  glm::vec3 center = getCenter();
   // analytic solution
-  glm::vec3 oc = ray.origin - mCenter;
+  glm::vec3 oc = ray.origin - center;
   float a = glm::dot(ray.direction, ray.direction);
   float b = 2 * glm::dot(oc, ray.direction);
   float c = glm::dot(oc, oc) - mRadius * mRadius;
@@ -23,7 +24,7 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
   float tnear = std::min(t0, t1);
 
   if (tnear > tMin && tnear < tMax) {
-    glm::vec3 N = glm::normalize(ray.getPoint(tnear) - mCenter);
+    glm::vec3 N = glm::normalize(ray.getPoint(tnear) - center);
     float u = (1 + atan2(N.z, N.x) / M_PI) * 0.5f;
     float v = acosf(N.y) / M_PI;
 

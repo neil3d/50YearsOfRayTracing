@@ -28,9 +28,11 @@ class Parallelogram : public Plane {
   }
 
   Parallelogram& setAnchor(glm::vec3 anchor) {
-    mP0 = anchor;
+    setPosition(anchor);
     return *this;
   }
+
+  glm::vec3 getAnchor() const { return mTransform.getPosition(); }
 
   virtual bool hit(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;

@@ -16,7 +16,7 @@ class Sphere : public MySceneObject {
   using MySceneObject::MySceneObject;
 
   Sphere& setCenter(const glm::vec3& center) {
-    mCenter = center;
+    setPosition(center);
     return *this;
   }
 
@@ -25,11 +25,14 @@ class Sphere : public MySceneObject {
     return *this;
   }
 
+  glm::vec3 getCenter() const{
+    return mTransform.getPosition();
+  }
+
   virtual bool hit(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;
 
  private:
-  glm::vec3 mCenter;
   float mRadius = 1;
 };
 

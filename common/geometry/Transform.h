@@ -18,6 +18,10 @@ struct Transform {
     bDirty = true;
   }
 
+  glm::vec3 getPosition() const{
+    return position;
+  }
+
   void setRotation(const glm::quat& rot) {
     rotation = rot;
     bDirty = true;
@@ -38,18 +42,34 @@ struct Transform {
     bDirty = true;
   }
 
+  const glm::mat4& getLocal2World() {
+    _update();
+    return local2World;
+  }
+
+  const glm::mat4& getWorld2Local() {
+    _update();
+    return world2Local;
+  }
+
+  const glm::mat4& getWorld2LocalT() {
+    _update();
+    return world2LocalT;
+  }
+
  private:
   void _update() {
     if (!bDirty) return;
     bDirty = false;
 
-    mat = glm::mat4_cast(rotation);
-    mat[0][3] = position.x;
-    mat[1][3] = position.y;
-    mat[2][3] = position.z;
-    mat = glm::scale(mat, scale);
+    local2World = glm::mat4_cast(rotation);
+    local2World[0][3] = position.x;
+    local2World[1][3] = position.y;
+    local2World[2][3] = position.z;
+    local2World = glm::scale(local2World, scale);
 
-    invMat = glm::inverse(mat);
+    world2Local = glm::inverse(local2World);
+    world2LocalT = glm::transpose(world2Local);
   }
 
   glm::vec3 position;
@@ -57,7 +77,8 @@ struct Transform {
   glm::vec3 scale;
 
   bool bDirty = true;
-  glm::mat4 mat;
-  glm::mat4 invMat;
+  glm::mat4 local2World;
+  glm::mat4 world2Local;
+  glm::mat4 world2LocalT;  // for normal transformation
 };
 }  // namespace RayTracingHistory

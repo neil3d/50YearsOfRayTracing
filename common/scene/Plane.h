@@ -18,9 +18,14 @@ class Plane : public MySceneObject {
   virtual bool hit(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;
 
- protected:
   // (p-p0).n = 0
-  glm::vec3 mP0 = {0, 0, 0};
+  Plane& setPointNormal(const glm::vec3& pt, const glm::vec3& n) {
+    setPosition(pt);
+    mNormal = n;
+    return *this;
+  }
+
+ protected:
   glm::vec3 mNormal = {0, 1, 0};
 };
 }  // namespace RayTracingHistory
