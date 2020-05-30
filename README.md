@@ -40,9 +40,9 @@
 - [x] Soft shadow
 - [x] Depth of field
 - [x] Gloss
-- [ ] Motion blur
+- [x] Motion blur
 
-![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-29.png)
+![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-30.png)
 
 ## Path Tracing 
 
@@ -50,6 +50,6 @@
 
 ## MyFramework
 
-- [ ] scene object instancing
+- [x] scene object instancing
 - [ ] triangle mesh with BVH
 - [ ] bilinear texture filter

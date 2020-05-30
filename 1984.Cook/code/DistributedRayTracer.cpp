@@ -15,7 +15,7 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
-constexpr int SPP_N = 2;
+constexpr int SPP_N = 10;
 constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
