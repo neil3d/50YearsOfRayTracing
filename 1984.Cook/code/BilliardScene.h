@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <glm/gtc/random.hpp>
 #include <memory>
 
 #include "AreaLight.h"
@@ -26,14 +27,18 @@ class BilliardScene : public MyScene {
  public:
   const AreaLight& getMainLight() const { return mLight; }
 
-  void createTexturedBall(glm::vec3 pos, const std::string& szName) {
+  void createTexturedBall(glm::vec3 pos, glm::vec3 degAngles,
+                          const std::string& szName) {
     std::string szTexture("content/billiard/");
     szTexture.append(szName);
     szTexture.append(".jpg");
 
+    glm::vec3 R = glm::radians(degAngles);
+
     createObject<Sphere>(szName)
         .setCenter(pos)
         .setRadius(1)
+        .setRotation(R.x, R.y, R.z)
         .createMaterial<Material>()
         .setGloss(BALL_GLOSS)
         .setCoefficient(BALL_KS)
@@ -59,21 +64,26 @@ class BilliardScene : public MyScene {
         .setGloss(2.0f)
         .setCoefficient(0.0f)
         .setTexture2D("content/billiard/table.jpg")
-        .setTiling(0.2f, 0.2f);
+        .setTiling(0.1f, 0.1f);
 #endif
 
             createObject<Sphere>("ball_white")
         .setCenter(glm::vec3(0, 1, 0))
         .setRadius(1)
+        .setRotation(0, 0, 0)
         .createMaterial<Material>()
         .setGloss(BALL_GLOSS)
         .setCoefficient(BALL_KS)
         .setColor(glm::vec3(0.88f));
 
-    createTexturedBall(glm::vec3(-2.5f, 1, 1.5f), "ball_8");
-    createTexturedBall(glm::vec3(-3.75f, 1, 3.5f), "ball_4");
-    createTexturedBall(glm::vec3(-2.25f, 1, -1.15f), "ball_9");
-    createTexturedBall(glm::vec3(-2.5f, 1, -3.5f), "ball_5");
+    createTexturedBall(glm::vec3(-2.5f, 1, 1.5f), glm::vec3(0, 0, 78),
+                       "ball_8");
+    createTexturedBall(glm::vec3(-3.75f, 1, 3.5f), glm::vec3(0, 0, 88),
+                       "ball_4");
+    createTexturedBall(glm::vec3(-2.25f, 1, -1.15f), glm::vec3(0, 0, 99),
+                       "ball_9");
+    createTexturedBall(glm::vec3(-2.5f, 1, -3.5f), glm::vec3(0, 0, 55),
+                       "ball_5");
   }
 };
 }  // namespace RayTracingHistory

@@ -18,9 +18,7 @@ struct Transform {
     bDirty = true;
   }
 
-  glm::vec3 getPosition() const{
-    return position;
-  }
+  glm::vec3 getPosition() const { return position; }
 
   void setRotation(const glm::quat& rot) {
     rotation = rot;
@@ -62,19 +60,18 @@ struct Transform {
     if (!bDirty) return;
     bDirty = false;
 
-    local2World = glm::mat4_cast(rotation);
-    local2World[0][3] = position.x;
-    local2World[1][3] = position.y;
-    local2World[2][3] = position.z;
+    static glm::mat4 identity(1);
+    local2World = glm::translate(identity, position);
+    local2World *= glm::mat4_cast(rotation);
     local2World = glm::scale(local2World, scale);
 
     world2Local = glm::inverse(local2World);
     world2LocalT = glm::transpose(world2Local);
   }
 
-  glm::vec3 position;
-  glm::quat rotation;
-  glm::vec3 scale;
+  glm::vec3 position = {0, 0, 0};
+  glm::quat rotation = {1, 0, 0, 0};
+  glm::vec3 scale = {1, 1, 1};
 
   bool bDirty = true;
   glm::mat4 local2World;

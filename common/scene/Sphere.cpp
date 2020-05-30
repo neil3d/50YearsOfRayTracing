@@ -12,11 +12,18 @@ static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
 }
 
 bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
-  glm::vec3 center = getCenter();
+  // intersection in local space
+  glm::vec4 wo(ray.origin, 1.0f);
+  glm::vec4 wd(ray.direction, 0.0f);
+  const glm::mat4 &world2Local = mTransform.getWorld2Local();
+  Ray localRay(world2Local * wo, world2Local * wd);
+
+  glm::vec3 center(0, 0, 0);
+
   // analytic solution
-  glm::vec3 oc = ray.origin - center;
-  float a = glm::dot(ray.direction, ray.direction);
-  float b = 2 * glm::dot(oc, ray.direction);
+  glm::vec3 oc = localRay.origin - center;
+  float a = glm::dot(localRay.direction, localRay.direction);
+  float b = 2 * glm::dot(oc, localRay.direction);
   float c = glm::dot(oc, oc) - mRadius * mRadius;
 
   float t0, t1;
@@ -24,9 +31,10 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
   float tnear = std::min(t0, t1);
 
   if (tnear > tMin && tnear < tMax) {
-    glm::vec3 N = glm::normalize(ray.getPoint(tnear) - center);
-    float u = (1 + atan2(N.z, N.x) / M_PI) * 0.5f;
-    float v = acosf(N.y) / M_PI;
+    glm::vec3 localN = glm::normalize(localRay.getPoint(tnear) - center);
+    glm::vec3 N(mTransform.getWorld2LocalT() * glm::vec4(localN, 0));
+    float u = (1 + atan2(localN.z, localN.x) / M_PI) * 0.5f;
+    float v = acosf(localN.y) / M_PI;
 
     outRec = _makeHitRecord(ray, tnear, N, glm::vec2(u, v));
     return true;

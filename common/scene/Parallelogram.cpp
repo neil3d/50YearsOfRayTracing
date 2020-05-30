@@ -4,6 +4,7 @@ namespace RayTracingHistory {
 
 bool Parallelogram::hit(const Ray& ray, float tMin, float tMax,
                         HitRecord& outRec) {
+  // TODO: instancing
   glm::vec3 anchor = getAnchor();
   HitRecord pHit;
   if (Plane::hit(ray, tMin, tMax, pHit)) {
