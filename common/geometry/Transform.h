@@ -62,7 +62,7 @@ struct Transform {
     if (!bDirty) return;
     bDirty = false;
 
-    static glm::mat4 identity(1);
+    static glm::mat4 identity = glm::identity<glm::mat4>();
     local2World = glm::translate(identity, position);
     local2World *= glm::mat4_cast(rotation);
     local2World = glm::scale(local2World, scale);

@@ -20,8 +20,8 @@
 
 namespace RayTracingHistory {
 
-constexpr float BALL_GLOSS = 0.85f;
-constexpr float BALL_KS = 0.45f;
+constexpr float BALL_GLOSS = 0.75f;
+constexpr float BALL_KS = 0.55f;
 #ifdef SCENE_A
 constexpr float BALL_PS = 1.75f;
 #else
@@ -83,7 +83,7 @@ class BilliardScene : public MyScene {
 #if SCENE_A
     glm::vec3 wPos(2, 1, 2);
 #else
-    glm::vec3 wPos(0, 1, 0);
+    glm::vec3 wPos(0.5f, 1, 0.5f);
 #endif
 
     MySceneObject& whiteSphere = createObject<Sphere>("ball_white")
@@ -95,17 +95,17 @@ class BilliardScene : public MyScene {
         .setGloss(0.5f)
         .setCoefficient(BALL_KS)
         .setColor(glm::vec3(0.88f));
-    whiteSphere.createAnimator(true).addKey(1.0f, wPos + glm::vec3(-0.25f, 0, -0.25f),
+    whiteSphere.createAnimator(true).addKey(1.0f, wPos + glm::vec3(-0.55f, 0, -0.55f),
                                             glm::vec3(0));
 
     float PS = BALL_PS;
     createTexturedBall(glm::vec3(-1.5f * PS, 1, 1.15f * PS),
                        glm::vec3(0, 0, 108), 0.0f, "ball_8");
-    createTexturedBall(glm::vec3(-2.75f * PS, 1, 2.75f), glm::vec3(0, 0, 55),
+    createTexturedBall(glm::vec3(-2.75f * PS, 1, 2.75f), glm::vec3(10, -40, 55),
                        0.0f, "ball_4");
     createTexturedBall(glm::vec3(-1.25f * PS, 1, -0.15f * PS),
                        glm::vec3(90, 0, 33), 1.0f, "ball_9");
-    createTexturedBall(glm::vec3(-1.5f * PS, 1, -1.5f * PS),
+    createTexturedBall(glm::vec3(-1.25f * PS, 1, -1.25f * PS),
                        glm::vec3(0, 0, 99), 0.5f, "ball_5");
   }
 };
