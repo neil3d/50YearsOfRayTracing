@@ -21,6 +21,7 @@ class Material : public MyMaterial {
  public:
   float gloss = 0.0f;
   float Ks = 0.4f;  // the specular reflection coefficient
+  glm::vec2 uvTiling = {1, 1};
 
   Material& setGloss(float g) {
     gloss = g;
@@ -29,6 +30,11 @@ class Material : public MyMaterial {
 
   Material& setCoefficient(float _Ks) {
     Ks = _Ks;
+    return *this;
+  }
+
+  Material& setTiling(float u, float v) {
+    uvTiling = glm::vec2(u, v);
     return *this;
   }
 
@@ -56,7 +62,7 @@ class Material : public MyMaterial {
 
   glm::vec3 sampleAlbedo(const glm::vec2& uv, const glm::vec3& p) {
     if (albedo)
-      return albedo->sample(uv, p);
+      return albedo->sample(uvTiling * uv, p);
     else
       return glm::vec3(1);
   }

@@ -10,6 +10,7 @@ bool Plane::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
     if (t >= 0) {
       if (t > tMin && t < tMax) {
         outRec = _makeHitRecord(ray, t, mNormal, glm::vec2());
+        outRec.uv = glm::vec2(outRec.p.x, outRec.p.z);
         return true;
       }
     }

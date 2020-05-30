@@ -49,13 +49,20 @@ class BilliardScene : public MyScene {
         .setIntensity(2.f);
 
     // setup scene objects
-    createObject<Plane>("ground")
+    createObject<Plane>("table")
         .createMaterial<Material>()
+#if 0
         .setGloss(0.2)
         .setCoefficient(0.6f)
         .setCheckerTexture(glm::vec3(0, 0, 0), glm::vec3(0.4f, 0.4f, 0.4f));
+#else
+        .setGloss(2.0f)
+        .setCoefficient(0.0f)
+        .setTexture2D("content/billiard/table.jpg")
+        .setTiling(0.2f, 0.2f);
+#endif
 
-    createObject<Sphere>("ball_white")
+            createObject<Sphere>("ball_white")
         .setCenter(glm::vec3(0, 1, 0))
         .setRadius(1)
         .createMaterial<Material>()
@@ -65,7 +72,7 @@ class BilliardScene : public MyScene {
 
     createTexturedBall(glm::vec3(-2.5f, 1, 1.5f), "ball_8");
     createTexturedBall(glm::vec3(-3.75f, 1, 3.5f), "ball_4");
-    createTexturedBall(glm::vec3(-2.25f, 1, -1.15f), "ball_1");
+    createTexturedBall(glm::vec3(-2.25f, 1, -1.15f), "ball_9");
     createTexturedBall(glm::vec3(-2.5f, 1, -3.5f), "ball_5");
   }
 };

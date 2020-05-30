@@ -22,8 +22,13 @@ int main(void) {
     auto scene = std::make_shared<BilliardScene>();
     scene->init();
 
+#if 1
     glm::vec3 eyePos(5, 10, 0);
     glm::vec3 lookAt(0, 1, 1);
+#else
+    glm::vec3 eyePos(2, 2.5f, -8);
+    glm::vec3 lookAt(0, 1, 0);
+#endif
     auto camera = std::make_shared<ThinLensCamera>();
     camera->setAperture(0.1f)
         .setFocusDist(glm::distance(eyePos, lookAt))
