@@ -22,12 +22,12 @@ int main(void) {
     auto scene = std::make_shared<BilliardScene>();
     scene->init();
 
-#if 1
+#if SCENE_A
+    glm::vec3 eyePos(-9, 4.5f, -6);
+    glm::vec3 lookAt(-2.25f * BALL_PS, 1, -1.15f * BALL_PS);
+#else
     glm::vec3 eyePos(4, 10, 0);
     glm::vec3 lookAt(-1, 1, 1);
-#else
-    glm::vec3 eyePos(2, 2.5f, -8);
-    glm::vec3 lookAt(0, 1, 0);
 #endif
     auto camera = std::make_shared<ThinLensCamera>();
     camera->setAperture(0.1f)

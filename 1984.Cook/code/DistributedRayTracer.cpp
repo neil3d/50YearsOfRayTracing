@@ -44,9 +44,9 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         for (int q = 0; q < n; q++) {
           int index = p * n + q;
           jitteredPointsR[index] =
-              invN * (glm::diskRand(1.0f) + glm::vec2(p, q));
+              invN * (glm::linearRand(0.0f, 1.0f) + glm::vec2(p, q));
           jitteredPointsS[index] =
-              invN * (glm::diskRand(1.0f) + glm::vec2(p, q));
+              invN * (glm::linearRand(0.0f, 1.0f) + glm::vec2(p, q));
         }  // end of for(q)
       }    // end of for(p)
       std::shuffle(jitteredPointsS.begin(), jitteredPointsS.end(), stdRand);
@@ -74,8 +74,13 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
 
   if (depth > MAX_DEPTH) return glm::vec3(0);
 
+  // update object's transform by animator
+  float t = glm::clamp(xi.x, 0.0f, 1.0f);
+  pScene->evaluateAnim(t);
+
+  // intersections
   HitRecord hitRec;
-  bool bHit = pScene->closestHit(ray, 0, FLOAT_MAX, hitRec);
+  bool bHit = pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
 
   glm::vec3 color = _shade(ray.direction, hitRec, pScene, xi);
