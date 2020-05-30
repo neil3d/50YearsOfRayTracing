@@ -19,10 +19,4 @@ bool MyScene::closestHit(const Ray& ray, float tMin, float tMax,
   return hitAnything;
 }
 
-void MyScene::evaluateAnim(float t) {
-  for (auto& obj : mObjects) {
-    obj->evaluateAnim(t);
-  }  // end of for
-}
-
 }  // namespace RayTracingHistory

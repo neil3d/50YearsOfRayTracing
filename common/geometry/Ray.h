@@ -17,6 +17,7 @@ namespace RayTracingHistory {
 struct Ray {
   glm::vec3 origin;
   glm::vec3 direction;
+  float time = 0.0f;
 
   Ray() : origin(0, 0, 0), direction(0, 1, 0) {}
 

@@ -9,16 +9,17 @@
 #pragma once
 #include <random>
 
-#include "framework/DirectRenderer.h"
+#include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
 
 class BilliardScene;
 class PinholeCamera;
 
-class DistributedRayTracer : public DirectRenderer {
+class DistributedRayTracer : public TiledRenderer {
  public:
-  virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
+  virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
+                                 MyCamera::Ptr camera) override;
 
   virtual std::string getInfo() const override;
 

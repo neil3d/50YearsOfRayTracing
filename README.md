@@ -50,6 +50,7 @@
 
 ## MyFramework
 
+- [x] multi-threaded rendering
 - [x] scene object instancing
 - [ ] triangle mesh with BVH
 - [ ] bilinear texture filter

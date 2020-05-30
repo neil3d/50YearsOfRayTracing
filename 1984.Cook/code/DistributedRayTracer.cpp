@@ -15,14 +15,14 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
-constexpr int SPP_N = 10;
+constexpr int SPP_N = 4;
 constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
 }
 
-void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
+void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   ThinLensCamera* pCamera = static_cast<ThinLensCamera*>(camera.get());
   BilliardScene* pScene = dynamic_cast<BilliardScene*>(scene.get());
@@ -35,8 +35,8 @@ void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
   std::random_device randDevice;
   std::mt19937 stdRand(randDevice());
 
-  for (int y = 0; y < mFrameHeight; y++)
-    for (int x = 0; x < mFrameWidth; x++) {
+  for (int y = tile.top; y < tile.bottom; y++)
+    for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
 
       // jittering/stratified sampling
@@ -60,6 +60,7 @@ void DistributedRayTracer::_renderThread(MyScene::Ptr scene,
             (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight,
             sampleXi);
 
+        viewingRay.time = (sampleXi.x + sampleXi.y) * 0.5f;
         color += _traceRay(viewingRay, pScene, 0, sampleXi);
       }
 
@@ -73,10 +74,6 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
   const glm::vec3 bgColor(0.25f, 0.25f, 0.25f);
 
   if (depth > MAX_DEPTH) return glm::vec3(0);
-
-  // update object's transform by animator
-  float t = glm::clamp(xi.x, 0.0f, 1.0f);
-  pScene->evaluateAnim(t);
 
   // intersections
   HitRecord hitRec;
@@ -93,6 +90,7 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
   if (Ks > 0) {
     Ray rRay = _jitteredReflectionRay(ray.direction, hitRec.p, hitRec.normal,
                                       xi, mtl->gloss);
+    rRay.time = ray.time;
     glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1, xi);
     color += rColor * Ks;
   }
@@ -108,6 +106,7 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
   Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 
   Ray shadowRay = light.jitteredShadowRay(shadingPoint.p, xi);
+  shadowRay.time = xi.x;
   HitRecord hitRecS;
   constexpr float SHADOW_E = 0.001f;
 

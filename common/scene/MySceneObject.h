@@ -45,13 +45,9 @@ class MySceneObject {
   }
 
   MyAnimator& createAnimator(bool addInitKey) {
-    mAnimator = std::make_shared<MyAnimator>(&mTransform);
-    if (addInitKey) mAnimator->addKey(0, &mTransform);
+    mAnimator = std::make_shared<MyAnimator>();
+    if (addInitKey) mAnimator->addKey(0, mTransform);
     return *mAnimator;
-  }
-
-  void evaluateAnim(float t){
-    if(mAnimator) mAnimator->evaluate(t);
   }
 
  protected:

@@ -28,17 +28,16 @@ struct RotKey {
 };
 
 class MyAnimator {
-  Transform* mTransfrom;
   std::vector<PosKey> mPosTrack;
   std::vector<RotKey> mRotTrack;
 
  public:
   typedef std::shared_ptr<MyAnimator> Ptr;
-  MyAnimator(Transform* pTransform) : mTransfrom(pTransform) {}
+  MyAnimator() = default;
 
-  void addKey(float t, Transform* pTransform) {
-    mPosTrack.emplace_back(t, pTransform->getPosition());
-    mRotTrack.emplace_back(t, pTransform->getRotation());
+  void addKey(float t, const Transform& trans) {
+    mPosTrack.emplace_back(t, trans.getPosition());
+    mRotTrack.emplace_back(t, trans.getRotation());
   }
 
   void addKey(float t, const glm::vec3& pos, const glm::quat& rot) {
@@ -51,7 +50,7 @@ class MyAnimator {
     mRotTrack.emplace_back(t, glm::quat(glm::radians(degAngles)));
   }
 
-  void evaluate(float t) {
+  void evaluate(float t, Transform* target) {
     if (mPosTrack.size() < 2) return;
     if (mRotTrack.size() < 2) return;
 
@@ -63,13 +62,13 @@ class MyAnimator {
     const auto& posK1 = mPosTrack[k1];
     const auto& posK2 = mPosTrack[k2];
     float r = t / duration;
-    mTransfrom->setPosition((1 - r) * posK1.pos + r * posK2.pos);
+    target->setPosition((1 - r) * posK1.pos + r * posK2.pos);
 
     const auto& rotKey1 = mRotTrack[k1];
     const auto& rotKey2 = mRotTrack[k2];
     r = t / duration;
     glm::quat rot = glm::lerp(rotKey1.rot, rotKey2.rot, r);
-    mTransfrom->setRotation(rot);
+    target->setRotation(rot);
   }
 };
 

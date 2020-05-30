@@ -48,8 +48,6 @@ class MyScene {
     return hitAnything;
   }
 
-  void evaluateAnim(float t);
-
  protected:
   std::list<MySceneObject::Ptr> mObjects;
 

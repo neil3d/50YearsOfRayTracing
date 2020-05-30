@@ -12,10 +12,13 @@ static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
 }
 
 bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
+  Transform transform = mTransform;
+  if (mAnimator) mAnimator->evaluate(ray.time, &transform);
+
   // intersection in local space
   glm::vec4 wo(ray.origin, 1.0f);
   glm::vec4 wd(ray.direction, 0.0f);
-  const glm::mat4 &world2Local = mTransform.getWorld2Local();
+  const glm::mat4 &world2Local = transform.getWorld2Local();
   Ray localRay(world2Local * wo, world2Local * wd);
 
   glm::vec3 center(0, 0, 0);
@@ -32,7 +35,7 @@ bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
 
   if (tnear > tMin && tnear < tMax) {
     glm::vec3 localN = glm::normalize(localRay.getPoint(tnear) - center);
-    glm::vec3 N(mTransform.getWorld2LocalT() * glm::vec4(localN, 0));
+    glm::vec3 N(transform.getWorld2LocalT() * glm::vec4(localN, 0));
     float u = (1 + atan2(localN.z, localN.x) / M_PI) * 0.5f;
     float v = acosf(localN.y) / M_PI;
 
