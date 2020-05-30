@@ -18,7 +18,7 @@
 
 namespace RayTracingHistory {
 
-constexpr float BALL_GLOSS = 0.65f;
+constexpr float BALL_GLOSS = 0.85f;
 constexpr float BALL_KS = 0.45f;
 
 class BilliardScene : public MyScene {
@@ -72,17 +72,17 @@ class BilliardScene : public MyScene {
         .setRadius(1)
         .setRotation(0, 0, 0)
         .createMaterial<Material>()
-        .setGloss(BALL_GLOSS)
+        .setGloss(0.5f)
         .setCoefficient(BALL_KS)
         .setColor(glm::vec3(0.88f));
 
-    createTexturedBall(glm::vec3(-2.5f, 1, 1.5f), glm::vec3(0, 0, 78),
+    createTexturedBall(glm::vec3(-2.5f, 1, 1.5f), glm::vec3(0, 0, 108),
                        "ball_8");
-    createTexturedBall(glm::vec3(-3.75f, 1, 3.5f), glm::vec3(0, 0, 88),
+    createTexturedBall(glm::vec3(-3.75f, 1, 3.5f), glm::vec3(0, 0, 55),
                        "ball_4");
-    createTexturedBall(glm::vec3(-2.25f, 1, -1.15f), glm::vec3(0, 0, 99),
+    createTexturedBall(glm::vec3(-2.25f, 1, -1.15f), glm::vec3(0, 0, 33),
                        "ball_9");
-    createTexturedBall(glm::vec3(-2.5f, 1, -3.5f), glm::vec3(0, 0, 55),
+    createTexturedBall(glm::vec3(-2.5f, 1, -3.5f), glm::vec3(0, 0, 99),
                        "ball_5");
   }
 };

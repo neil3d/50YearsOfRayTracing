@@ -23,8 +23,8 @@ int main(void) {
     scene->init();
 
 #if 1
-    glm::vec3 eyePos(5, 10, 0);
-    glm::vec3 lookAt(0, 1, 1);
+    glm::vec3 eyePos(4, 10, 0);
+    glm::vec3 lookAt(-1, 1, 1);
 #else
     glm::vec3 eyePos(2, 2.5f, -8);
     glm::vec3 lookAt(0, 1, 0);

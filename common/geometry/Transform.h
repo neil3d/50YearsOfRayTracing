@@ -25,6 +25,8 @@ struct Transform {
     bDirty = true;
   }
 
+  glm::quat getRotation() const { return rotation; }
+
   void setRotation(float pitch, float yaw, float roll) {
     rotation = glm::quat(glm::vec3(pitch, yaw, roll));
     bDirty = true;

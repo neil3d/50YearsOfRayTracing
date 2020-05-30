@@ -14,6 +14,7 @@
 #include "../geometry/Transform.h"
 #include "../material/MyMaterial.h"
 #include "HitRecord.h"
+#include "MyAnimator.h"
 
 namespace RayTracingHistory {
 
@@ -43,6 +44,16 @@ class MySceneObject {
     return *this;
   }
 
+  MyAnimator& createAnimator(bool addInitKey) {
+    mAnimator = std::make_shared<MyAnimator>(&mTransform);
+    if (addInitKey) mAnimator->addKey(0, &mTransform);
+    return *mAnimator;
+  }
+
+  void evaluateAnim(float t){
+    if(mAnimator) mAnimator->evaluate(t);
+  }
+
  protected:
   HitRecord _makeHitRecord(const Ray& ray, const float t,
                            const glm::vec3& normal, const glm::vec2& uv) {
@@ -61,6 +72,7 @@ class MySceneObject {
   std::string mName;
   Transform mTransform;
   MyMaterial::Ptr mMaterial;
+  MyAnimator::Ptr mAnimator;
 
  public:
   MySceneObject(const MySceneObject&) = delete;
