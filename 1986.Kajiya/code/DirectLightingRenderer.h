@@ -7,11 +7,14 @@
  */
 
 #pragma once
-#include "framework/MyRenderer.h"
+#include "framework/DirectRenderer.h"
 
 namespace RayTracingHistory {
 
-class BasicPathTracer : public MyRenderer {
+/**
+ * A simple Monte Carlo solution for direct lighting only
+ */ 
+class DirectLightingRenderer : public DirectRenderer {
  public:
   virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
 };

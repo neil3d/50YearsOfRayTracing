@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "DemoScene.h"
-#include "BasicPathTracer.h"
+#include "DirectLightingRenderer.h"
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
@@ -17,7 +17,7 @@ int main(void) {
   try {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
-    auto renderer = app.createRenderer<BasicPathTracer>();
+    auto renderer = app.createRenderer<DirectLightingRenderer>();
     
     auto scene = std::make_shared<DemoScene>();
     scene->init();

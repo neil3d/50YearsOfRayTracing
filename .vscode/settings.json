@@ -73,6 +73,8 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "*.tcc": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "random": "cpp",
+        "numeric": "cpp"
     }
 }

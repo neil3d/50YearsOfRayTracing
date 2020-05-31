@@ -16,7 +16,7 @@
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
 
-#define SCENE_A false
+#define SCENE_A true
 
 namespace RayTracingHistory {
 
@@ -51,11 +51,12 @@ class BilliardScene : public MyScene {
         .setGloss(BALL_GLOSS)
         .setCoefficient(BALL_KS)
         .setTexture2D(szTexture);
-
+#if !SCENE_A
     if (animScale > 0.0f) {
       newSphere.createAnimator(true).addKey(1.0f, pos + animOffset * animScale,
                                             animRot * animScale);
     }
+#endif
   }
 
   virtual void init() override {
@@ -63,7 +64,7 @@ class BilliardScene : public MyScene {
     mLight
         .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
                           glm::vec3(0, 15, 0))
-        .setAmbient(0.15f)
+        .setAmbient(0.25f)
         .setIntensity(2.f);
 
     // setup scene objects
@@ -95,8 +96,10 @@ class BilliardScene : public MyScene {
         .setGloss(0.5f)
         .setCoefficient(BALL_KS)
         .setColor(glm::vec3(0.88f));
-    whiteSphere.createAnimator(true).addKey(1.0f, wPos + glm::vec3(-0.55f, 0, -0.55f),
-                                            glm::vec3(0));
+#if !SCENE_A
+    whiteSphere.createAnimator(true).addKey(
+        1.0f, wPos + glm::vec3(-0.55f, 0, -0.55f), glm::vec3(0));
+#endif
 
     float PS = BALL_PS;
     createTexturedBall(glm::vec3(-1.5f * PS, 1, 1.15f * PS),

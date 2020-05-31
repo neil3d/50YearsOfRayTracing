@@ -39,12 +39,12 @@
 
 - [x] Soft shadow
 - [x] Depth of field
-- [x] Gloss
+- [x] Glossy reflection
 - [x] Motion blur
 
 ![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-30.png)
 
-## Path Tracing 
+## Path Tracing - James Kajiya, 1986
 
 - [ ] TODO
 

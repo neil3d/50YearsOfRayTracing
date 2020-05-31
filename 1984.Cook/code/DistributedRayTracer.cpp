@@ -1,7 +1,5 @@
 #include "DistributedRayTracer.h"
 
-#include <spdlog/spdlog.h>
-
 #include <algorithm>
 #include <array>
 #include <glm/glm.hpp>
@@ -15,7 +13,7 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_DEPTH = 32;
-constexpr int SPP_N = 4;
+constexpr int SPP_N = 3;
 constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
@@ -80,7 +78,9 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
   bool bHit = pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
 
-  glm::vec3 color = _shade(ray.direction, hitRec, pScene, xi);
+  auto shading = _shade(ray.direction, hitRec, pScene, xi);
+  float shadowFactor = std::get<0>(shading);
+  glm::vec3 color = std::get<1>(shading);
 
   // reflection
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
@@ -92,16 +92,16 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
                                       xi, mtl->gloss);
     rRay.time = ray.time;
     glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1, xi);
-    color += rColor * Ks;
+
+    color += Ks * shadowFactor * rColor;
   }
 
   return color;
 }
 
-glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
-                                       const HitRecord& shadingPoint,
-                                       BilliardScene* pScene,
-                                       const glm::vec2 xi) {
+std::tuple<float, glm::vec3> DistributedRayTracer::_shade(
+    const glm::vec3& dir, const HitRecord& shadingPoint, BilliardScene* pScene,
+    const glm::vec2 xi) {
   const auto& light = pScene->getMainLight();
   Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 
@@ -118,13 +118,13 @@ glm::vec3 DistributedRayTracer::_shade(const glm::vec3& dir,
   glm::vec3 color;
   bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
   if (bShadow) {
-    float a = 0;  // light.ambient;
+    float a = light.ambient;
     color = a * albedo;
   } else {
     float lgt = light.lighting(shadingPoint.p, shadingPoint.normal, dir, xi);
     color = lgt * albedo;
   }
-  return color;
+  return std::make_tuple(bShadow ? light.ambient : 1.0f, color);
 }
 
 Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,

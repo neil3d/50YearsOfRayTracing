@@ -7,14 +7,13 @@
  */
 
 #pragma once
-#include <random>
+#include <tuple>
 
 #include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
 
 class BilliardScene;
-class PinholeCamera;
 
 class DistributedRayTracer : public TiledRenderer {
  public:
@@ -27,8 +26,10 @@ class DistributedRayTracer : public TiledRenderer {
   glm::vec3 _traceRay(const Ray& ray, BilliardScene* pScene, int depth,
                       const glm::vec2 xi);
 
-  glm::vec3 _shade(const glm::vec3& dir, const HitRecord& shadingPoint,
-                   BilliardScene* pScene, const glm::vec2 xi);
+  std::tuple<float, glm::vec3> _shade(const glm::vec3& dir,
+                                            const HitRecord& shadingPoint,
+                                            BilliardScene* pScene,
+                                            const glm::vec2 xi);
 
   Ray _jitteredReflectionRay(const glm::vec3& dir, const glm::vec3& point,
                              const glm::vec3& normal, const glm::vec2 xi,
