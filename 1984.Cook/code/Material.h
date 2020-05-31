@@ -20,7 +20,7 @@ class Material : public MyMaterial {
 
  public:
   float gloss = 0.0f;
-  float Ks = 0.4f;  // the specular reflection coefficient
+  float Kr = 0.4f;  // the reflection coefficient
   glm::vec2 uvTiling = {1, 1};
 
   Material& setGloss(float g) {
@@ -28,8 +28,8 @@ class Material : public MyMaterial {
     return *this;
   }
 
-  Material& setCoefficient(float _Ks) {
-    Ks = _Ks;
+  Material& setCoefficient(float _Kr) {
+    Kr = _Kr;
     return *this;
   }
 

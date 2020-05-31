@@ -85,15 +85,15 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
   // reflection
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
-  float Ks = 0.5f;
-  if (mtl) Ks = mtl->Ks;
-  if (Ks > 0) {
+  float Kr = shadowFactor;
+  if (mtl) Kr *= mtl->Kr;
+  if (Kr > 0) {
     Ray rRay = _jitteredReflectionRay(ray.direction, hitRec.p, hitRec.normal,
                                       xi, mtl->gloss);
     rRay.time = ray.time;
     glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1, xi);
 
-    color += Ks * shadowFactor * rColor;
+    color += Kr * rColor;
   }
 
   return color;

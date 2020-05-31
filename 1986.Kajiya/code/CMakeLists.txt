@@ -6,8 +6,8 @@ set(SUB_PROJECT_NAME BasicPathTracer)
 
 add_executable(${SUB_PROJECT_NAME} main.cpp
                 DemoScene.h
-                BasicPathTracer.h
-                BasicPathTracer.cpp
+                DirectLightingRenderer.h
+                DirectLightingRenderer.cpp
                 )
 
 target_link_libraries(${SUB_PROJECT_NAME} MyFramework)
