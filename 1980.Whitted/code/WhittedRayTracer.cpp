@@ -30,15 +30,16 @@ float mySchlick(float cosine, float Kn, float exp) {
   return r0 + (1 - r0) * pow((1 - cosine), exp);
 }
 
-void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
+void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
+                                         MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
 
   int W = mFrameWidth;
   int H = mFrameHeight;
 
-  for (int y = 0; y < H; y++)
-    for (int x = 0; x < W; x++) {
+  for (int y = tile.top; y < tile.bottom; y++)
+    for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
 
       Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);

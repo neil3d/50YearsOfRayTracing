@@ -7,13 +7,14 @@
  */
 
 #pragma once
-#include "framework/DirectRenderer.h"
+#include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
 
-class WhittedRayTracer : public DirectRenderer {
+class WhittedRayTracer : public TiledRenderer {
  public:
-  virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
+  virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
+                                 MyCamera::Ptr camera) override;
 
  private:
   Ray _generateReflectionRay(const glm::vec3& dir, const glm::vec3& point,
