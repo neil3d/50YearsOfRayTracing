@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <array>
 #include <glm/glm.hpp>
-#include <glm/gtc/random.hpp>
 #include <random>
 
 #include "BilliardScene.h"
@@ -32,6 +31,7 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   std::array<glm::vec2, n * n> jitteredPointsR, jitteredPointsS;
   std::random_device randDevice;
   std::mt19937 stdRand(randDevice());
+  std::uniform_real_distribution<float> uniformDist(0, 1);
 
   for (int y = tile.top; y < tile.bottom; y++)
     for (int x = tile.left; x < tile.right; x++) {
@@ -42,9 +42,11 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         for (int q = 0; q < n; q++) {
           int index = p * n + q;
           jitteredPointsR[index] =
-              invN * (glm::linearRand(0.0f, 1.0f) + glm::vec2(p, q));
+              invN * (glm::vec2(uniformDist(stdRand), uniformDist(stdRand)) +
+                      glm::vec2(p, q));
           jitteredPointsS[index] =
-              invN * (glm::linearRand(0.0f, 1.0f) + glm::vec2(p, q));
+              invN * (glm::vec2(uniformDist(stdRand), uniformDist(stdRand)) +
+                      glm::vec2(p, q));
         }  // end of for(q)
       }    // end of for(p)
       std::shuffle(jitteredPointsS.begin(), jitteredPointsS.end(), stdRand);
