@@ -21,14 +21,15 @@ int main(void) {
     auto scene = std::make_shared<DemoScene>();
     scene->init();
 
-    glm::vec3 eyePos(0, 1.25f, -8);
+    glm::vec3 eyePos(0, 10, -8);
     glm::vec3 lookAt(0, 1, 0);
     auto camera = std::make_shared<ThinLensCamera>();
-    camera->setAperture(0.01f)
-        .setFocusDist(glm::distance(eyePos, lookAt))
+    camera->setFocusDist(glm::distance(eyePos, lookAt))
+        .setAperture(0.001f)
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);
+    camera->init();
 
     renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 

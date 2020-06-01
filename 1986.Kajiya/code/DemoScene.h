@@ -30,7 +30,7 @@ class DemoScene : public MyScene {
 
     createObject<Parallelogram>("Light")
         .setEdges(glm::vec3(0, 0, 1), glm::vec3(1, 0, 0))
-        .setAnchor(glm::vec3(-0.5f, 0, -0.5f));
+        .setAnchor(glm::vec3(-0.5f, 5, -0.5f));
   }
 };
 }  // namespace RayTracingHistory
