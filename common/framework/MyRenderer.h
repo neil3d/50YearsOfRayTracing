@@ -30,11 +30,11 @@ class MyRenderer {
  public:
   virtual void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                            const glm::vec4& clearColor) = 0;
-  bool nextPresentReady() const;
   virtual bool isDone() const;
-  float getProgress() const;
-
+  virtual float getProgress() const;
   virtual std::string getInfo() const { return ""; }
+
+  bool nextPresentReady() const;
 
  public:
   virtual void _init(SDL_Window* pWnd);

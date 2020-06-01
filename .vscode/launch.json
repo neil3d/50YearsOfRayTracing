@@ -8,7 +8,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/1984.Cook/code/DistributedRayTracer",
+            "program": "${workspaceFolder}/build/1986.Kajiya/code/BasicPathTracer",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

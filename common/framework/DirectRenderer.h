@@ -32,6 +32,7 @@ class DirectRenderer : public MyRenderer {
         [this, scene, camera] { this->_renderThread(scene, camera); });
   }
 
+ private:
   virtual void _shutdown() override {
     mRuning = false;
     if (mRenderingThread.joinable()) mRenderingThread.join();

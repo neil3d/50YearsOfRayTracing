@@ -64,9 +64,11 @@ void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {
   }
 
   // gama
-  color.x = std::powf(color.x, gama);
-  color.y = std::powf(color.y, gama);
-  color.z = std::powf(color.z, gama);
+  if (gama != 1.0f) {
+    color.r = std::powf(color.r, gama);
+    color.g = std::powf(color.g, gama);
+    color.b = std::powf(color.b, gama);
+  }
 
   uint8_t r = 255.5f * std::clamp(color.r, 0.0f, 1.0f);
   uint8_t g = 255.5f * std::clamp(color.g, 0.0f, 1.0f);
