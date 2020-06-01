@@ -22,6 +22,7 @@
 
 ## Ray Casting - Arthur Appel, 1968
 
+- [x] Resolve visibility & depth
 - [x] Lambertian shading
 - [x] Sharp shadow
 
