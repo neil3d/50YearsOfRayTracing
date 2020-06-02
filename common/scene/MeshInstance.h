@@ -26,7 +26,7 @@ class MeshInstance : public MySceneObject {
   MeshInstance& setScale(glm::vec3 scale);
   MeshInstance& setRotation(float pitch, float yaw, float roll);
 
-  virtual bool hit(const Ray& ray, float tMin, float tMax,
+  virtual bool intersect(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;
 
  private:

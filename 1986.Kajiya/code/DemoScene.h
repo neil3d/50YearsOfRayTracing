@@ -21,7 +21,7 @@ class DemoScene : public MyScene {
   virtual void init() override {
     // create objects
     constexpr float W = 8;
-    constexpr float H = 16;
+    constexpr float H = 10;
     createObject<Parallelogram>("Floor")
         .setEdges(glm::vec3(0, 0, H), glm::vec3(W, 0, 0))
         .setAnchor(glm::vec3(W / -2, 0, H / -2));

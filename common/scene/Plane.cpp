@@ -2,7 +2,7 @@
 
 namespace RayTracingHistory {
 
-bool Plane::hit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
+bool Plane::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
   glm::vec3 pt = mTransform.getPosition();
   float denominator = glm::dot(mNormal, ray.direction);
   if (fabsf(denominator) > 0.0001f) {

@@ -11,7 +11,7 @@ static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
   return true;
 }
 
-bool Sphere::hit(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
+bool Sphere::intersect(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
   Transform transform = mTransform;
   if (mAnimator) mAnimator->evaluate(ray.time, &transform);
 

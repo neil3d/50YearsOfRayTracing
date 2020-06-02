@@ -9,7 +9,7 @@ bool MyScene::closestHit(const Ray& ray, float tMin, float tMax,
   HitRecord rec;
 
   for (auto& obj : mObjects) {
-    if (obj->hit(ray, tMin, closestSoFar, rec)) {
+    if (obj->intersect(ray, tMin, closestSoFar, rec)) {
       hitAnything = true;
       closestSoFar = rec.t;
       outRec = rec;

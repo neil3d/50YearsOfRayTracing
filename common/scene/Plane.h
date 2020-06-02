@@ -15,7 +15,7 @@ class Plane : public MySceneObject {
  public:
   using MySceneObject::MySceneObject;
 
-  virtual bool hit(const Ray& ray, float tMin, float tMax,
+  virtual bool intersect(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;
 
   // (p-p0).n = 0

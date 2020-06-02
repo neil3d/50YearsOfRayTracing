@@ -17,7 +17,7 @@ struct AABBox {
   glm::vec3 min;
   glm::vec3 max;
 
-  bool hit(const Ray& ray, float tMin, float tMax) {
+  bool intersect(const Ray& ray, float tMin, float tMax) {
     for (int i = 0; i < 3; i++) {
       float invD = 1.0f / ray.direction[i];
       float t0 = (min[i] - ray.origin[i]) * invD;

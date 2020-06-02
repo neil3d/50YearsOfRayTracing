@@ -39,7 +39,7 @@ class MyScene {
     HitRecord rec;
 
     for (auto& obj : mObjects) {
-      if (obj->hit(ray, tMin, tMax, rec)) {
+      if (obj->intersect(ray, tMin, tMax, rec)) {
         hitAnything = true;
         if (callback(rec)) break;
       }

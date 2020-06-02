@@ -24,7 +24,7 @@ class MySceneObject {
   MySceneObject(const std::string& szName) : mName(szName) {}
   virtual ~MySceneObject() = default;
 
-  virtual bool hit(const Ray& ray, float tMin, float tMax,
+  virtual bool intersect(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) = 0;
 
   template <typename T, typename... Args>
@@ -49,6 +49,8 @@ class MySceneObject {
     if (addInitKey) mAnimator->addKey(0, mTransform);
     return *mAnimator;
   }
+
+  const std::string& getName() const { return mName; }
 
  protected:
   HitRecord _makeHitRecord(const Ray& ray, const float t,

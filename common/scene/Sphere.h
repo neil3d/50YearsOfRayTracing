@@ -29,7 +29,7 @@ class Sphere : public MySceneObject {
     return mTransform.getPosition();
   }
 
-  virtual bool hit(const Ray& ray, float tMin, float tMax,
+  virtual bool intersect(const Ray& ray, float tMin, float tMax,
                    HitRecord& outRec) override;
 
  private:

@@ -24,7 +24,7 @@ MeshInstance& MeshInstance::setRotation(float pitch, float yaw, float roll) {
   return *this;
 }
 
-bool MeshInstance::hit(const Ray& ray, float tMin, float tMax,
+bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
                        HitRecord& outRec) {
   // tranform ray to local space
   Ray localRay = ray;
