@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <tuple>
 #include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
@@ -19,9 +20,8 @@ class WhittedRayTracer : public TiledRenderer {
  private:
   Ray _generateReflectionRay(const glm::vec3& dir, const glm::vec3& point,
                              const glm::vec3& normal);
-  bool _generateRefractationRay(const glm::vec3& dir, const glm::vec3& point,
-                                const glm::vec3& normal, float Kn, Ray& outRay,
-                                float& outReflectivity);
+  std::tuple<bool, float, Ray> _generateRefractationRay(const glm::vec3& dir, const glm::vec3& point,
+                                const glm::vec3& normal, float Kn);
 
   glm::vec3 _traceRay(Ray ray, MyScene* pScene, int depth);
 

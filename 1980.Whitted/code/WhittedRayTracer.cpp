@@ -81,11 +81,11 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, MyScene* pScene, int depth) {
     float Kn = mtl->Kn;
     glm::vec3 normal = hitRec.normal;
 
-    Ray rRay;
-    bool bRefraction = false;
-
-    bRefraction = _generateRefractationRay(ray.direction, hitRec.p, normal, Kn,
-                                           rRay, reflectivity);
+    auto refractTuple =
+        _generateRefractationRay(ray.direction, hitRec.p, normal, Kn);
+    bool bRefraction = std::get<0>(refractTuple);
+    reflectivity = std::get<1>(refractTuple);
+    Ray rRay = std::get<2>(refractTuple);
 
     if (bRefraction) {
       glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1);
@@ -152,11 +152,9 @@ Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
   return Ray(point, outDir);
 }
 
-bool WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
-                                                const glm::vec3& point,
-                                                const glm::vec3& normal,
-                                                float Kn, Ray& outRay,
-                                                float& outReflectivity) {
+std::tuple<bool, float, Ray> WhittedRayTracer::_generateRefractationRay(
+    const glm::vec3& dir, const glm::vec3& point, const glm::vec3& normal,
+    float Kn) {
   glm::vec3 outwardNormal;
   float niOverNt, cosine;
 
@@ -174,16 +172,12 @@ bool WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
   bool ret;
 
   if (myRefract(dir, outwardNormal, niOverNt, refracted)) {
-    outReflectivity = mySchlick(cosine, Kn, 5.0f);
-    outRay = Ray(point, refracted);
-    ret = true;
-  } else {
-    // total internal reflection
-    outReflectivity = 1.0f;
-    ret = false;
+    float reflectivity = mySchlick(cosine, Kn, 5.0f);
+    return std::make_tuple(true, reflectivity, Ray(point, refracted));
   }
 
-  return ret;
+  // total internal reflection
+  return std::make_tuple(false, 1.0f, Ray());
 }
 
 }  // namespace RayTracingHistory
