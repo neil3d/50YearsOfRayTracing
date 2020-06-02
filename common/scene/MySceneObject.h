@@ -25,7 +25,7 @@ class MySceneObject {
   virtual ~MySceneObject() = default;
 
   virtual bool intersect(const Ray& ray, float tMin, float tMax,
-                   HitRecord& outRec) = 0;
+                         HitRecord& outRec) = 0;
 
   template <typename T, typename... Args>
   T& createMaterial(Args&&... args) {
@@ -33,6 +33,8 @@ class MySceneObject {
     mMaterial = newMtl;
     return *newMtl;
   }
+
+  void setMaterial(MyMaterial::Ptr pMtl) { mMaterial = pMtl; }
 
   MySceneObject& setPosition(const glm::vec3& pos) {
     mTransform.setPosition(pos);

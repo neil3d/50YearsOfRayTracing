@@ -1,8 +1,3 @@
-#pragma once
-#include <list>
-#include <memory>
-#include <string>
-
 /**
  * A Brief History of Ray tracing
  *
@@ -10,6 +5,12 @@
  *
  * Created by yanliang.fyl, 2020
  */
+
+#pragma once
+#include <list>
+#include <memory>
+#include <string>
+#include <map>
 
 #include "MySceneObject.h"
 
@@ -24,6 +25,8 @@ class MyScene {
 
   virtual void init() = 0;
 
+  void setupMaterials(const std::map<std::string, MyMaterial::Ptr>& materialMap);
+
   template <typename T, typename... Args>
   T& createObject(Args&&... args) {
     auto newObject = std::make_shared<T>(std::forward<Args>(args)...);
@@ -31,7 +34,8 @@ class MyScene {
     return *newObject;
   }
 
-  bool closestHit(const Ray& ray, float tMin, float tMax, HitRecord& outRec) const;
+  bool closestHit(const Ray& ray, float tMin, float tMax,
+                  HitRecord& outRec) const;
 
   template <typename T>
   bool anyHit(const Ray& ray, float tMin, float tMax, T callback) const {
