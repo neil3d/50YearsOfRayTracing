@@ -4,14 +4,16 @@
 #include <glm/gtc/random.hpp>
 #include <random>
 
+#include "MaterialBase.h"
 #include "framework/PinholeCamera.h"
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int TARGET_SPP = 4;
+constexpr int BOUNCES = 100;
+constexpr int MAX_DEPTH = 4;
 
-void SimpleMonteCarloApproach::_renderThread(MyScene::Ptr scene,
-                                             MyCamera::Ptr camera) {
+void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
+                                                 MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
 
@@ -22,8 +24,8 @@ void SimpleMonteCarloApproach::_renderThread(MyScene::Ptr scene,
   int W = mFrameWidth;
   int H = mFrameHeight;
 
-  for (int y = 0; y < H; y++)
-    for (int x = 0; x < W; x++) {
+  for (int y = tile.top; y < tile.bottom; y++)
+    for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
 
       Ray primaryRay =
@@ -39,12 +41,43 @@ void SimpleMonteCarloApproach::_renderThread(MyScene::Ptr scene,
 glm::vec3 SimpleMonteCarloApproach::_traceRay(Ray ray, MyScene* pScene,
                                               int depth) {
   const glm::vec3 bgColor(0.f, 0.f, 0.f);
+  if (depth > MAX_DEPTH) return bgColor;
 
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
 
-  return hitRec.normal * glm::vec3(1, 1, -1);
+  return _shade(ray.direction, hitRec, pScene, depth);
+}
+
+glm::vec3 SimpleMonteCarloApproach::_shade(const glm::vec3& dir,
+                                           const HitRecord& shadingPoint,
+                                           MyScene* pScene, int depth) {
+  MaterialBase* pMtl = static_cast<MaterialBase*>(shadingPoint.mtl);
+
+  // error check
+  if (!pMtl) return glm::vec3(1, 0, 0);
+
+  if (pMtl->getEmission() > 0.001f) {
+    // hit a light
+    return pMtl->getEmission() *
+           pMtl->getBaseColor(shadingPoint.uv, shadingPoint.p);
+  }
+
+  // Monte Carlo Estimating
+  glm::vec3 sum(0);
+
+  for (int i = 0; i < BOUNCES; i++) {
+    glm::vec3 bounceDir = pMtl->scatter(shadingPoint.normal);
+    float pdf = pMtl->pdf(bounceDir, shadingPoint.normal);
+    float cosine = std::max(0.0f, glm::dot(bounceDir, shadingPoint.normal));
+    if (pdf > 0) {
+      Ray ray(shadingPoint.p, bounceDir);
+      sum += _traceRay(ray, pScene, depth + 1) * cosine / pdf;
+    }
+  }
+
+  return sum / (float)BOUNCES;
 }
 
 }  // namespace RayTracingHistory

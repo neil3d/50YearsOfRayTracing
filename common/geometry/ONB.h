@@ -34,6 +34,8 @@ struct ONB {
     V = glm::cross(N, U);
     W = glm::cross(U, V);
   }
+
+  glm::vec3 local(const glm::vec3& p) { return p.x * U + p.y * V + p.z * W; }
 };
 
 }  // namespace RayTracingHistory

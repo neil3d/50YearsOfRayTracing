@@ -17,18 +17,23 @@ namespace RayTracingHistory {
 
 class MaterialBase : public MyMaterial {
  public:
-  MaterialBase() {
-    auto ct = std::make_shared<ConstantTexture>();
-    ct->setColor(glm::vec3(1, 0.5f, 0.25f));
-    mBaseColor = ct;
-  }
-
   glm::vec3 getBaseColor(const glm::vec2& uv, const glm::vec3& p) {
     if (mBaseColor)
       return mBaseColor->sample(uv, p);
     else
       return glm::vec3(1);
   }
+
+  MaterialBase& setEmission(float val) {
+    mEmission = val;
+    return *this;
+  }
+
+  float getEmission() const { return mEmission; }
+
+  virtual glm::vec3 scatter(const glm::vec3& normal) = 0;
+
+  virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) = 0;
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;

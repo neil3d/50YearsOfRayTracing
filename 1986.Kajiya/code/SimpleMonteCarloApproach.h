@@ -7,19 +7,22 @@
  */
 
 #pragma once
-#include "framework/DirectRenderer.h"
+#include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
 
 /**
  * A simple Monte Carlo solution for direct lighting only
  */
-class SimpleMonteCarloApproach : public DirectRenderer {
+class SimpleMonteCarloApproach : public TiledRenderer {
  private:
-  virtual void _renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) override;
+    virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
+                                 MyCamera::Ptr camera) override;
 
   glm::vec3 _traceRay(Ray ray, MyScene* pScene, int depth);
 
+  glm::vec3 _shade(const glm::vec3& dir, const HitRecord& shadingPoint,
+                   MyScene* pScene, int depth);
 };
 
 }  // namespace RayTracingHistory
