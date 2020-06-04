@@ -20,18 +20,12 @@ class PinholeCamera : public MyCamera {
   }
 
   Ray generateViewingRay(float u, float v) {
-    if (!mInited) {
-      _initImagePlane();
-      mInited = true;
-    }
-
     glm::vec3 origin = mEyePos;
     return Ray(origin, mImagePlaneLeftTop + u * mImagePlaneH -
                            v * mImagePlaneV - origin);
   }
 
- private:
-  void _initImagePlane() {
+  void init() {
     float halfHeight = tanf(mFov * 0.5f) * mZNear;
     float halfWidth = mAspect * halfHeight;
 
@@ -42,7 +36,6 @@ class PinholeCamera : public MyCamera {
   }
 
  private:
-  bool mInited = false;
   float mZNear;
   glm::vec3 mImagePlaneH, mImagePlaneV, mImagePlaneLeftTop;
 };

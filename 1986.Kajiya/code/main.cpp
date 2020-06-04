@@ -1,9 +1,9 @@
 #include <iostream>
 
 #include "DemoScene.h"
-#include "DirectLightingRenderer.h"
+#include "SimpleMonteCarloApproach.h"
 #include "framework/MyApp.h"
-#include "framework/ThinLensCamera.h"
+#include "framework/PinholeCamera.h"
 
 using namespace RayTracingHistory;
 
@@ -16,16 +16,15 @@ int main(void) {
   try {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
-    auto renderer = app.createRenderer<DirectLightingRenderer>();
+    auto renderer = app.createRenderer<SimpleMonteCarloApproach>();
 
     auto scene = std::make_shared<DemoScene>();
     scene->init();
 
     glm::vec3 eyePos(0, 10, -8);
     glm::vec3 lookAt(0, 1, 0);
-    auto camera = std::make_shared<ThinLensCamera>();
-    camera->setFocusDist(glm::distance(eyePos, lookAt))
-        .setAperture(0.001f)
+    auto camera = std::make_shared<PinholeCamera>();
+    camera->setZNear(1.0f)
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);

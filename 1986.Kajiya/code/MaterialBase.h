@@ -15,17 +15,24 @@
 
 namespace RayTracingHistory {
 
-enum class ESamplingType { Uniform };
-
 class MaterialBase : public MyMaterial {
-  std::shared_ptr<MyTexture> mAlbedo;
-  ESamplingType mSampling = ESamplingType::Uniform;
-
  public:
   MaterialBase() {
     auto ct = std::make_shared<ConstantTexture>();
-    ct->setColor(color);
-    mAlbedo = ct;
+    ct->setColor(glm::vec3(1, 0.5f, 0.25f));
+    mBaseColor = ct;
   }
+
+  glm::vec3 getBaseColor(const glm::vec2& uv, const glm::vec3& p) {
+    if (mBaseColor)
+      return mBaseColor->sample(uv, p);
+    else
+      return glm::vec3(1);
+  }
+
+ protected:
+  std::shared_ptr<MyTexture> mBaseColor;
+  float mEmission = 0;
 };
+
 }  // namespace RayTracingHistory

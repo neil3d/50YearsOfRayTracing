@@ -11,7 +11,7 @@
 #include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
-class PathTracer : public TiledRenderer {
+class MonteCarloPathTracer : public TiledRenderer {
  public:
   virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
                                  MyCamera::Ptr camera) override;

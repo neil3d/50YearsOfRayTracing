@@ -8,7 +8,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/1986.Kajiya/code/BasicPathTracer",
+            "program": "${workspaceFolder}/build/1986.Kajiya/code/MonteCarloPathTracer",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
