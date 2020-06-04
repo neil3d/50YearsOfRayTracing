@@ -8,6 +8,7 @@
 #include "BilliardScene.h"
 #include "Material.h"
 #include "framework/ThinLensCamera.h"
+#include "geometry/ONB.h"
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
@@ -134,22 +135,12 @@ Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,
                                                  const glm::vec3& normal,
                                                  const glm::vec2 xi,
                                                  float glossy) {
-  // choose any vector T not collinear with normal
-  glm::vec3 T = normal;
+  ONB onb(normal);
 
-  if (normal.x < normal.y && normal.x < normal.z) {
-    T.x = 1.0f;
-  } else if (normal.y < normal.x && normal.y < normal.z) {
-    T.y = 1.0f;
-  } else
-    T.z = 1.0f;
-
-  // constructing orthonormal bases
-  T = glm::normalize(T);
   float u = -glossy / 2 + xi.x * glossy;
   float v = -glossy / 2 + xi.y * glossy;
-  glm::vec3 U = glossy * glm::cross(T, normal);
-  glm::vec3 V = glossy * glm::cross(normal, U);
+  glm::vec3 U = glossy * onb.U;
+  glm::vec3 V = glossy * onb.V;
 
   // jittered direction
   glm::vec3 R = glm::reflect(dir, normal);
