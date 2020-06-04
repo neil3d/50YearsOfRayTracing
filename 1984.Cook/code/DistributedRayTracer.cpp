@@ -115,17 +115,17 @@ std::tuple<float, glm::vec3> DistributedRayTracer::_shade(
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
 
-  glm::vec3 albedo(1);
-  if (mtl) albedo = mtl->sampleAlbedo(shadingPoint.uv, shadingPoint.p);
+  glm::vec3 baseColor(1);
+  if (mtl) baseColor = mtl->sampleBaseColor(shadingPoint.uv, shadingPoint.p);
 
   glm::vec3 color;
   bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
   if (bShadow) {
     float a = light.ambient;
-    color = a * albedo;
+    color = a * baseColor;
   } else {
     float lgt = light.lighting(shadingPoint.p, shadingPoint.normal, dir, xi);
-    color = lgt * albedo;
+    color = lgt * baseColor;
   }
   return std::make_tuple(bShadow ? light.ambient : 1.0f, color);
 }

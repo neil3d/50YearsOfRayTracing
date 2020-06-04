@@ -109,7 +109,7 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
   DemoScene* scene = dynamic_cast<DemoScene*>(pScene);
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
-  glm::vec3 albedo = mtl->sampleAlbedo(hitRec.uv, hitRec.p);
+  glm::vec3 baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
 
   glm::vec3 color(0);
 
@@ -133,13 +133,13 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
         light->blinnPhongShading(hitRec.p, hitRec.normal, dir, mtl->n);
 
     // ambient lighting
-    color += lgt.x * albedo;
+    color += lgt.x * baseColor;
 
     // diffuse lighting
-    color += mtl->Kd * lgt.y * attenuation * albedo;
+    color += mtl->Kd * lgt.y * attenuation * baseColor;
 
     // specular lighting
-    color += lgt.z * attenuation * albedo;
+    color += lgt.z * attenuation * baseColor;
   }  // end of for each light
 
   return color;

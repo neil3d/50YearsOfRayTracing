@@ -19,7 +19,7 @@ namespace RayTracingHistory {
  * Material for "Improved Model" (Whitted 1980)
  */
 class Material : public MyMaterial {
-  std::shared_ptr<MyTexture> albedo;
+  std::shared_ptr<MyTexture> baseColor;
 
  public:
   Material() {}
@@ -27,12 +27,12 @@ class Material : public MyMaterial {
   Material& setColor(const glm::vec3& color) {
     auto ct = std::make_shared<ConstantTexture>();
     ct->setColor(color);
-    albedo = ct;
+    baseColor = ct;
     return *this;
   }
 
   Material& setCheckerTexture() {
-    albedo = std::make_shared<CheckerTexture>();
+    baseColor = std::make_shared<CheckerTexture>();
     return *this;
   }
 
@@ -46,9 +46,9 @@ class Material : public MyMaterial {
     return *this;
   }
 
-  glm::vec3 sampleAlbedo(const glm::vec2& uv, const glm::vec3& p) {
-    if (albedo)
-      return albedo->sample(uv, p);
+  glm::vec3 sampleBaseColor(const glm::vec2& uv, const glm::vec3& p) {
+    if (baseColor)
+      return baseColor->sample(uv, p);
     else
       return glm::vec3(1);
   }

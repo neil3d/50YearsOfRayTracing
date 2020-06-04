@@ -16,7 +16,7 @@
 namespace RayTracingHistory {
 
 class Material : public MyMaterial {
-  std::shared_ptr<MyTexture> albedo;
+  std::shared_ptr<MyTexture> baseColor;
 
  public:
   float gloss = 0.0f;
@@ -41,14 +41,14 @@ class Material : public MyMaterial {
   Material& setTexture2D(const std::string& szFile) {
     auto tex = std::make_shared<Texture2D>();
     tex->loadImage(szFile);
-    albedo = tex;
+    baseColor = tex;
     return *this;
   }
 
   Material& setColor(const glm::vec3& color) {
     auto ct = std::make_shared<ConstantTexture>();
     ct->setColor(color);
-    albedo = ct;
+    baseColor = ct;
     return *this;
   }
 
@@ -56,13 +56,13 @@ class Material : public MyMaterial {
                               const glm::vec3& colorEven) {
     auto checker = std::make_shared<CheckerTexture>();
     checker->setColor(colorOdd, colorEven);
-    albedo = checker;
+    baseColor = checker;
     return *this;
   }
 
-  glm::vec3 sampleAlbedo(const glm::vec2& uv, const glm::vec3& p) {
-    if (albedo)
-      return albedo->sample(uvTiling * uv, p);
+  glm::vec3 sampleBaseColor(const glm::vec2& uv, const glm::vec3& p) {
+    if (baseColor)
+      return baseColor->sample(uvTiling * uv, p);
     else
       return glm::vec3(1);
   }
