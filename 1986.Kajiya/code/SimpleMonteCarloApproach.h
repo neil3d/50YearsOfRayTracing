@@ -16,12 +16,10 @@ namespace RayTracingHistory {
  */
 class SimpleMonteCarloApproach : public TiledRenderer {
  private:
-    virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
+  virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
                                  MyCamera::Ptr camera) override;
 
-  glm::vec3 _traceRay(Ray ray, MyScene* pScene, int depth);
-
-  glm::vec3 _shade(const Ray& wi, const HitRecord& shadingPoint,
+  glm::vec3 _shade(const Ray& wo, const HitRecord& shadingPoint,
                    MyScene* pScene, int depth);
 };
 

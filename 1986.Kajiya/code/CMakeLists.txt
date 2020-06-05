@@ -11,6 +11,8 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 SimpleMonteCarloApproach.cpp
                 LambertianMaterial.h
                 MaterialBase.h
+                MonteCarloPathTracer.h
+                MonteCarloPathTracer.cpp
                 )
 
 target_link_libraries(${SUB_PROJECT_NAME} MyFramework)
