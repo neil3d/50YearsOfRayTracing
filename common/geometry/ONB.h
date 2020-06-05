@@ -35,7 +35,7 @@ struct ONB {
     W = N;
   }
 
-  glm::vec3 local(const glm::vec3& p) { return p.x * U + p.y * V + p.z * W; }
+  glm::vec3 localToWorld(const glm::vec3& p) { return p.x * U + p.y * V + p.z * W; }
 };
 
 }  // namespace RayTracingHistory

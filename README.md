@@ -48,6 +48,9 @@
 ## Path Tracing - James Kajiya, 1986
 
 - [ ] TODO
+- Material
+    * [x] Diffuse material / uniform sampling
+    * [ ] Lambertian material / cosine sampling
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-05.png)
 

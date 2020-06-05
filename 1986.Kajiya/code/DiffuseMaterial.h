@@ -24,7 +24,7 @@ class DiffuseMaterial : public MaterialBase {
     glm::vec3 rand = glm::sphericalRand(1.0f);
     rand.z = fabsf(rand.z);
     ONB onb(normal);
-    return onb.local(rand);
+    return onb.localToWorld(rand);
   }
 
   virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) override {

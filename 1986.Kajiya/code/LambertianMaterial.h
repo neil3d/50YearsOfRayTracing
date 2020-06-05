@@ -36,7 +36,7 @@ class LambertianMaterial : public MaterialBase {
   virtual glm::vec3 scatter(const glm::vec3& normal) override {
     ONB onb(normal);
     glm::vec3 rand = _randomCosineDirection();
-    return onb.local(rand);
+    return onb.localToWorld(rand);
   }
 
   virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) override {
