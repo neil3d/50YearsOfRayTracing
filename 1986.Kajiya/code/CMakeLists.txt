@@ -6,6 +6,7 @@ set(SUB_PROJECT_NAME MonteCarloPathTracer)
 
 add_executable(${SUB_PROJECT_NAME} main.cpp
                 DemoScene.h
+                DiffuseMaterial.h
                 SimpleMonteCarloApproach.h
                 SimpleMonteCarloApproach.cpp
                 LambertianMaterial.h

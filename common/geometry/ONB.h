@@ -32,7 +32,7 @@ struct ONB {
     // constructing orthonormal bases
     U = glm::cross(T, N);
     V = glm::cross(N, U);
-    W = glm::cross(U, V);
+    W = N;
   }
 
   glm::vec3 local(const glm::vec3& p) { return p.x * U + p.y * V + p.z * W; }

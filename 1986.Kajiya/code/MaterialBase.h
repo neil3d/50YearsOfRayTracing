@@ -29,6 +29,13 @@ class MaterialBase : public MyMaterial {
     return *this;
   }
 
+  MaterialBase& setColor(const glm::vec3& color) {
+    auto ct = std::make_shared<ConstantTexture>();
+    ct->setColor(color);
+    mBaseColor = ct;
+    return *this;
+  }
+
   float getEmission() const { return mEmission; }
 
   virtual glm::vec3 scatter(const glm::vec3& normal) = 0;

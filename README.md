@@ -49,6 +49,8 @@
 
 - [ ] TODO
 
+![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-05.png)
+
 ## MyFramework
 
 - [x] multi-threaded rendering

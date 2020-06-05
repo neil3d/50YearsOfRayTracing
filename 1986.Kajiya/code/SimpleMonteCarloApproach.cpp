@@ -9,7 +9,7 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int BOUNCES = 100;
+constexpr int SIMPLES = 15;
 constexpr int MAX_DEPTH = 4;
 
 void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
@@ -33,7 +33,7 @@ void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
       glm::vec3 color = _traceRay(primaryRay, scene.get(), 0);
 
-      _writePixel(x, y, glm::vec4(color, 1), 1.0f);
+      _writePixel(x, y, glm::vec4(color, 1), 0.68f);
       mPixelCount++;
     }  // end of for(x)
 }
@@ -47,10 +47,10 @@ glm::vec3 SimpleMonteCarloApproach::_traceRay(Ray ray, MyScene* pScene,
   bool bHit = pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
 
-  return _shade(ray.direction, hitRec, pScene, depth);
+  return _shade(ray, hitRec, pScene, depth);
 }
 
-glm::vec3 SimpleMonteCarloApproach::_shade(const glm::vec3& dir,
+glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wi,
                                            const HitRecord& shadingPoint,
                                            MyScene* pScene, int depth) {
   MaterialBase* pMtl = static_cast<MaterialBase*>(shadingPoint.mtl);
@@ -58,26 +58,27 @@ glm::vec3 SimpleMonteCarloApproach::_shade(const glm::vec3& dir,
   // error check
   if (!pMtl) return glm::vec3(1, 0, 0);
 
+  glm::vec3 baseColor = pMtl->getBaseColor(shadingPoint.uv, shadingPoint.p);
   if (pMtl->getEmission() > 0.001f) {
     // hit a light
-    return pMtl->getEmission() *
-           pMtl->getBaseColor(shadingPoint.uv, shadingPoint.p);
+    return pMtl->getEmission() * baseColor;
   }
 
   // Monte Carlo Estimating
   glm::vec3 sum(0);
 
-  for (int i = 0; i < BOUNCES; i++) {
+  float Kd = pow(0.68f, depth * depth);
+
+  for (int i = 0; i < SIMPLES; i++) {
     glm::vec3 bounceDir = pMtl->scatter(shadingPoint.normal);
     float pdf = pMtl->pdf(bounceDir, shadingPoint.normal);
-    float cosine = std::max(0.0f, glm::dot(bounceDir, shadingPoint.normal));
-    if (pdf > 0) {
-      Ray ray(shadingPoint.p, bounceDir);
-      sum += _traceRay(ray, pScene, depth + 1) * cosine / pdf;
-    }
+    float cosine = glm::dot(bounceDir, shadingPoint.normal);
+
+    Ray ray(shadingPoint.p, bounceDir);
+    sum += _traceRay(ray, pScene, depth + 1) * baseColor * Kd * cosine / pdf;
   }
 
-  return sum / (float)BOUNCES;
+  return sum / (float)SIMPLES;
 }
 
 }  // namespace RayTracingHistory

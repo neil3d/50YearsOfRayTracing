@@ -21,7 +21,7 @@ class SimpleMonteCarloApproach : public TiledRenderer {
 
   glm::vec3 _traceRay(Ray ray, MyScene* pScene, int depth);
 
-  glm::vec3 _shade(const glm::vec3& dir, const HitRecord& shadingPoint,
+  glm::vec3 _shade(const Ray& wi, const HitRecord& shadingPoint,
                    MyScene* pScene, int depth);
 };
 
