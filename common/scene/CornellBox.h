@@ -9,13 +9,12 @@
 #pragma once
 
 #include "MyScene.h"
-#include "Parallelogram.h"
-#include "Sphere.h"
 
 namespace RayTracingHistory {
 
 class CornellBox: public MyScene {
  public:
+  virtual void init() override;
 };
 
 }  // namespace RayTracingHistory

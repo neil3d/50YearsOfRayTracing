@@ -7,8 +7,8 @@
  */
 
 #pragma once
-#include <glm/gtc/random.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/random.hpp>
 
 #include "MaterialBase.h"
 #include "geometry/ONB.h"
@@ -25,7 +25,7 @@ class DiffuseMaterial : public MaterialBase {
     glm::vec3 rand = glm::sphericalRand(1.0f);
     rand.z = fabsf(rand.z);
     ONB onb(normal);
-    return onb.localToWorld(rand);
+    return glm::normalize(onb.localToWorld(rand));
   }
 
   virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) override {

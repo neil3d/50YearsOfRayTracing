@@ -8,9 +8,9 @@
 
 #pragma once
 #include <list>
+#include <map>
 #include <memory>
 #include <string>
-#include <map>
 
 #include "MySceneObject.h"
 
@@ -24,13 +24,14 @@ class MyScene {
   virtual ~MyScene() = default;
 
   virtual void init() = 0;
-
-  void setupMaterials(const std::map<std::string, MyMaterial::Ptr>& materialMap);
+  virtual void onObjectCreated(MySceneObject* newObject) {}
 
   template <typename T, typename... Args>
   T& createObject(Args&&... args) {
     auto newObject = std::make_shared<T>(std::forward<Args>(args)...);
     mObjects.emplace_back(newObject);
+    
+    onObjectCreated(newObject.get());
     return *newObject;
   }
 

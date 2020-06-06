@@ -22,7 +22,7 @@ class MonteCarloPathTracer : public TiledRenderer {
 
   virtual std::string getInfo() const override;
   virtual float getProgress() const override;
-
+  virtual bool isDone() const;
 
  private:
   glm::vec3 _rayGeneration(PinholeCamera* pCamera, float pixelX, float pixelY,

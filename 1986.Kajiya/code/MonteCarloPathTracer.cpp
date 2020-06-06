@@ -25,6 +25,13 @@ float MonteCarloPathTracer::getProgress() const {
   return p / SIMPLES;
 }
 
+bool MonteCarloPathTracer::isDone() const {
+  int total = mFrameWidth * mFrameHeight;
+  int spp = mPixelCount / total;
+  int SIMPLES = SIMPLES_R * SIMPLES_R;
+  return spp >= SIMPLES;
+}
+
 void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
@@ -79,7 +86,7 @@ glm::vec3 MonteCarloPathTracer::_rayGeneration(PinholeCamera* pCamera,
   HitRecord hitRec;
   if (pScene->closestHit(primaryRay, 0.01f, FLOAT_MAX, hitRec)) {
     MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
-    if (pMtl->getEmission() > 0.1f)
+    if (pMtl->isLight())
       color = pMtl->getEmission() * pMtl->getBaseColor(hitRec.uv, hitRec.p);
     else
       color = _shade(Ray(hitRec.p, -primaryRay.direction), hitRec, pScene, 0);
@@ -111,14 +118,15 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   if (!pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec)) return glm::vec3(0);
 
   MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
-  if (pHitMtl->getEmission() > 0.1f) {
+  if (pHitMtl->isLight()) {
     // hit a light
     glm::vec3 lightColor = pHitMtl->getBaseColor(hitRec.uv, hitRec.p);
     glm::vec3 CC = pHitMtl->getEmission() * Kd * cosine * lightColor / pdf;
     color += CC * baseColor;
   } else {
     glm::vec3 CC = _shade(Ray(hitRec.p, -wi), hitRec, pScene, depth + 1);
-    color += baseColor * CC * Kd * cosine / pdf;
+    glm::vec3 Le = pHitMtl->getEmission() * baseColor;
+    color += Le + baseColor * CC * Kd * cosine / pdf;
   }
 
   return color;
