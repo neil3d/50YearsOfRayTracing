@@ -26,11 +26,9 @@ class Box : public MySceneObject {
     return *this;
   }
 
-  private:
-  void _updateSides();
+  void init();
 
  protected:
-  bool mDirty = true;
   glm::vec3 mExtents = glm::vec3(1);
   std::array<Parallelogram::Ptr, 6> mSides;
 };

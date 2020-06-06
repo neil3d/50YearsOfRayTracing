@@ -19,6 +19,8 @@ namespace RayTracingHistory {
  * Diffuse : uniform sampling
  */
 class DiffuseMaterial : public MaterialBase {
+  float Kd = 0.5f;
+
  public:
   virtual glm::vec3 scatter(const glm::vec3& normal) override {
     // uniform sampling the hemisphere
@@ -33,7 +35,16 @@ class DiffuseMaterial : public MaterialBase {
     constexpr float PI = glm::pi<float>();
 
     float cosine = glm::dot(dir, normal);
-    return (cosine > 0) ? 0.5f / PI : 1.f;
+    return (cosine > 0) ? 0.5f / PI : 0.f;
+  }
+
+  virtual float evaluate(const glm::vec3& wo, const glm::vec3& wi,
+                         const glm::vec3& normal) override {
+    float cosine = glm::dot(normal, wi);
+    if (cosine > 0)
+      return Kd / glm::pi<float>();
+    else
+      return 0;
   }
 };
 

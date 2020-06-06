@@ -10,8 +10,8 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_ROOT = 5;
-constexpr int MAX_BOUNCES = 5;
+constexpr int SPP_ROOT = 10;
+constexpr int MAX_BOUNCES = 10;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -105,7 +105,8 @@ glm::vec3 MonteCarloPathTracer::_rayGeneration(PinholeCamera* pCamera,
 glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
                                        const HitRecord& shadingPoint,
                                        MyScene* pScene, int depth) {
-  if (depth > MAX_BOUNCES) return glm::vec3(0);
+  const glm::vec3 bgColor(0);
+  if (depth > MAX_BOUNCES) return bgColor;
 
   MaterialBase* pMtl = static_cast<MaterialBase*>(shadingPoint.mtl);
 
@@ -114,12 +115,11 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   glm::vec3 baseColor = pMtl->getBaseColor(shadingPoint.uv, shadingPoint.p);
 
   // Monte Carlo Estimating
-  float d = depth;
-  float Kd = powf(0.15f, d * d * d);
-
   glm::vec3 wi = pMtl->scatter(shadingPoint.normal);
   float pdf = pMtl->pdf(wi, shadingPoint.normal);
-  float cosine = glm::dot(wi, shadingPoint.normal);
+  float cosine = std::max(0.0f, glm::dot(wi, shadingPoint.normal));
+
+  if (pdf == 0.0f) return bgColor;
 
   Ray ray(shadingPoint.p, wi);
   HitRecord hitRec;
@@ -128,16 +128,23 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
   if (!pHitMtl) return glm::vec3(1, 0, 0);
 
+  float d = glm::distance(shadingPoint.p, hitRec.p);
+  float falloff = 1.0f;
+  if (d > 1) falloff = 1.0f / (d * d);
+
   glm::vec3 color(0);
   if (pHitMtl->isLight()) {
     // hit a light
     glm::vec3 lightColor = pHitMtl->getBaseColor(hitRec.uv, hitRec.p);
-    glm::vec3 CC = pHitMtl->getEmission() * Kd * cosine * lightColor / pdf;
-    color = CC * baseColor;
+    glm::vec3 CC = pHitMtl->getEmission() * cosine * lightColor / pdf;
+    color = falloff * CC * baseColor;
   } else {
-    glm::vec3 CC = _shade(Ray(hitRec.p, -wi), hitRec, pScene, depth + 1);
-    glm::vec3 Le = pHitMtl->getEmission() * baseColor;
-    color = Le + baseColor * CC * Kd * cosine / pdf;
+    float fr = pHitMtl->evaluate(wo.direction, wi, hitRec.normal);
+    if (fr > 0) {
+      glm::vec3 CC = _shade(Ray(hitRec.p, -wi), hitRec, pScene, depth + 1);
+      glm::vec3 Le = pHitMtl->getEmission() * baseColor;
+      color = Le + baseColor * CC * fr * cosine / pdf * falloff;
+    }
   }
 
   return color;

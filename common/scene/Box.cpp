@@ -3,11 +3,6 @@
 namespace RayTracingHistory {
 
 bool Box::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
-  if (mDirty) {
-    _updateSides();
-    mDirty = false;
-  }
-
   Ray localRay = _makeLocalRay(ray);
 
   bool hitAnySide = false;
@@ -25,7 +20,7 @@ bool Box::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
   return hitAnySide;
 }
 
-void Box::_updateSides() {
+void Box::init() {
   float W = mExtents.x;
   float H = mExtents.y;
   float D = mExtents.z;

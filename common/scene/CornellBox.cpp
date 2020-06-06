@@ -37,20 +37,22 @@ void CornellBox::init() {
       .setEdges(glm::vec3(0, H, 0), glm::vec3(W, 0, 0))
       .setAnchor(glm::vec3(W / -2, 0, D / 2));
 
-  createObject<Box>("tall_box")
-      .setExtents(W / 4.5f, H / 2, D / 4.5f)
+  auto& tallBox = createObject<Box>("tall_box");
+  tallBox.setExtents(W / 4.5f, H / 2, D / 4.5f)
       .setPosition(glm::vec3(-W / 5, 0, 0))
-      .setRotation(0, glm::radians(15.0f), 0);
+      .setRotation(0, glm::radians(30.0f), 0);
+  tallBox.init();
 
   glm::vec3 boxPos = glm::vec3(W / 4, 0, 0);
   glm::vec3 boxSize = glm::vec3(W / 4, H / 3.5f, D / 4);
-  createObject<Box>("short_box")
-      .setExtents(boxSize.x, boxSize.y, boxSize.z)
+  auto& shotBox = createObject<Box>("short_box");
+  shotBox.setExtents(boxSize.x, boxSize.y, boxSize.z)
       .setPosition(boxPos)
       .setRotation(0, glm::radians(-18.0f), 0);
+  shotBox.init();
 
-#if 0
-  float ball = W / 4.5f / 2;
+#if 1
+  float ball = W / 4.5f / 2.25f;
   createObject<Sphere>("ball")
       .setCenter(boxPos + glm::vec3(0, ball + boxSize.y, 0))
       .setRadius(ball);
