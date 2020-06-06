@@ -9,8 +9,10 @@
 
 using namespace RayTracingHistory;
 
-// const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
-const char* const APP_NAME = "A Simple Monte Carlo Approach";
+//const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
+const char* const APP_NAME = "A Simple Monte Carlo Path Tracer";
+
+//const char* const APP_NAME = "A Simple Monte Carlo Approach";
 
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
@@ -35,7 +37,7 @@ int main(int argc, char* argv[]) {
     scene->init();
 
     auto camera = std::make_shared<PinholeCamera>();
-    camera->setZNear(1.0f)
+    camera->setZNear(0.1f)
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);

@@ -12,7 +12,7 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int MAX_DEPTH = 32;
+constexpr int MAX_BOUNCES = 32;
 constexpr int SPP_N = 3;
 constexpr float GAMA = 1.5f;
 
@@ -59,7 +59,7 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
                                           int depth, const glm::vec2 xi) {
   const glm::vec3 bgColor(0.25f, 0.25f, 0.25f);
 
-  if (depth > MAX_DEPTH) return glm::vec3(0);
+  if (depth > MAX_BOUNCES) return glm::vec3(0);
 
   // intersections
   HitRecord hitRec;

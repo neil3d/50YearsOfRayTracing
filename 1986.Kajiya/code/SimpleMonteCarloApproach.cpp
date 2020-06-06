@@ -9,8 +9,8 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SIMPLES = 12;
-constexpr int MAX_DEPTH = 3;
+constexpr int MAX_SPP = 12;
+constexpr int MAX_BOUNCES = 3;
 
 void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                                  MyCamera::Ptr camera) {
@@ -52,7 +52,7 @@ void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wo,
                                            const HitRecord& shadingPoint,
                                            MyScene* pScene, int depth) {
-  if (depth > MAX_DEPTH) return glm::vec3(0);
+  if (depth > MAX_BOUNCES) return glm::vec3(0);
 
   MaterialBase* pMtl = static_cast<MaterialBase*>(shadingPoint.mtl);
 
@@ -64,7 +64,7 @@ glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wo,
   glm::vec3 sum(0);
   float Kd = powf(0.25f, depth * depth);
 
-  for (int i = 0; i < SIMPLES; i++) {
+  for (int i = 0; i < MAX_SPP; i++) {
     glm::vec3 wi = pMtl->scatter(shadingPoint.normal);
     float pdf = pMtl->pdf(wi, shadingPoint.normal);
     float cosine = glm::dot(wi, shadingPoint.normal);
@@ -86,7 +86,7 @@ glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wo,
 
   }  // end of for
 
-  return sum / (float)SIMPLES;
+  return sum / (float)MAX_SPP;
 }
 
 }  // namespace RayTracingHistory

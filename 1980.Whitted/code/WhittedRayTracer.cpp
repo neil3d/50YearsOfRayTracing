@@ -9,7 +9,7 @@
 namespace RayTracingHistory {
 
 constexpr float fMax = std::numeric_limits<float>::max();
-constexpr int MAX_DEPTH = 32;
+constexpr int MAX_BOUNCES = 32;
 
 bool myRefract(const glm::vec3& v, const glm::vec3& n, float niOverNt,
                glm::vec3& outRefracted) {
@@ -60,7 +60,7 @@ glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
 }
 
 glm::vec3 WhittedRayTracer::_traceRay(Ray ray, MyScene* pScene, int depth) {
-  if (depth > MAX_DEPTH) return _backgroundColor(ray);
+  if (depth > MAX_BOUNCES) return _backgroundColor(ray);
 
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0.001f, fMax, hitRec);

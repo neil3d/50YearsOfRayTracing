@@ -10,22 +10,35 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SIMPLES_R = 6;
-constexpr int MAX_DEPTH = 4;
+constexpr int SPP_ROOT = 10;
+constexpr int MAX_BOUNCES = 5;
 
-std::string MonteCarloPathTracer::getInfo() const {
-  int total = mFrameWidth * mFrameHeight;
-  int spp = mPixelCount / total;
-  return std::string(" - SPP: ") + std::to_string(spp);
+void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
+  TiledRenderer::_init(pWnd);
+
+  int SPP = SPP_ROOT * SPP_ROOT;
+  mInfo = std::string(" - SPP: ");
+  mInfo.append(std::to_string(SPP));
+  mInfo.append(", Bounces: ");
+  mInfo.append(std::to_string(MAX_BOUNCES));
 }
+
+std::string MonteCarloPathTracer::getInfo() const { return mInfo; }
 
 float MonteCarloPathTracer::getProgress() const {
-  float p = TiledRenderer::getProgress();
-  int SIMPLES = SIMPLES_R * SIMPLES_R;
-  return p / SIMPLES;
+  int SPP = SPP_ROOT * SPP_ROOT;
+  int total = mFrameWidth * mFrameHeight * SPP;
+  if (mPixelCount == total)
+    return 1.0f;
+  else
+    return (float)mPixelCount / total;
 }
 
-bool MonteCarloPathTracer::isDone() const { return false; }
+bool MonteCarloPathTracer::isDone() const {
+  int SPP = SPP_ROOT * SPP_ROOT;
+  int total = mFrameWidth * mFrameHeight * SPP;
+  return mPixelCount >= total;
+}
 
 void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
@@ -38,19 +51,19 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
   int W = mFrameWidth;
   int H = mFrameHeight;
-  int SIMPLES = SIMPLES_R * SIMPLES_R;
+  int MAX_SPP = SPP_ROOT * SPP_ROOT;
 
   int SPP = 0;
   std::vector<glm::vec3> tileBuffer;
-  auto jit = jitteredPoints(SIMPLES_R, false);
 
   int tileW = tile.right - tile.left;
   int tileH = tile.bottom - tile.top;
   tileBuffer.resize(tileW * tileH);
 
-  while (SPP < SIMPLES) {
+  while (SPP < MAX_SPP) {
     int index = 0;
     float scale = 1.0f / (SPP + 1);
+    auto jit = jitteredPoints(SPP_ROOT, true);
 
     for (int y = tile.top; y < tile.bottom; y++)
       for (int x = tile.left; x < tile.right; x++) {
@@ -62,7 +75,7 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         buf += _rayGeneration(pCamera, (x + xi.x) / W, (y + xi.y) / H, pScene);
 
         glm::vec3 color = scale * buf;
-        _writePixel(x, y, glm::vec4(color, 1), 0.68f);
+        _writePixel(x, y, glm::vec4(color, 1), 0.18f);
         mPixelCount++;
       }
 
@@ -92,7 +105,7 @@ glm::vec3 MonteCarloPathTracer::_rayGeneration(PinholeCamera* pCamera,
 glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
                                        const HitRecord& shadingPoint,
                                        MyScene* pScene, int depth) {
-  if (depth > MAX_DEPTH) return glm::vec3(0);
+  if (depth > MAX_BOUNCES) return glm::vec3(0);
 
   MaterialBase* pMtl = static_cast<MaterialBase*>(shadingPoint.mtl);
 
@@ -102,7 +115,8 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
 
   // Monte Carlo Estimating
   glm::vec3 color(0);
-  float Kd = powf(0.25f, depth * depth);
+  float d = depth;
+  float Kd = powf(0.15f, d * d * d);
 
   glm::vec3 wi = pMtl->scatter(shadingPoint.normal);
   float pdf = pMtl->pdf(wi, shadingPoint.normal);

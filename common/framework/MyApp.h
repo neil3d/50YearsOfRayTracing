@@ -35,6 +35,7 @@ class MyApp final {
 
  private:
   void _tick();
+  void _showProgress();
 
  private:
   std::string mWindowTitle;

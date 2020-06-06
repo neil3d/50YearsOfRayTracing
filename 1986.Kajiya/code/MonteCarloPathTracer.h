@@ -25,11 +25,16 @@ class MonteCarloPathTracer : public TiledRenderer {
   virtual bool isDone() const;
 
  private:
+  virtual void _init(SDL_Window* pWnd) override;
+
   glm::vec3 _rayGeneration(PinholeCamera* pCamera, float pixelX, float pixelY,
                            MyScene* pScene);
 
   glm::vec3 _shade(const Ray& wo, const HitRecord& shadingPoint,
                    MyScene* pScene, int depth);
+
+  private:
+  std::string mInfo;
   
 };
 }  // namespace RayTracingHistory
