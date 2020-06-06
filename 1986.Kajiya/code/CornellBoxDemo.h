@@ -22,7 +22,7 @@ class CornellBoxDemo : public CornellBox {
   virtual void onObjectCreated(MySceneObject* newObject) {
     if (newObject->getName() == "light") {
       mLight = newObject;
-      mLight->createMaterial<DiffuseMaterial>().setEmission(1.0f).enableLight();
+      mLight->createMaterial<DiffuseMaterial>().setEmission(10.0f).enableLight();
     } else if (newObject->getName() == "left_wall") {
       newObject->createMaterial<DiffuseMaterial>().setColor(glm::vec3(0, 1, 0));
 

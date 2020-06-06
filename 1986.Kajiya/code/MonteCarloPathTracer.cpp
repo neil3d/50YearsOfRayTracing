@@ -10,7 +10,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_ROOT = 10;
+constexpr int SPP_ROOT = 20;
 constexpr int MAX_BOUNCES = 5;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
@@ -75,7 +75,7 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
         buf += _rayGeneration(pCamera, (x + xi.x) / W, (y + xi.y) / H, pScene);
 
         glm::vec3 color = scale * buf;
-        _writePixel(x, y, glm::vec4(color, 1), 0.18f);
+        _writePixel(x, y, glm::vec4(color, 1), 1);
         mPixelCount++;
       }
 
