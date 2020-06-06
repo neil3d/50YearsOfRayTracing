@@ -118,8 +118,9 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   glm::vec3 wi = pMtl->scatter(shadingPoint.normal);
   float pdf = pMtl->pdf(wi, shadingPoint.normal);
   float cosine = std::max(0.0f, glm::dot(wi, shadingPoint.normal));
+  float fr = pMtl->evaluate(wo.direction, wi, shadingPoint.normal);
 
-  if (pdf == 0.0f) return bgColor;
+  if (pdf == 0.0f || fr <= 0.0f) return bgColor;
 
   Ray ray(shadingPoint.p, wi);
   HitRecord hitRec;
@@ -139,12 +140,9 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
     glm::vec3 CC = pHitMtl->getEmission() * cosine * lightColor / pdf;
     color = falloff * CC * baseColor;
   } else {
-    float fr = pHitMtl->evaluate(wo.direction, wi, hitRec.normal);
-    if (fr > 0) {
-      glm::vec3 CC = _shade(Ray(hitRec.p, -wi), hitRec, pScene, depth + 1);
-      glm::vec3 Le = pHitMtl->getEmission() * baseColor;
-      color = Le + baseColor * CC * fr * cosine / pdf * falloff;
-    }
+    glm::vec3 CC = _shade(Ray(hitRec.p, -wi), hitRec, pScene, depth + 1);
+    glm::vec3 Le = pHitMtl->getEmission() * baseColor;
+    color = Le + baseColor * CC * fr * cosine / pdf * falloff;
   }
 
   return color;

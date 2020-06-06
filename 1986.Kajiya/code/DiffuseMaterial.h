@@ -40,7 +40,7 @@ class DiffuseMaterial : public MaterialBase {
 
   virtual float evaluate(const glm::vec3& wo, const glm::vec3& wi,
                          const glm::vec3& normal) override {
-    float cosine = glm::dot(normal, wi);
+    float cosine = glm::dot(normal, wo);
     if (cosine > 0)
       return Kd / glm::pi<float>();
     else

@@ -23,7 +23,7 @@ class CornellBoxDemo : public CornellBox {
     if (newObject->getName() == "light") {
       mLight = newObject;
       mLight->createMaterial<DiffuseMaterial>()
-          .setEmission(50.0f)
+          .setEmission(100.0f)
           .enableLight();
     } else if (newObject->getName() == "left_wall") {
       newObject->createMaterial<DiffuseMaterial>().setColor(glm::vec3(0, 1, 0));
