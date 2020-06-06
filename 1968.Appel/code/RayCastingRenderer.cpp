@@ -1,5 +1,6 @@
 #include "RayCastingRenderer.h"
 
+#include <algorithm>
 #include <glm/glm.hpp>
 
 #include "framework/PinholeCamera.h"
@@ -18,7 +19,8 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
     for (int x = 0; x < W; x++) {
       if (!mRuning) break;
 
-      glm::vec4 color = _castRay((x+0.5f)/W, (y+0.5f)/H, pScene, pCamera);
+      glm::vec4 color =
+          _castRay((x + 0.5f) / W, (y + 0.5f) / H, pScene, pCamera);
       mPixelCount++;
 
       _writePixel(x, y, color, 1.25f);
@@ -32,14 +34,14 @@ Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
 }
 
 glm::vec4 RayCastingRenderer::_castRay(float u, float v, MyScene* pScene,
-                                           PinholeCamera* camera) {
+                                       PinholeCamera* camera) {
   constexpr float fMax = std::numeric_limits<float>::max();
 
   HitRecord hitRec;
   Ray viewRay = camera->generateViewingRay(u, v);
   bool bHit = pScene->closestHit(viewRay, 0, fMax, hitRec);
 
-  glm::vec4 color(0,0,0,1);
+  glm::vec4 color(0, 0, 0, 1);
   if (!bHit) return color;
 
   Ray shadowRay = _generateShadowRay(hitRec.p);

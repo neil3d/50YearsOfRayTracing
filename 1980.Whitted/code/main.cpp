@@ -11,7 +11,7 @@ const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
 const uint32_t WINDOW_WIDTH = 640;
 const uint32_t WINDOW_HEIGHT = 360;
 
-int main(void) {
+int main(int argc, char* argv[]) {
   MyApp app;
   try {
     app.init();

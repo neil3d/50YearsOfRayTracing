@@ -56,6 +56,9 @@
 
 ## MyFramework
 
+- [x] cross platform
+    * [x] MacOS
+    * [x] Windows 10
 - [x] multi-threaded rendering
 - [x] scene object instancing
 - [ ] triangle mesh with BVH

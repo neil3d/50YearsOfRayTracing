@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <algorithm>
 #include "geometry/Ray.h"
 
 namespace RayTracingHistory {

@@ -11,3 +11,4 @@ CTestTestfile.cmake
 
 build
 .DS_Store
+.vs

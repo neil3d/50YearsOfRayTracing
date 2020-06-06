@@ -1,5 +1,8 @@
 #include "Sphere.h"
 
+#include <algorithm>
+#include <glm/gtc/constants.hpp>
+
 namespace RayTracingHistory {
 
 static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
@@ -11,7 +14,8 @@ static bool _solveQuadratic(float a, float b, float c, float &x0, float &x1) {
   return true;
 }
 
-bool Sphere::intersect(const Ray &ray, float tMin, float tMax, HitRecord &outRec) {
+bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
+                       HitRecord &outRec) {
   Transform transform = mTransform;
   if (mAnimator) mAnimator->evaluate(ray.time, &transform);
 
@@ -34,10 +38,12 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax, HitRecord &outRec
   float tnear = std::min(t0, t1);
 
   if (tnear > tMin && tnear < tMax) {
+    constexpr float PI = glm::pi<float>();
+
     glm::vec3 localN = glm::normalize(localRay.getPoint(tnear) - center);
     glm::vec3 N(transform.getWorld2LocalT() * glm::vec4(localN, 0));
-    float u = (1 + atan2(localN.z, localN.x) / M_PI) * 0.5f;
-    float v = acosf(localN.y) / M_PI;
+    float u = (1 + atan2(localN.z, localN.x) / PI) * 0.5f;
+    float v = acosf(localN.y) / PI;
 
     outRec = _makeHitRecord(ray, tnear, N, glm::vec2(u, v));
     return true;

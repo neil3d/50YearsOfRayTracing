@@ -12,6 +12,8 @@
 
 namespace RayTracingHistory {
 
+static glm::mat4 identity = glm::identity<glm::mat4>();
+
 struct Transform {
   void setPosition(const glm::vec3& pos) {
     position = pos;
@@ -62,7 +64,6 @@ struct Transform {
     if (!bDirty) return;
     bDirty = false;
 
-    static glm::mat4 identity = glm::identity<glm::mat4>();
     local2World = glm::translate(identity, position);
     local2World *= glm::mat4_cast(rotation);
     local2World = glm::scale(local2World, scale);
@@ -76,8 +77,8 @@ struct Transform {
   glm::vec3 scale = {1, 1, 1};
 
   bool bDirty = true;
-  glm::mat4 local2World;
-  glm::mat4 world2Local;
-  glm::mat4 world2LocalT;  // for normal transformation
+  glm::mat4 local2World = identity;
+  glm::mat4 world2Local = identity;
+  glm::mat4 world2LocalT = identity;  // for normal transformation
 };
 }  // namespace RayTracingHistory

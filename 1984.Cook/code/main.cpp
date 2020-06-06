@@ -12,7 +12,7 @@ const char* const APP_NAME =
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
-int main(void) {
+int main(int argc, char* argv[]) {
   MyApp app;
   try {
     app.init();

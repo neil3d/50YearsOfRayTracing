@@ -8,6 +8,7 @@
 
 #pragma once
 #include <glm/gtc/random.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "MaterialBase.h"
 #include "geometry/ONB.h"
@@ -29,8 +30,10 @@ class DiffuseMaterial : public MaterialBase {
 
   virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) override {
     // uniform sampling the hemisphere: pdf = 1 / (2 * PI)
+    constexpr float PI = glm::pi<float>();
+
     float cosine = glm::dot(dir, normal);
-    return (cosine > 0) ? 0.5f / M_PI : 1.f;
+    return (cosine > 0) ? 0.5f / PI : 1.f;
   }
 };
 

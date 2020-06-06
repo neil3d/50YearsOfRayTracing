@@ -8,6 +8,7 @@
 
 #pragma once
 #include <glm/gtc/random.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "MaterialBase.h"
 #include "geometry/ONB.h"
@@ -15,13 +16,15 @@
 namespace RayTracingHistory {
 
 inline glm::vec3 _randomCosineDirection() {
+  constexpr float PI = glm::pi<float>();
+
   glm::vec2 rand = glm::diskRand(0.5f);
 
   auto r1 = rand.x + 0.5f;
   auto r2 = rand.y + 0.5f;
   auto z = sqrt(1 - r2);
 
-  auto phi = 2 * M_PI * r1;
+  auto phi = 2 * PI * r1;
   auto x = cos(phi) * sqrt(r2);
   auto y = sin(phi) * sqrt(r2);
 
@@ -40,8 +43,10 @@ class LambertianMaterial : public MaterialBase {
   }
 
   virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) override {
+    constexpr float PI = glm::pi<float>();
+
     float cosine = glm::dot(dir, normal);
-    return (cosine <= 0) ? 0 : cosine / M_PI;
+    return (cosine <= 0) ? 0 : cosine / PI;
   }
 };
 
