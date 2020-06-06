@@ -19,6 +19,7 @@ aux_source_directory(./asset ASSET_SRC)
 aux_source_directory(./framework FRAMEWORK_SRC)
 aux_source_directory(./material MATERIAL_SRC)
 aux_source_directory(./math MATH_SRC)
+aux_source_directory(./sampling SAMPLING_SRC)
 aux_source_directory(./scene SCENE_SRC)
 
 add_library(${SUB_PROJECT_NAME} STATIC 
@@ -26,6 +27,7 @@ add_library(${SUB_PROJECT_NAME} STATIC
                 ${FRAMEWORK_SRC}
                 ${MATERIAL_SRC}
                 ${MATH_SRC}
+                ${SAMPLING_SRC}
                 ${SCENE_SRC}
                 )
 

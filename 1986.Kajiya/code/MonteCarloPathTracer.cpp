@@ -9,7 +9,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SIMPLES = 16;
+constexpr int SIMPLES = 66;
 constexpr int MAX_DEPTH = 4;
 
 std::string MonteCarloPathTracer::getInfo() const {

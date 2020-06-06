@@ -1,7 +1,6 @@
 #include "DistributedRayTracer.h"
 
 #include <algorithm>
-#include <array>
 #include <glm/glm.hpp>
 #include <random>
 
@@ -9,6 +8,7 @@
 #include "Material.h"
 #include "framework/ThinLensCamera.h"
 #include "geometry/ONB.h"
+#include "sampling/JitteringSampling.h"
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
@@ -26,31 +26,16 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   BilliardScene* pScene = dynamic_cast<BilliardScene*>(scene.get());
 
   constexpr int n = SPP_N;
-  float invN = 1.0f / n;
   float invSPP = 1.0f / (n * n);
 
-  std::array<glm::vec2, n * n> jitteredPointsR, jitteredPointsS;
-  std::random_device randDevice;
-  std::mt19937 stdRand(randDevice());
-  std::uniform_real_distribution<float> uniformDist(0, 1);
-
+  std::vector<glm::vec2> jitteredPointsR, jitteredPointsS;
+  
   for (int y = tile.top; y < tile.bottom; y++)
     for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
 
-      // jittering/stratified sampling
-      for (int p = 0; p < n; p++) {
-        for (int q = 0; q < n; q++) {
-          int index = p * n + q;
-          jitteredPointsR[index] =
-              invN * (glm::vec2(uniformDist(stdRand), uniformDist(stdRand)) +
-                      glm::vec2(p, q));
-          jitteredPointsS[index] =
-              invN * (glm::vec2(uniformDist(stdRand), uniformDist(stdRand)) +
-                      glm::vec2(p, q));
-        }  // end of for(q)
-      }    // end of for(p)
-      std::shuffle(jitteredPointsS.begin(), jitteredPointsS.end(), stdRand);
+      jitteredPointsR = jitteredPoints(n, false);
+      jitteredPointsS = jitteredPoints(n, true);
 
       glm::vec3 color(0);
       for (int i = 0; i < n * n; i++) {

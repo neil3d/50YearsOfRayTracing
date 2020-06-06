@@ -38,6 +38,7 @@ class BilliardScene : public MyScene {
                           const std::string& szName) {
     std::string szBasePath("./");
 #ifdef WIN32
+    //TODO£ºFIX ME
     szBasePath = "../../../../../";
 #endif  // WIN32
 
@@ -78,7 +79,7 @@ class BilliardScene : public MyScene {
     createObject<Plane>("table")
         .createMaterial<Material>()
 #if SCENE_A
-        .setGloss(0.2)
+        .setGloss(0.2f)
         .setCoefficient(0.6f)
         .setCheckerTexture(glm::vec3(0, 0, 0), glm::vec3(0.4f, 0.4f, 0.4f));
 #else
