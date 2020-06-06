@@ -40,14 +40,14 @@ void CornellBox::init() {
   createObject<Box>("tall_box")
       .setExtents(W / 4.5f, H / 2, D / 4.5f)
       .setPosition(glm::vec3(-W / 5, 0, 0))
-      .setRotation(0, glm::pi<float>() / 6, 0);
+      .setRotation(0, glm::radians(15.0f), 0);
 
   glm::vec3 boxPos = glm::vec3(W / 4, 0, 0);
   glm::vec3 boxSize = glm::vec3(W / 4, H / 3.5f, D / 4);
   createObject<Box>("short_box")
       .setExtents(boxSize.x, boxSize.y, boxSize.z)
       .setPosition(boxPos)
-      .setRotation(0, glm::pi<float>() / 10, 0);
+      .setRotation(0, glm::radians(-18.0f), 0);
 
 #if 0
   float ball = W / 4.5f / 2;
