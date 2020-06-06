@@ -5,11 +5,12 @@
 
 #include "MaterialBase.h"
 #include "framework/PinholeCamera.h"
+#include "sampling/JitteringSampling.h"
 
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SIMPLES = 66;
+constexpr int SIMPLES_R = 4;
 constexpr int MAX_DEPTH = 4;
 
 std::string MonteCarloPathTracer::getInfo() const {
@@ -20,6 +21,7 @@ std::string MonteCarloPathTracer::getInfo() const {
 
 float MonteCarloPathTracer::getProgress() const {
   float p = TiledRenderer::getProgress();
+  int SIMPLES = SIMPLES_R * SIMPLES_R;
   return p / SIMPLES;
 }
 
@@ -34,9 +36,11 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
   int W = mFrameWidth;
   int H = mFrameHeight;
+  int SIMPLES = SIMPLES_R * SIMPLES_R;
 
   int SPP = 0;
   std::vector<glm::vec3> tileBuffer;
+  auto jit = jitteredPoints(SIMPLES_R, false);
 
   int tileW = tile.right - tile.left;
   int tileH = tile.bottom - tile.top;
@@ -52,9 +56,8 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
         glm::vec3& buf = tileBuffer[index++];
 
-        float xi = uniformDist(stdRand);
-        float yi = uniformDist(stdRand);
-        buf += _rayGeneration(pCamera, (x + xi) / W, (y + yi) / H, pScene);
+        const glm::vec2& xi = jit[SPP];
+        buf += _rayGeneration(pCamera, (x + xi.x) / W, (y + xi.y) / H, pScene);
 
         glm::vec3 color = scale * buf;
         _writePixel(x, y, glm::vec4(color, 1), 0.68f);
