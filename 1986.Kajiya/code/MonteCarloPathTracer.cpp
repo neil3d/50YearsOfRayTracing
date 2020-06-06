@@ -10,7 +10,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_ROOT = 20;
+constexpr int SPP_ROOT = 5;
 constexpr int MAX_BOUNCES = 5;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
@@ -114,7 +114,6 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   glm::vec3 baseColor = pMtl->getBaseColor(shadingPoint.uv, shadingPoint.p);
 
   // Monte Carlo Estimating
-  glm::vec3 color(0);
   float d = depth;
   float Kd = powf(0.15f, d * d * d);
 
@@ -129,15 +128,16 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
   if (!pHitMtl) return glm::vec3(1, 0, 0);
 
+  glm::vec3 color(0);
   if (pHitMtl->isLight()) {
     // hit a light
     glm::vec3 lightColor = pHitMtl->getBaseColor(hitRec.uv, hitRec.p);
     glm::vec3 CC = pHitMtl->getEmission() * Kd * cosine * lightColor / pdf;
-    color += CC * baseColor;
+    color = CC * baseColor;
   } else {
     glm::vec3 CC = _shade(Ray(hitRec.p, -wi), hitRec, pScene, depth + 1);
     glm::vec3 Le = pHitMtl->getEmission() * baseColor;
-    color += Le + baseColor * CC * Kd * cosine / pdf;
+    color = Le + baseColor * CC * Kd * cosine / pdf;
   }
 
   return color;
