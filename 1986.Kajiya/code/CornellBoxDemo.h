@@ -14,12 +14,15 @@
 namespace RayTracingHistory {
 
 class CornellBoxDemo : public CornellBox {
+  MySceneObject* mLight = nullptr;
+
  public:
+  MySceneObject* getLight() const { return mLight; }
+
   virtual void onObjectCreated(MySceneObject* newObject) {
     if (newObject->getName() == "light") {
-      newObject->createMaterial<DiffuseMaterial>()
-          .setEmission(1.0f)
-          .enableLight();
+      mLight = newObject;
+      mLight->createMaterial<DiffuseMaterial>().setEmission(1.0f).enableLight();
     } else if (newObject->getName() == "left_wall") {
       newObject->createMaterial<DiffuseMaterial>().setColor(glm::vec3(0, 1, 0));
 
