@@ -10,7 +10,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SIMPLES_R = 4;
+constexpr int SIMPLES_R = 6;
 constexpr int MAX_DEPTH = 4;
 
 std::string MonteCarloPathTracer::getInfo() const {
@@ -25,12 +25,7 @@ float MonteCarloPathTracer::getProgress() const {
   return p / SIMPLES;
 }
 
-bool MonteCarloPathTracer::isDone() const {
-  int total = mFrameWidth * mFrameHeight;
-  int spp = mPixelCount / total;
-  int SIMPLES = SIMPLES_R * SIMPLES_R;
-  return spp >= SIMPLES;
-}
+bool MonteCarloPathTracer::isDone() const { return false; }
 
 void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
@@ -118,6 +113,8 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   if (!pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec)) return glm::vec3(0);
 
   MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
+  if (!pHitMtl) return glm::vec3(1, 0, 0);
+
   if (pHitMtl->isLight()) {
     // hit a light
     glm::vec3 lightColor = pHitMtl->getBaseColor(hitRec.uv, hitRec.p);

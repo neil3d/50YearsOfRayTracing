@@ -55,6 +55,12 @@ class MySceneObject {
   const std::string& getName() const { return mName; }
 
  protected:
+  Ray _makeLocalRay(const Ray& worldRay) {
+    glm::vec4 wo(worldRay.origin, 1.0f);
+    glm::vec4 wd(worldRay.direction, 0.0f);
+    const glm::mat4& world2Local = mTransform.getWorld2Local();
+    return Ray(world2Local * wo, world2Local * wd);
+  }
   HitRecord _makeHitRecord(const Ray& ray, const float t,
                            const glm::vec3& normal, const glm::vec2& uv) {
     HitRecord hit;

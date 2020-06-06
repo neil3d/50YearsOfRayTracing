@@ -13,6 +13,8 @@ namespace RayTracingHistory {
 
 class Parallelogram : public Plane {
  public:
+  typedef std::shared_ptr<Parallelogram> Ptr;
+
   using Plane::Plane;
 
   Parallelogram& setEdges(glm::vec3 e1, glm::vec3 e2) {
@@ -27,6 +29,11 @@ class Parallelogram : public Plane {
     return *this;
   }
 
+  Parallelogram& flipFace() {
+    setEdges(edge2, edge1);
+    return *this;
+  }
+
   Parallelogram& setAnchor(glm::vec3 anchor) {
     setPosition(anchor);
     return *this;
@@ -35,7 +42,7 @@ class Parallelogram : public Plane {
   glm::vec3 getAnchor() const { return mTransform.getPosition(); }
 
   virtual bool intersect(const Ray& ray, float tMin, float tMax,
-                   HitRecord& outRec) override;
+                         HitRecord& outRec) override;
 
  private:
   glm::vec3 edge1 = {1, 0, 0};
