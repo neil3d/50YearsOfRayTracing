@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);
+    camera->init();
 
     renderer->renderScene(scene, camera, glm::vec4(1, 1, 1, 1));
 
