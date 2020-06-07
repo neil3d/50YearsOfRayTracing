@@ -110,13 +110,21 @@ std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
     auto check = Triangle::intersect(ray, v0, v1, v2);
     bool bHit = std::get<0>(check);
     float t = std::get<1>(check);
+    glm::vec3 uvw = std::get<2>(check);
     if (bHit && t > tMin && t < closestSoFar) {
       hitAnyFace = true;
       tnear = t;
       closestSoFar = t;
       hitNormal = face.normal;
       hitMtl = face.materialID;
-      // TODO: UV
+
+      if (!mTexcoords.empty() && face.texcoordIndex[0] != -1 &&
+          face.texcoordIndex[1] != -1 && face.texcoordIndex[2] != -1) {
+        const auto& uv0 = mTexcoords[face.texcoordIndex[0]];
+        const auto& uv1 = mTexcoords[face.texcoordIndex[1]];
+        const auto& uv2 = mTexcoords[face.texcoordIndex[2]];
+        hitUV = Triangle::barycentricInterpolation(uvw, uv0, uv1, uv2);
+      }
     }
   }  // end of for
 
