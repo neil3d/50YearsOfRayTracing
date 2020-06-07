@@ -10,7 +10,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_ROOT = 4;
+constexpr int SPP_ROOT = 5;
 constexpr int MAX_BOUNCES = 3;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
@@ -104,6 +104,8 @@ std::tuple<bool, glm::vec3> MonteCarloPathTracer::_rayGeneration(
 
   glm::vec3 color;
   MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
+
+  // error check
   if (!pMtl) return std::make_tuple(true, glm::abs(hitRec.normal));
 
   if (pMtl->isLight())
@@ -140,7 +142,7 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
   if (!pHitMtl) return glm::vec3(1, 0, 0);
 
-  float d = glm::distance(shadingPoint.p, hitRec.p);
+  float d = glm::distance(shadingPoint.p, hitRec.p) / 100;
   float falloff = 1.0f;
   if (d > 1) falloff = 1.0f / (d * d);
 

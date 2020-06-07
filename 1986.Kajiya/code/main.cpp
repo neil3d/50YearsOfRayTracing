@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
     auto scene = std::make_shared<DemoScene>();
     scene->init();
 
-    glm::vec3 eyePos(0, 2.5f, -8.5f);
-    glm::vec3 lookAt(0, 2.5f, 0);
+    glm::vec3 eyePos(0, 250, -850);
+    glm::vec3 lookAt(0, 250, 0);
 #endif
 
     auto camera = std::make_shared<PinholeCamera>();

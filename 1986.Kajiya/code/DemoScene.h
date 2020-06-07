@@ -22,9 +22,9 @@ class DemoScene : public MyScene {
  public:
   virtual void init() override {
     // create objects
-    constexpr float W = 5;
-    constexpr float D = 5;
-    constexpr float H = 5;
+    constexpr float W = 500;
+    constexpr float D = 500;
+    constexpr float H = 500;
     constexpr float LS = 3.5f;  // ligt size scale
 
     createObject<Parallelogram>("light")
@@ -72,9 +72,10 @@ class DemoScene : public MyScene {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
+    ball *= 1.5f;
     createObject<Sphere>("big_ball")
-        .setCenter(glm::vec3(-1, 1, 0))
-        .setRadius(1)
+        .setCenter(glm::vec3(-ball, ball, 0))
+        .setRadius(ball)
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
   }
