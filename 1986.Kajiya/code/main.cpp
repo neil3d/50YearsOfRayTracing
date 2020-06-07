@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     auto scene = std::make_shared<CornellBoxScene>();
     scene->init();
 
-    glm::vec3 eyePos(278, 278, -800);
+    glm::vec3 eyePos(278, 278, -656);
     glm::vec3 lookAt(278, 278, 0);
 #else
     auto scene = std::make_shared<DemoScene>();

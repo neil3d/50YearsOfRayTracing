@@ -29,7 +29,7 @@ bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
 
     glm::vec3 WN(mTransform.getWorld2LocalT() * glm::vec4(hitNormal, 0));
 
-    _makeHitRecord(ray, tnear, WN, hitUV);
+    outRec = _makeHitRecord(ray, tnear, WN, hitUV);
   }
 
   return hitAnyFace;
