@@ -7,9 +7,12 @@ set(SUB_PROJECT_NAME DistributedRayTracer)
 add_executable(${SUB_PROJECT_NAME} main.cpp
                 AreaLight.h
                 Material.h
-                BilliardScene.h
+                BilliardSceneClone.h
+                BilliardSceneDemo.h
+                CornellBoxDemo.h
                 DistributedRayTracer.h
                 DistributedRayTracer.cpp
+                MySceneWithLight.h
                 )
 
 target_link_libraries(${SUB_PROJECT_NAME} MyFramework)

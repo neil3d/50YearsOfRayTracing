@@ -20,7 +20,7 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
   if (mAnimator) mAnimator->evaluate(ray.time, &transform);
 
   // intersection in local space
-  Ray localRay = _makeLocalRay(ray);
+  Ray localRay = _makeLocalRay(ray, &transform);
   glm::vec3 center(0, 0, 0);
 
   // analytic solution

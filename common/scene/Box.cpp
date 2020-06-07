@@ -3,7 +3,7 @@
 namespace RayTracingHistory {
 
 bool Box::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
-  Ray localRay = _makeLocalRay(ray);
+  Ray localRay = _makeLocalRay(ray, nullptr);
 
   bool hitAnySide = false;
   float closestSoFar = tMax;

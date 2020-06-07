@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <random>
 
-#include "BilliardScene.h"
 #include "Material.h"
+#include "MySceneWithLight.h"
 #include "framework/ThinLensCamera.h"
 #include "geometry/ONB.h"
 #include "sampling/JitteringSampling.h"
@@ -23,13 +23,13 @@ std::string DistributedRayTracer::getInfo() const {
 void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   ThinLensCamera* pCamera = static_cast<ThinLensCamera*>(camera.get());
-  BilliardScene* pScene = dynamic_cast<BilliardScene*>(scene.get());
+  MySceneWithLight* pScene = dynamic_cast<MySceneWithLight*>(scene.get());
 
   constexpr int n = SPP_N;
   float invSPP = 1.0f / (n * n);
 
   std::vector<glm::vec2> jitteredPointsR, jitteredPointsS;
-  
+
   for (int y = tile.top; y < tile.bottom; y++)
     for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
@@ -55,8 +55,9 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
     }  // end of for(x)
 }
 
-glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
-                                          int depth, const glm::vec2 xi) {
+glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,
+                                          MySceneWithLight* pScene, int depth,
+                                          const glm::vec2 xi) {
   const glm::vec3 bgColor(0.25f, 0.25f, 0.25f);
 
   if (depth > MAX_BOUNCES) return glm::vec3(0);
@@ -72,6 +73,7 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
 
   // reflection
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
+  if (!mtl) return glm::vec3(1, 0, 0);
 
   float Kr = shadowFactor;
   if (mtl) Kr *= mtl->Kr;
@@ -88,8 +90,8 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray, BilliardScene* pScene,
 }
 
 std::tuple<float, glm::vec3> DistributedRayTracer::_shade(
-    const glm::vec3& dir, const HitRecord& shadingPoint, BilliardScene* pScene,
-    const glm::vec2 xi) {
+    const glm::vec3& dir, const HitRecord& shadingPoint,
+    MySceneWithLight* pScene, const glm::vec2 xi) {
   const auto& light = pScene->getMainLight();
   Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 

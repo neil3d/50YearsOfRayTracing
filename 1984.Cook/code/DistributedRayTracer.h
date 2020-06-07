@@ -13,7 +13,7 @@
 
 namespace RayTracingHistory {
 
-class BilliardScene;
+class MySceneWithLight;
 
 class DistributedRayTracer : public TiledRenderer {
  public:
@@ -23,12 +23,12 @@ class DistributedRayTracer : public TiledRenderer {
   virtual std::string getInfo() const override;
 
  private:
-  glm::vec3 _traceRay(const Ray& ray, BilliardScene* pScene, int depth,
+  glm::vec3 _traceRay(const Ray& ray, MySceneWithLight* pScene, int depth,
                       const glm::vec2 xi);
 
   std::tuple<float, glm::vec3> _shade(const glm::vec3& dir,
                                             const HitRecord& shadingPoint,
-                                            BilliardScene* pScene,
+                                            MySceneWithLight* pScene,
                                             const glm::vec2 xi);
 
   Ray _jitteredReflectionRay(const glm::vec3& dir, const glm::vec3& point,
