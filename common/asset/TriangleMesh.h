@@ -13,6 +13,7 @@
 
 #include "../geometry/AABBox.h"
 #include "MyAssetObject.h"
+#include "MaterialImporter.h"
 
 namespace RayTracingHistory {
 class TriangleMesh : public MyAssetObject {
@@ -22,9 +23,11 @@ class TriangleMesh : public MyAssetObject {
   // load Wavefront .Obj file
   virtual void loadFromFile(const std::string& szPath) override;
 
-  std::tuple<bool, float, glm::vec3, glm::vec2> intersect(const Ray& ray,
+  std::tuple<bool, float, glm::vec3, glm::vec2, int> intersect(const Ray& ray,
                                                           float tMin,
                                                           float tMax);
+  
+  std::vector<MyMaterial::Ptr> importMaterial(MaterialImporter* pImporter);
 
  private:
   void _generateFaceNormal();
@@ -40,11 +43,17 @@ class TriangleMesh : public MyAssetObject {
     glm::vec3 normal;
   };
 
+  struct MtlDesc {
+    std::string name;
+  };
+
  private:
   std::vector<glm::vec3> mVertices;
   std::vector<glm::vec3> mNormals;
   std::vector<glm::vec2> mTexcoords;
   std::vector<Face> mFaces;
+
+  std::vector<MtlDesc> mMaterials;
 
   AABBox mBoundingBox;
 };

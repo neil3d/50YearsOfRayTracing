@@ -16,6 +16,7 @@
 namespace RayTracingHistory {
 
 class TriangleMesh;
+class MaterialImporter;
 
 class MeshInstance : public MySceneObject {
  public:
@@ -23,10 +24,13 @@ class MeshInstance : public MySceneObject {
 
   MeshInstance& setMeshFile(const std::string& szObjFileName);
 
+  size_t importMaterial(MaterialImporter* pImporter);
+
   virtual bool intersect(const Ray& ray, float tMin, float tMax,
                          HitRecord& outRec) override;
 
  private:
   std::shared_ptr<TriangleMesh> mMesh;
+  std::vector<MyMaterial::Ptr> mModelMtls;
 };
 }  // namespace RayTracingHistory

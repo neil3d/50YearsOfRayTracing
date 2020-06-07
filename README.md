@@ -53,7 +53,7 @@
     * [x] Diffuse material / uniform sampling
     * [ ] Lambertian material / cosine sampling
 
-![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-06.png)
+![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-07.png)
 
 ## MyFramework
 

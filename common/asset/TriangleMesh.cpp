@@ -35,6 +35,12 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   if (!ret)
     throw MyException(std::string("Failed to load/parse: ") + szFileName);
 
+  // copy materials
+  for (const auto& mtl : materials) {
+    MtlDesc desc = {mtl.name};
+    mMaterials.push_back(desc);
+  }
+
   // copy attributes
   mVertices.resize(attrib.vertices.size() / 3);
   std::memcpy(mVertices.data(), attrib.vertices.data(),
@@ -84,14 +90,15 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   // build BVH
 }
 
-std::tuple<bool, float, glm::vec3, glm::vec2> TriangleMesh::intersect(
+std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
     const Ray& ray, float tMin, float tMax) {
   if (!mBoundingBox.intersect(ray, tMin, tMax))
-    return std::make_tuple(false, 0, glm::vec3(), glm::vec2());
+    return std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
 
   bool hitAnyFace = false;
   glm::vec3 hitNormal(0, 1, 0);
   glm::vec2 hitUV(0, 0);
+  int hitMtl = -1;
   float tnear = 0;
   float closestSoFar = tMax;
 
@@ -108,11 +115,21 @@ std::tuple<bool, float, glm::vec3, glm::vec2> TriangleMesh::intersect(
       tnear = t;
       closestSoFar = t;
       hitNormal = face.normal;
+      hitMtl = face.materialID;
       // TODO: UV
     }
   }  // end of for
 
-  return std::make_tuple(hitAnyFace, tnear, hitNormal, hitUV);
+  return std::make_tuple(hitAnyFace, tnear, hitNormal, hitUV, hitMtl);
+}
+std::vector<MyMaterial::Ptr> TriangleMesh::importMaterial(
+    MaterialImporter* pImporter) {
+  std::vector<MyMaterial::Ptr> result;
+  for (const auto& desc : mMaterials) {
+    result.emplace_back(pImporter->importObj(desc.name));
+  }
+
+  return result;
 }
 void TriangleMesh::_generateFaceNormal() {
   for (auto& face : mFaces) {
