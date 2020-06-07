@@ -54,11 +54,11 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   int MAX_SPP = SPP_ROOT * SPP_ROOT;
 
   int SPP = 0;
-  std::vector<glm::vec3> tileBuffer;
+  std::vector<glm::vec4> tileBuffer;
 
   int tileW = tile.right - tile.left;
   int tileH = tile.bottom - tile.top;
-  tileBuffer.resize(tileW * tileH);
+  tileBuffer.resize(tileW * tileH, glm::vec4(0));
 
   while (SPP < MAX_SPP) {
     int index = 0;
@@ -69,12 +69,21 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       for (int x = tile.left; x < tile.right; x++) {
         if (!mRuning) break;
 
-        glm::vec3& buf = tileBuffer[index++];
+        glm::vec4& buf = tileBuffer[index++];
 
         const glm::vec2& xi = jit[SPP];
-        buf += _rayGeneration(pCamera, (x + xi.x) / W, (y + xi.y) / H, pScene);
+        auto result =
+            _rayGeneration(pCamera, (x + xi.x) / W, (y + xi.y) / H, pScene);
+        if (std::get<0>(result)) {
+          buf.w += 1.0f;
 
-        glm::vec3 color = scale * buf;
+          const glm::vec3& color = std::get<1>(result);
+          buf.x += color.x;
+          buf.y += color.y;
+          buf.z += color.z;
+        }
+
+        glm::vec3 color = glm::vec3(buf.x, buf.y, buf.z) / buf.w;
         _writePixel(x, y, glm::vec4(color, 1), 1);
         mPixelCount++;
       }
@@ -83,23 +92,23 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   }  // end of while
 }
 
-glm::vec3 MonteCarloPathTracer::_rayGeneration(PinholeCamera* pCamera,
-                                               float pixelX, float pixelY,
-                                               MyScene* pScene) {
+std::tuple<bool, glm::vec3> MonteCarloPathTracer::_rayGeneration(
+    PinholeCamera* pCamera, float pixelX, float pixelY, MyScene* pScene) {
   const glm::vec3 bgColor(0.f, 0.f, 0.f);
 
   Ray primaryRay = pCamera->generateViewingRay(pixelX, pixelY);
 
-  glm::vec3 color = bgColor;
   HitRecord hitRec;
-  if (pScene->closestHit(primaryRay, 0.01f, FLOAT_MAX, hitRec)) {
-    MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
-    if (pMtl->isLight())
-      color = pMtl->getEmission() * pMtl->getBaseColor(hitRec.uv, hitRec.p);
-    else
-      color = _shade(Ray(hitRec.p, -primaryRay.direction), hitRec, pScene, 0);
-  }
-  return color;
+  bool bHit = pScene->closestHit(primaryRay, 0.01f, FLOAT_MAX, hitRec);
+  if (!bHit) return std::make_tuple(false, bgColor);
+
+  glm::vec3 color;
+  MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
+  if (pMtl->isLight())
+    color = pMtl->getEmission() * pMtl->getBaseColor(hitRec.uv, hitRec.p);
+  else
+    color = _shade(Ray(hitRec.p, -primaryRay.direction), hitRec, pScene, 0);
+  return std::make_tuple(true, color);
 }
 
 glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,

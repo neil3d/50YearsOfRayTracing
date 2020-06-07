@@ -8,7 +8,9 @@
 
 #pragma once
 
+#include <tuple>
 #include <vector>
+
 #include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
@@ -27,14 +29,14 @@ class MonteCarloPathTracer : public TiledRenderer {
  private:
   virtual void _init(SDL_Window* pWnd) override;
 
-  glm::vec3 _rayGeneration(PinholeCamera* pCamera, float pixelX, float pixelY,
-                           MyScene* pScene);
+  std::tuple<bool, glm::vec3> _rayGeneration(PinholeCamera* pCamera,
+                                             float pixelX, float pixelY,
+                                             MyScene* pScene);
 
   glm::vec3 _shade(const Ray& wo, const HitRecord& shadingPoint,
                    MyScene* pScene, int depth);
 
-  private:
+ private:
   std::string mInfo;
-  
 };
 }  // namespace RayTracingHistory
