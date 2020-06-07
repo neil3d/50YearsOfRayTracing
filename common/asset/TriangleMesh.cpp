@@ -3,6 +3,8 @@
 #include <spdlog/spdlog.h>
 #include <tiny_obj_loader.h>
 
+#include <filesystem>
+
 #include "../framework/MyException.h"
 #include "../geometry/Triangle.h"
 
@@ -19,8 +21,12 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   std::string err;
 
   // load and trianglulation
+  std::filesystem::path filePath(szFileName);
+  std::filesystem::path basePath = filePath.remove_filename();
+  std::string szBasePath = basePath.string();
+
   bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
-                              szFileName.c_str(), nullptr, true);
+                              szFileName.c_str(), szBasePath.c_str(), true);
 
   if (!warn.empty()) spdlog::warn(warn);
   if (!err.empty()) spdlog::error(err);
