@@ -8,6 +8,7 @@
 
 #pragma once
 #include <glm/glm.hpp>
+#include <tuple>
 #include <vector>
 
 #include "../geometry/AABBox.h"
@@ -21,12 +22,22 @@ class TriangleMesh : public MyAssetObject {
   // load Wavefront .Obj file
   virtual void loadFromFile(const std::string& szPath) override;
 
+  std::tuple<bool, float, glm::vec3, glm::vec2> intersect(const Ray& ray,
+                                                          float tMin,
+                                                          float tMax);
+
+ private:
+  void _generateFaceNormal();
+
+  void _buildBoundingBox();
+
  private:
   struct Face {
     int vertexIndex[3];
     int normalIndex[3];
     int texcoordIndex[3];
     int materialID;
+    glm::vec3 normal;
   };
 
  private:

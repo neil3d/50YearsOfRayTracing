@@ -104,6 +104,8 @@ std::tuple<bool, glm::vec3> MonteCarloPathTracer::_rayGeneration(
 
   glm::vec3 color;
   MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
+  if (!pMtl) return std::make_tuple(true, glm::vec3(1, 0, 0));
+
   if (pMtl->isLight())
     color = pMtl->getEmission() * pMtl->getBaseColor(hitRec.uv, hitRec.p);
   else

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "CornellBoxScene.h"
 #include "DemoScene.h"
 #include "MonteCarloPathTracer.h"
 #include "SimpleMonteCarloApproach.h"
@@ -8,10 +9,10 @@
 
 using namespace RayTracingHistory;
 
-//const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
+// const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
 const char* const APP_NAME = "A Simple Monte Carlo Path Tracer";
 
-//const char* const APP_NAME = "A Simple Monte Carlo Approach";
+// const char* const APP_NAME = "A Simple Monte Carlo Approach";
 
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
@@ -27,10 +28,19 @@ int main(int argc, char* argv[]) {
     auto renderer = app.createRenderer<SimpleMonteCarloApproach>();
 #endif
 
+#if 1
+    auto scene = std::make_shared<CornellBoxScene>();
+    scene->init();
+
+    glm::vec3 eyePos(278, 278, -800);
+    glm::vec3 lookAt(278, 278, 0);
+#else
     auto scene = std::make_shared<DemoScene>();
+    scene->init();
+
     glm::vec3 eyePos(0, 2.5f, -8.5f);
     glm::vec3 lookAt(0, 2.5f, 0);
-    scene->init();
+#endif
 
     auto camera = std::make_shared<PinholeCamera>();
     camera->setZNear(0.1f)

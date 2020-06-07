@@ -3,24 +3,35 @@
 #include "../asset/MyAssetManager.h"
 #include "../asset/TriangleMesh.h"
 
-
 namespace RayTracingHistory {
 
 MeshInstance& MeshInstance::setMeshFile(const std::string& szObjFileName) {
-  mMesh = MyAssetManager::instance().loadAssetObject<TriangleMesh>(szObjFileName);
+  mMesh =
+      MyAssetManager::instance().loadAssetObject<TriangleMesh>(szObjFileName);
   return *this;
 }
 
 bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
-                       HitRecord& outRec) {
+                             HitRecord& outRec) {
+  if (!mMesh) return false;
+
   // tranform ray to local space
-  Ray localRay = ray;
+  Ray localRay = _makeLocalRay(ray, nullptr);
 
-  // bouding box check
-  // if (!mBoundingBox.hit(localRay, tMin, tMax)) return false;
+  // trangle mesh check
+  auto result = mMesh->intersect(ray, tMin, tMax);
 
-  // trangle list check
+  bool hitAnyFace = std::get<0>(result);
+  if (hitAnyFace) {
+    float tnear = std::get<1>(result);
+    glm::vec3 hitNormal = std::get<2>(result);
+    glm::vec2 hitUV = std::get<3>(result);
 
-  return false;
+    glm::vec3 WN(mTransform.getWorld2LocalT() * glm::vec4(hitNormal, 0));
+
+    _makeHitRecord(ray, tnear, WN, hitUV);
+  }
+
+  return hitAnyFace;
 }
 }  // namespace RayTracingHistory
