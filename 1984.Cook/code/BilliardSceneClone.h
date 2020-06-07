@@ -29,17 +29,12 @@ class BilliardSceneClone : public MySceneWithLight {
         .setAmbient(0.25f)
         .setIntensity(2.f);
 
-#ifdef WIN32
-    // TODO£ºFIX ME
-    std::string szBasePath = "../../../../../";
-#endif  // WIN32
-
     // setup scene objects
     createObject<Plane>("table")
         .createMaterial<Material>()
         .setGloss(2.0f)
         .setCoefficient(0.0f)
-        .setTexture2D(szBasePath + "content/billiard/table.jpg")
+        .setTexture2D("content/billiard/table.jpg")
         .setTiling(0.1f, 0.1f);
 
     glm::vec3 wPos(0.5f, 1, 0.5f);

@@ -17,6 +17,8 @@ void Mesh::loadFromFile(const std::string& szFileName) {
 
   std::string warn;
   std::string err;
+  
+  // load and trianglulation
   bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
                               szFileName.c_str(), nullptr, true);
 
@@ -40,16 +42,23 @@ void Mesh::loadFromFile(const std::string& szFileName) {
               attrib.texcoords.size() * sizeof(float));
 
   // convert sub meshes
+  size_t faceCount = 0, faceIndex = 0;
   for (const auto& shape : shapes) {
-    auto& subMesh = mSubMeshes.emplace_back();
-    subMesh.name = shape.name;
-
     size_t indexCount = shape.mesh.indices.size();
-    subMesh.faces.resize(indexCount / 3);
+    faceCount += indexCount / 3;
+  }
+  mFaces.resize(faceCount);
+
+  for (const auto& shape : shapes) {
+    const auto& mesh = shape.mesh;
+    size_t indexCount = mesh.indices.size();
+    size_t meshFaceIndex = 0;
     for (size_t i = 0; i < indexCount; i += 3) {
-      auto& face = subMesh.faces[i / 3];
+      auto& face = mFaces[faceIndex++];
+      face.materialID = mesh.material_ids[meshFaceIndex++];
+
       for (size_t j = 0; j < 3; j++) {
-        const tinyobj::index_t& tinyIndex = shape.mesh.indices[i + j];
+        const tinyobj::index_t& tinyIndex = mesh.indices[i + j];
         face.vertexIndex[j] = tinyIndex.vertex_index;
         face.normalIndex[j] = tinyIndex.normal_index;
         face.texcoordIndex[j] = tinyIndex.texcoord_index;

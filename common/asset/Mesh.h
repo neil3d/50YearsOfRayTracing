@@ -26,19 +26,14 @@ class Mesh : public MyAssetObject {
     int vertexIndex[3];
     int normalIndex[3];
     int texcoordIndex[3];
-  };
-
-  struct SubMesh {
-    std::string name;
-    std::vector<Face> faces;
-    std::vector<int> materialIDs;  // per-face material ID
+    int materialID;
   };
 
  private:
   std::vector<glm::vec3> mVertices;
   std::vector<glm::vec3> mNormals;
   std::vector<glm::vec2> mTexcoords;
-  std::vector<SubMesh> mSubMeshes;
+  std::vector<Face> mFaces;
 
   AABBox mBoundingBox;
 };

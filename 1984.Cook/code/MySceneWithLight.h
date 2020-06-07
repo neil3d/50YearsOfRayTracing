@@ -22,15 +22,7 @@ class MySceneWithLight : public MyScene {
 
   void createTexturedBall(glm::vec3 pos, glm::vec3 degAngles, float animScale,
                           const std::string& szName, float gloss, float Ks) {
-    std::string szBasePath("./");
-#ifdef WIN32
-    // TODO£ºFIX ME
-    szBasePath = "../../../../../";
-#endif  // WIN32
-
-    std::string szTexture;
-    szTexture.append(szBasePath);
-    szTexture.append("content/billiard/");
+    std::string szTexture("content/billiard/");
     szTexture.append(szName);
     szTexture.append(".jpg");
 

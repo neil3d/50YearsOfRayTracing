@@ -8,6 +8,7 @@
 
 #pragma once
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 #include <tuple>
 
 namespace RayTracingHistory {
@@ -33,7 +34,7 @@ std::tuple<bool, float, glm::vec3> intersect(const Ray& ray,
   float det = glm::dot(edge1, pvec);
 
   // enable culling
-  if (det < 0.001f) return std::make_tuple(false, 0, glm::vec3(0));
+  if (det < glm::epsilon<float>()) return std::make_tuple(false, 0, glm::vec3(0));
 
   // calculate distance from v0 to ray origin
   glm::vec3 tvec = orig - v0;
