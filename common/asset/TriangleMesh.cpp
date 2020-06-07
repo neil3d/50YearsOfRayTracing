@@ -4,6 +4,7 @@
 #include <tiny_obj_loader.h>
 
 #include <filesystem>
+#include <limits>
 
 #include "../framework/MyException.h"
 #include "../geometry/Triangle.h"
@@ -85,6 +86,9 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
 
 std::tuple<bool, float, glm::vec3, glm::vec2> TriangleMesh::intersect(
     const Ray& ray, float tMin, float tMax) {
+  if (!mBoundingBox.intersect(ray, tMin, tMax))
+    return std::make_tuple(false, 0, glm::vec3(), glm::vec2());
+
   bool hitAnyFace = false;
   glm::vec3 hitNormal(0, 1, 0);
   glm::vec2 hitUV(0, 0);
@@ -120,6 +124,25 @@ void TriangleMesh::_generateFaceNormal() {
   }  // end of for
 }
 
-void TriangleMesh::_buildBoundingBox() {}
+void TriangleMesh::_buildBoundingBox() {
+  constexpr float S = std::numeric_limits<float>::min();
+  constexpr float B = std::numeric_limits<float>::max();
+
+  glm::vec3 max(S, S, S);
+  glm::vec3 min(B, B, B);
+
+  for (const auto& v : mVertices) {
+    if (v.x > max.x) max.x = v.x;
+    if (v.y > max.y) max.y = v.y;
+    if (v.z > max.z) max.z = v.z;
+
+    if (v.x < min.x) min.x = v.x;
+    if (v.y < min.y) min.y = v.y;
+    if (v.z < min.z) min.z = v.z;
+  }
+
+  mBoundingBox.max = max;
+  mBoundingBox.min = min;
+}
 
 }  // namespace RayTracingHistory
