@@ -52,10 +52,10 @@ class BilliardSceneDemo : public MySceneWithLight {
                        BALL_KS);
     createTexturedBall(glm::vec3(-2.75f * PS, 1, 2.75f), glm::vec3(10, -40, 55),
                        0.0f, "ball_4", BALL_GLOSS, BALL_KS);
-    createTexturedBall(glm::vec3(-1.25f * PS, 1, -0.15f * PS),
+    createTexturedBall(glm::vec3(-1.25f * PS, 1, -1.15f * PS),
                        glm::vec3(90, 0, 33), 0.0f, "ball_9", BALL_GLOSS,
                        BALL_KS);
-    createTexturedBall(glm::vec3(-1.25f * PS, 1, -1.25f * PS),
+    createTexturedBall(glm::vec3(-1.25f * PS, 1, -2.25f * PS),
                        glm::vec3(0, 0, 99), 0.f, "ball_5", BALL_GLOSS,
                        BALL_KS);
   }

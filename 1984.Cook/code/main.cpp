@@ -13,7 +13,7 @@ const char* const APP_NAME =
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
-#define DEMO_INDEX 0
+#define DEMO_INDEX 1
 
 int main(int argc, char* argv[]) {
   MyApp app;
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     scene->init();
 
     auto camera = std::make_shared<ThinLensCamera>();
-    camera->setAperture(0.1f)
+    camera->setAperture(0.2f)
         .setFocusDist(glm::distance(eyePos, lookAt))
         .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))

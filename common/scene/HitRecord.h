@@ -16,9 +16,9 @@ class MySceneObject;
 
 struct HitRecord {
   float t = 0;
-  glm::vec3 p;
-  glm::vec3 normal;
-  glm::vec2 uv;
+  glm::vec3 p = {0, 0, 0};
+  glm::vec3 normal = {0, 1, 0};
+  glm::vec2 uv = {0, 0};
   MyMaterial* mtl = nullptr;
   MySceneObject* obj = nullptr;
 };

@@ -169,7 +169,6 @@ std::tuple<bool, float, Ray> WhittedRayTracer::_generateRefractationRay(
   }
 
   glm::vec3 refracted;
-  bool ret;
 
   if (myRefract(dir, outwardNormal, niOverNt, refracted)) {
     float reflectivity = mySchlick(cosine, Kn, 5.0f);

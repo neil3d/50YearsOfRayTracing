@@ -31,7 +31,7 @@ void MyRenderer::_init(SDL_Window* pWnd) {
 }
 
 bool MyRenderer::nextPresentReady() const {
-  int line = mPixelCount / mFrameWidth;
+  uint32_t line = mPixelCount / mFrameWidth;
   return line > mPresentLine;
 }
 
@@ -87,10 +87,10 @@ void MyRenderer::_clearFrameBuffer(const glm::vec4& colorf) {
     spdlog::error("MyRenderer._clearFrameBuffer: INVALID surface.");
   }
 
-  uint8_t r = 255.5f * colorf.r;
-  uint8_t g = 255.5f * colorf.g;
-  uint8_t b = 255.5f * colorf.b;
-  uint8_t a = 255.5f * colorf.a;
+  uint8_t r = uint8_t(255.5f * colorf.r);
+  uint8_t g = uint8_t(255.5f * colorf.g);
+  uint8_t b = uint8_t(255.5f * colorf.b);
+  uint8_t a = uint8_t(255.5f * colorf.a);
 
   uint32_t color = SDL_MapRGBA(mSurface->format, r, g, b, a);
   {
