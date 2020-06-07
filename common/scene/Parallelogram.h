@@ -39,6 +39,11 @@ class Parallelogram : public Plane {
     return *this;
   }
 
+  void getEdges(glm::vec3& outEdge1, glm::vec3& outEdge2) const {
+    outEdge1 = edge1;
+    outEdge2 = edge2;
+  }
+
   glm::vec3 getAnchor() const { return mTransform.getPosition(); }
 
   virtual bool intersect(const Ray& ray, float tMin, float tMax,

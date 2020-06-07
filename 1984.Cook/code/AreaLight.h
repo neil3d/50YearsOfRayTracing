@@ -57,6 +57,11 @@ struct AreaLight {
     return *this;
   }
 
+  AreaLight& setRange(float val) {
+    range = val;
+    return *this;
+  }
+
   AreaLight& setAmbient(float a) {
     ambient = a;
     return *this;

@@ -20,7 +20,7 @@ class BilliardSceneDemo : public MySceneWithLight {
   virtual void init() override {
     constexpr float BALL_GLOSS = 0.75f;
     constexpr float BALL_KS = 0.55f;
-    constexpr float BALL_PS = 1.75f;
+    constexpr float BALL_PS = 2.5f;
     // setup a main light
     mLight
         .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
@@ -53,10 +53,10 @@ class BilliardSceneDemo : public MySceneWithLight {
     createTexturedBall(glm::vec3(-2.75f * PS, 1, 2.75f), glm::vec3(10, -40, 55),
                        0.0f, "ball_4", BALL_GLOSS, BALL_KS);
     createTexturedBall(glm::vec3(-1.25f * PS, 1, -0.15f * PS),
-                       glm::vec3(90, 0, 33), 1.0f, "ball_9", BALL_GLOSS,
+                       glm::vec3(90, 0, 33), 0.0f, "ball_9", BALL_GLOSS,
                        BALL_KS);
     createTexturedBall(glm::vec3(-1.25f * PS, 1, -1.25f * PS),
-                       glm::vec3(0, 0, 99), 0.5f, "ball_5", BALL_GLOSS,
+                       glm::vec3(0, 0, 99), 0.f, "ball_5", BALL_GLOSS,
                        BALL_KS);
   }
 };

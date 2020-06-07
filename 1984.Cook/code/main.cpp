@@ -13,7 +13,7 @@ const char* const APP_NAME =
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
-#define MY_DEMO 0
+#define DEMO_INDEX 0
 
 int main(int argc, char* argv[]) {
   MyApp app;
@@ -22,13 +22,12 @@ int main(int argc, char* argv[]) {
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<DistributedRayTracer>();
 
-
-#if MY_DEMO
+#if DEMO_INDEX == 0
     constexpr float BALL_PS = 1.75f;
     auto scene = std::make_shared<BilliardSceneDemo>();
     glm::vec3 eyePos(-9, 4.5f, -6);
     glm::vec3 lookAt(-2.25f * BALL_PS, 1, -1.15f * BALL_PS);
-#else
+#elif DEMO_INDEX == 1
     auto scene = std::make_shared<BilliardSceneClone>();
     glm::vec3 eyePos(4, 10, 0);
     glm::vec3 lookAt(-1, 1, 1);

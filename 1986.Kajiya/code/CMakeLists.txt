@@ -5,7 +5,6 @@ project(RayTracingHistory)
 set(SUB_PROJECT_NAME MonteCarloPathTracer)
 
 add_executable(${SUB_PROJECT_NAME} main.cpp
-                CornellBoxDemo.h
                 DemoScene.h
                 DiffuseMaterial.h
                 SimpleMonteCarloApproach.h

@@ -9,7 +9,6 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 Material.h
                 BilliardSceneClone.h
                 BilliardSceneDemo.h
-                CornellBoxDemo.h
                 DistributedRayTracer.h
                 DistributedRayTracer.cpp
                 MySceneWithLight.h

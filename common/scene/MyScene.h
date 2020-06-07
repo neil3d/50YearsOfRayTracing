@@ -24,14 +24,14 @@ class MyScene {
   virtual ~MyScene() = default;
 
   virtual void init() = 0;
-  virtual void onObjectCreated(MySceneObject* newObject) {}
+  virtual bool onObjectCreated(MySceneObject* newObject) { return true; }
 
   template <typename T, typename... Args>
   T& createObject(Args&&... args) {
     auto newObject = std::make_shared<T>(std::forward<Args>(args)...);
-    mObjects.emplace_back(newObject);
-    
-    onObjectCreated(newObject.get());
+    if (onObjectCreated(newObject.get())) {
+      mObjects.emplace_back(newObject);
+    }
     return *newObject;
   }
 
