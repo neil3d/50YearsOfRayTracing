@@ -10,8 +10,8 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int SPP_ROOT = 2;
-constexpr int MAX_BOUNCES = 2;
+constexpr int SPP_ROOT = 10;
+constexpr int MAX_BOUNCES = 5;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);

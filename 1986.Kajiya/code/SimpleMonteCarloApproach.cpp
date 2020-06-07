@@ -9,7 +9,7 @@
 
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr int MAX_SPP = 12;
+constexpr int MAX_SPP = 4;
 constexpr int MAX_BOUNCES = 3;
 
 void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
@@ -44,7 +44,7 @@ void SimpleMonteCarloApproach::_tileRenderThread(Tile tile, MyScene::Ptr scene,
               _shade(Ray(hitRec.p, -primaryRay.direction), hitRec, pScene, 0);
       }
 
-      _writePixel(x, y, glm::vec4(color, 1), 0.68f);
+      _writePixel(x, y, glm::vec4(color, 1), 1);
       mPixelCount++;
     }  // end of for(x)
 }
@@ -64,6 +64,7 @@ glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wo,
   glm::vec3 sum(0);
   float Kd = powf(0.25f, depth * depth);
 
+  float count = 0;
   for (int i = 0; i < MAX_SPP; i++) {
     glm::vec3 wi = pMtl->scatter(shadingPoint.normal);
     float pdf = pMtl->pdf(wi, shadingPoint.normal);
@@ -73,6 +74,7 @@ glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wo,
     HitRecord hitRec;
     if (!pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec)) continue;
 
+    count += 1.0f;
     MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
     if (pHitMtl->getEmission() > 0.1f) {
       // hit a light
@@ -86,7 +88,7 @@ glm::vec3 SimpleMonteCarloApproach::_shade(const Ray& wo,
 
   }  // end of for
 
-  return sum / (float)MAX_SPP;
+  return sum / count;
 }
 
 }  // namespace RayTracingHistory
