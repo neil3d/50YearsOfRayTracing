@@ -4,6 +4,7 @@
 #include <tiny_obj_loader.h>
 
 #include "../framework/MyException.h"
+#include "../geometry/Triangle.h"
 
 static_assert(sizeof(tinyobj::real_t) == sizeof(float));
 
