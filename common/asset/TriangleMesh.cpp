@@ -95,6 +95,21 @@ std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
   if (!mBoundingBox.intersect(ray, tMin, tMax))
     return std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
 
+#if 1
+  return _perFaceIntersect(ray, tMin, tMax);
+#else
+  return _accelIntersect(ray, tMin, tMax);
+#endif
+}
+
+std::tuple<bool, float, glm::vec3, glm::vec2, int>
+TriangleMesh::_accelIntersect(const Ray& ray, float tMin, float tMax) {
+  // TODO:
+  return std::tuple<bool, float, glm::vec3, glm::vec2, int>();
+}
+
+std::tuple<bool, float, glm::vec3, glm::vec2, int>
+TriangleMesh::_perFaceIntersect(const Ray& ray, float tMin, float tMax) {
   bool hitAnyFace = false;
   glm::vec3 hitNormal(0, 1, 0);
   glm::vec2 hitUV(0, 0);

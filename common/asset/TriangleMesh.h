@@ -30,6 +30,13 @@ class TriangleMesh : public MyAssetObject {
   std::vector<MyMaterial::Ptr> importMaterial(MaterialImporter* pImporter);
 
  private:
+  std::tuple<bool, float, glm::vec3, glm::vec2, int> _perFaceIntersect(const Ray& ray,
+                                                               float tMin,
+                                                               float tMax);
+
+  std::tuple<bool, float, glm::vec3, glm::vec2, int> _accelIntersect(
+      const Ray& ray, float tMin, float tMax);
+
   void _generateFaceNormal();
 
   void _buildBoundingBox();
