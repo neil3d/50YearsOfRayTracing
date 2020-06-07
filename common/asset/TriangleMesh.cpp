@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "TriangleMesh.h"
 
 #include <spdlog/spdlog.h>
 #include <tiny_obj_loader.h>
@@ -10,7 +10,7 @@ static_assert(sizeof(tinyobj::real_t) == sizeof(float));
 
 namespace RayTracingHistory {
 
-void Mesh::loadFromFile(const std::string& szFileName) {
+void TriangleMesh::loadFromFile(const std::string& szFileName) {
   tinyobj::attrib_t attrib;
   std::vector<tinyobj::shape_t> shapes;
   std::vector<tinyobj::material_t> materials;

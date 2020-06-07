@@ -1,26 +1,13 @@
 #include "MeshInstance.h"
 
 #include "../asset/MyAssetManager.h"
+#include "../asset/TriangleMesh.h"
+
 
 namespace RayTracingHistory {
 
 MeshInstance& MeshInstance::setMeshFile(const std::string& szObjFileName) {
-  mMesh = MyAssetManager::instance().loadAssetObject<Mesh>(szObjFileName);
-  return *this;
-}
-
-MeshInstance& MeshInstance::setPosition(glm::vec3 pos) {
-  mTransform.setPosition(pos);
-  return *this;
-}
-
-MeshInstance& MeshInstance::setScale(glm::vec3 scale) {
-  mTransform.setScale(scale);
-  return *this;
-}
-
-MeshInstance& MeshInstance::setRotation(float pitch, float yaw, float roll) {
-  mTransform.setRotation(pitch, yaw, roll);
+  mMesh = MyAssetManager::instance().loadAssetObject<TriangleMesh>(szObjFileName);
   return *this;
 }
 

@@ -14,7 +14,7 @@
 #include "MyAssetObject.h"
 
 namespace RayTracingHistory {
-class Mesh : public MyAssetObject {
+class TriangleMesh : public MyAssetObject {
  public:
   using MyAssetObject::MyAssetObject;
 
