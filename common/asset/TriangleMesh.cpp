@@ -87,7 +87,11 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   _generateFaceNormal();
   _buildBoundingBox();
 
-  // build BVH
+  std::vector<int> faceList(mFaces.size());
+  int i = 0;
+  std::generate(faceList.begin(), faceList.end(), [&i] { return i++; });
+
+  _buildBVH(&mBVHRoot, std::move(faceList));
 }
 
 std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
@@ -95,55 +99,113 @@ std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
   if (!mBoundingBox.intersect(ray, tMin, tMax))
     return std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
 
-#if 1
+#if 0
   return _perFaceIntersect(ray, tMin, tMax);
 #else
-  return _accelIntersect(ray, tMin, tMax);
+  return _accelIntersect(&mBVHRoot, ray, tMin, tMax);
 #endif
 }
 
 std::tuple<bool, float, glm::vec3, glm::vec2, int>
-TriangleMesh::_accelIntersect(const Ray& ray, float tMin, float tMax) {
-  // TODO:
-  return std::tuple<bool, float, glm::vec3, glm::vec2, int>();
+TriangleMesh::_accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,
+                              float tMax) {
+  auto result = std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
+
+  if (!pNode) return result;
+
+  bool bHitNode = pNode->boudingBox.intersect(ray, tMin, tMax);
+  if (!bHitNode) return result;
+
+  // left node
+  if (!(pNode->faceList.empty())) {
+    float closestSoFar = tMax;
+
+    for (int faceIndex : pNode->faceList) {
+      const auto& face = mFaces[faceIndex];
+      auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
+
+      if (std::get<0>(hit)) {
+        float tnear = std::get<1>(hit);
+        if (tnear < closestSoFar) {
+          result = hit;
+          closestSoFar = tnear;
+        }
+      }
+    }  // end of for
+
+    return result;
+  }  // end of if
+
+  // recursive
+  auto leftResult = _accelIntersect(pNode->leftChild.get(), ray, tMin, tMax);
+  auto rightResult = _accelIntersect(pNode->rightChild.get(), ray, tMin, tMax);
+
+  if (std::get<0>(leftResult) && std::get<0>(rightResult)) {
+    float leftT = std::get<1>(leftResult);
+    float rightT = std::get<1>(rightResult);
+    if (leftT < rightT)
+      return leftResult;
+    else
+      return rightResult;
+  } else {
+    if (std::get<0>(leftResult)) return leftResult;
+    if (std::get<0>(rightResult)) return rightResult;
+  }
+
+  return std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
+}
+
+std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::_faceIntersect(
+    const Face& face, const Ray& ray, float tMin, float tMax) {
+  bool hitAnyFace = false;
+  float tnear = 0;
+  glm::vec3 hitNormal(0, 1, 0);
+  glm::vec2 hitUV(0, 0);
+  int hitMtl = -1;
+
+  const auto& v0 = mVertices[face.vertexIndex[0]];
+  const auto& v1 = mVertices[face.vertexIndex[1]];
+  const auto& v2 = mVertices[face.vertexIndex[2]];
+
+  auto check = Triangle::intersect(ray, v0, v1, v2);
+  bool bHit = std::get<0>(check);
+  float t = std::get<1>(check);
+  glm::vec3 uvw = std::get<2>(check);
+  if (bHit && t > tMin && t < tMax) {
+    hitAnyFace = true;
+    tnear = t;
+    hitNormal = face.normal;
+    hitMtl = face.materialID;
+
+    if (!mTexcoords.empty() && face.texcoordIndex[0] != -1 &&
+        face.texcoordIndex[1] != -1 && face.texcoordIndex[2] != -1) {
+      const auto& uv0 = mTexcoords[face.texcoordIndex[0]];
+      const auto& uv1 = mTexcoords[face.texcoordIndex[1]];
+      const auto& uv2 = mTexcoords[face.texcoordIndex[2]];
+      hitUV = Triangle::barycentricInterpolation(uvw, uv0, uv1, uv2);
+    }
+  }
+
+  return std::make_tuple(hitAnyFace, tnear, hitNormal, hitUV, hitMtl);
 }
 
 std::tuple<bool, float, glm::vec3, glm::vec2, int>
 TriangleMesh::_perFaceIntersect(const Ray& ray, float tMin, float tMax) {
-  bool hitAnyFace = false;
-  glm::vec3 hitNormal(0, 1, 0);
-  glm::vec2 hitUV(0, 0);
-  int hitMtl = -1;
-  float tnear = 0;
+  auto result = std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
   float closestSoFar = tMax;
 
   for (auto& face : mFaces) {
-    const auto& v0 = mVertices[face.vertexIndex[0]];
-    const auto& v1 = mVertices[face.vertexIndex[1]];
-    const auto& v2 = mVertices[face.vertexIndex[2]];
-
-    auto check = Triangle::intersect(ray, v0, v1, v2);
-    bool bHit = std::get<0>(check);
-    float t = std::get<1>(check);
-    glm::vec3 uvw = std::get<2>(check);
-    if (bHit && t > tMin && t < closestSoFar) {
-      hitAnyFace = true;
-      tnear = t;
-      closestSoFar = t;
-      hitNormal = face.normal;
-      hitMtl = face.materialID;
-
-      if (!mTexcoords.empty() && face.texcoordIndex[0] != -1 &&
-          face.texcoordIndex[1] != -1 && face.texcoordIndex[2] != -1) {
-        const auto& uv0 = mTexcoords[face.texcoordIndex[0]];
-        const auto& uv1 = mTexcoords[face.texcoordIndex[1]];
-        const auto& uv2 = mTexcoords[face.texcoordIndex[2]];
-        hitUV = Triangle::barycentricInterpolation(uvw, uv0, uv1, uv2);
+    auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
+    if (std::get<0>(hit)) {
+      float tnear = std::get<1>(hit);
+      if (tnear < closestSoFar) {
+        result = hit;
+        closestSoFar = tnear;
       }
     }
   }  // end of for
 
-  return std::make_tuple(hitAnyFace, tnear, hitNormal, hitUV, hitMtl);
+  return result;
 }
 std::vector<MyMaterial::Ptr> TriangleMesh::importMaterial(
     MaterialImporter* pImporter) {
@@ -181,8 +243,59 @@ void TriangleMesh::_buildBoundingBox() {
     if (v.z < min.z) min.z = v.z;
   }
 
-  mBoundingBox.max = max;
-  mBoundingBox.min = min;
+  glm::vec3 e(0.01f, 0.01f, 0.01f);
+
+  mBoundingBox.max = max + e;
+  mBoundingBox.min = min - e;
+}
+
+void TriangleMesh::_buildBVH(BVHNode* pNode, std::vector<int> faceList) {
+  constexpr size_t LEAF_FACE_COUNT = 5;
+
+  // build bounding box for this node
+  pNode->boudingBox = _buildBoundingBox(faceList);
+
+  // is a leaf node
+  if (faceList.size() <= LEAF_FACE_COUNT) {
+    pNode->faceList = std::move(faceList);
+    return;
+  }
+
+  // split face list to children nodes
+  pNode->leftChild = std::make_unique<BVHNode>();
+  pNode->rightChild = std::make_unique<BVHNode>();
+
+  int split = faceList.size() / 2;
+  std::vector<int> leftArray(faceList.begin(), faceList.begin() + split);
+  std::vector<int> rightArray(faceList.begin() + split, faceList.end());
+
+  _buildBVH(pNode->leftChild.get(), std::move(leftArray));
+  _buildBVH(pNode->rightChild.get(), std::move(rightArray));
+}
+
+AABBox TriangleMesh::_buildBoundingBox(const std::vector<int>& faceList) {
+  constexpr float S = std::numeric_limits<float>::min();
+  constexpr float B = std::numeric_limits<float>::max();
+
+  glm::vec3 max(S, S, S);
+  glm::vec3 min(B, B, B);
+
+  for (const auto& i : faceList) {
+    const Face& face = mFaces[i];
+    for (int j = 0; j < 3; j++) {
+      const auto& v = mVertices[face.vertexIndex[j]];
+      if (v.x > max.x) max.x = v.x;
+      if (v.y > max.y) max.y = v.y;
+      if (v.z > max.z) max.z = v.z;
+
+      if (v.x < min.x) min.x = v.x;
+      if (v.y < min.y) min.y = v.y;
+      if (v.z < min.z) min.z = v.z;
+    }
+  }  // end of for
+
+  glm::vec3 e(0.01f, 0.01f, 0.01f);
+  return {min - e, max + e};
 }
 
 }  // namespace RayTracingHistory
