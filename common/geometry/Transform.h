@@ -17,53 +17,41 @@ static glm::mat4 identity = glm::identity<glm::mat4>();
 struct Transform {
   void setPosition(const glm::vec3& pos) {
     position = pos;
-    bDirty = true;
+    _update();
   }
 
   glm::vec3 getPosition() const { return position; }
 
   void setRotation(const glm::quat& rot) {
     rotation = rot;
-    bDirty = true;
+    _update();
   }
 
   glm::quat getRotation() const { return rotation; }
 
   void setRotation(float pitch, float yaw, float roll) {
     rotation = glm::quat(glm::vec3(pitch, yaw, roll));
-    bDirty = true;
+    _update();
   }
 
   void setScale(float s) {
     scale = glm::vec3(s);
-    bDirty = true;
+    _update();
   }
 
   void setScale(const glm::vec3& s) {
     scale = s;
-    bDirty = true;
+    _update();
   }
 
-  const glm::mat4& getLocal2World() {
-    _update();
-    return local2World;
-  }
+  const glm::mat4& getLocal2World() { return local2World; }
 
-  const glm::mat4& getWorld2Local() {
-    _update();
-    return world2Local;
-  }
+  const glm::mat4& getWorld2Local() { return world2Local; }
 
-  const glm::mat4& getWorld2LocalT() {
-    _update();
-    return world2LocalT;
-  }
+  const glm::mat4& getWorld2LocalT() { return world2LocalT; }
 
  private:
   void _update() {
-    if (!bDirty) return;
-    bDirty = false;
-
     local2World = glm::translate(identity, position);
     local2World *= glm::mat4_cast(rotation);
     local2World = glm::scale(local2World, scale);
@@ -76,7 +64,6 @@ struct Transform {
   glm::quat rotation = {1, 0, 0, 0};
   glm::vec3 scale = {1, 1, 1};
 
-  bool bDirty = true;
   glm::mat4 local2World = identity;
   glm::mat4 world2Local = identity;
   glm::mat4 world2LocalT = identity;  // for normal transformation
