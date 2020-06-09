@@ -50,6 +50,8 @@ class CornellBoxMtlImporter : public MaterialImporter {
       mtl->setColor(glm::vec3(1)).setEmission(100.0f).enableLight();
       return mtl;
     }
+
+    return std::make_shared<DiffuseMaterial>();
   }
 };
 
