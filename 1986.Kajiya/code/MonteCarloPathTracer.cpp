@@ -142,7 +142,7 @@ glm::vec3 MonteCarloPathTracer::_shade(const Ray& wo,
   MaterialBase* pHitMtl = static_cast<MaterialBase*>(hitRec.mtl);
   if (!pHitMtl) return glm::vec3(1, 0, 0);
 
-  float d = glm::distance(shadingPoint.p, hitRec.p) / 100;
+  float d = glm::distance(shadingPoint.p, hitRec.p) / 50;
   float falloff = 1.0f;
   if (d > 1) falloff = 1.0f / (d * d);
 

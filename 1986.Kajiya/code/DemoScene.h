@@ -33,7 +33,7 @@ class DemoScene : public MyScene {
         .setAnchor(glm::vec3(W / -2 / LS, H - 0.01f, D / -2 / LS))
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1))
-        .setEmission(100.0f)
+        .setEmission(200.0f)
         .enableLight();
 
     createObject<Parallelogram>("ceiling")
@@ -85,9 +85,10 @@ class DemoScene : public MyScene {
     const char* const szFileName = "content/bunny/bunny.obj";
     auto& mesh = createObject<MeshInstance>("bunny");
     mesh.setMeshFile(szFileName);
-    mesh.createMaterial<DiffuseMaterial>().setColor(
-        glm::vec3(1.0f));
-    mesh.setScale(120);
+    mesh.createMaterial<DiffuseMaterial>().setColor(glm::vec3(0, 0, 1.0f));
+    mesh.setScale(150)
+        .setPosition(glm::vec3(0, 100, 0))
+        .setRotation(0, glm::radians(180.0f), 0);
   }
 };
 }  // namespace RayTracingHistory
