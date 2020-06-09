@@ -49,9 +49,8 @@
 
 - [ ] Direct lighting
 - [ ] Indirect lighting
-- [ ]Material
-    * [x] Diffuse material / uniform sampling
-    * [ ] Lambertian material / cosine sampling
+- [x] Diffuse material / uniform sampling
+- [ ] Lambertian material / cosine sampling
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-07.png)
 
@@ -62,5 +61,5 @@
     * [x] Windows 10
 - [x] multi-threaded rendering
 - [x] scene object instancing
-- [ ] triangle mesh with BVH
+- [x] triangle mesh with BVH
 - [ ] bilinear texture filter
