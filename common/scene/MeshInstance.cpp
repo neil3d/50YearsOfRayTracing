@@ -28,7 +28,7 @@ bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
   Ray localRay = _makeLocalRay(ray, nullptr);
 
   // trangle mesh check
-  auto result = mMesh->intersect(ray, tMin, tMax);
+  auto result = mMesh->intersect(localRay, tMin, tMax);
 
   bool hitAnyFace = std::get<0>(result);
   if (hitAnyFace) {
@@ -37,7 +37,7 @@ bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
     glm::vec2 hitUV = std::get<3>(result);
     int mtlID = std::get<4>(result);
 
-    glm::vec3 WN(mTransform.getWorld2LocalT() * glm::vec4(hitNormal, 0));
+    glm::vec3 WN(mTransform.getNormalMatrix() * glm::vec4(hitNormal, 0));
 
     outRec = _makeHitRecord(ray, tnear, WN, hitUV);
 

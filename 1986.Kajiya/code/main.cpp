@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
     auto renderer = app.createRenderer<SimpleMonteCarloApproach>();
 #endif
 
-#if 1
+#if 0
     auto scene = std::make_shared<CornellBoxScene>();
     scene->init();
 

@@ -86,8 +86,8 @@ class DemoScene : public MyScene {
     auto& mesh = createObject<MeshInstance>("bunny");
     mesh.setMeshFile(szFileName);
     mesh.createMaterial<DiffuseMaterial>().setColor(
-        glm::vec3(0.2f, 0.4f, 1.0f));
-    // mesh.setScale(150);
+        glm::vec3(1.0f));
+    mesh.setScale(120);
   }
 };
 }  // namespace RayTracingHistory

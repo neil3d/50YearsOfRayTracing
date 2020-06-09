@@ -21,9 +21,10 @@ struct Ray {
 
   Ray() : origin(0, 0, 0), direction(0, 1, 0) {}
 
-  Ray(const glm::vec3& inOrigin, const glm::vec3& inDir) {
+  Ray(const glm::vec3& inOrigin, const glm::vec3& inDir, bool bUnitDir = true) {
     origin = inOrigin;
-    direction = glm::normalize(inDir);
+    direction = inDir;
+    if (bUnitDir) direction = glm::normalize(inDir);
   }
 
   glm::vec3 getPoint(float t) const { return origin + direction * t; }

@@ -37,7 +37,7 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
     constexpr float PI = glm::pi<float>();
 
     glm::vec3 localN = glm::normalize(localRay.getPoint(tnear) - center);
-    glm::vec3 N(transform.getWorld2LocalT() * glm::vec4(localN, 0));
+    glm::vec3 N(transform.getNormalMatrix() * glm::vec4(localN, 0));
     float u = (1 + atan2(localN.z, localN.x) / PI) * 0.5f;
     float v = acosf(localN.y) / PI;
 

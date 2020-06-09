@@ -48,16 +48,17 @@ struct Transform {
 
   const glm::mat4& getWorld2Local() { return world2Local; }
 
-  const glm::mat4& getWorld2LocalT() { return world2LocalT; }
+  const glm::mat4& getNormalMatrix() { return normalMatrix; }
 
  private:
   void _update() {
+    auto matRotation = glm::mat4_cast(rotation);
     local2World = glm::translate(identity, position);
-    local2World *= glm::mat4_cast(rotation);
+    local2World *= matRotation;
     local2World = glm::scale(local2World, scale);
 
     world2Local = glm::inverse(local2World);
-    world2LocalT = glm::transpose(world2Local);
+    normalMatrix = glm::transpose(glm::inverse(matRotation));
   }
 
   glm::vec3 position = {0, 0, 0};
@@ -66,6 +67,6 @@ struct Transform {
 
   glm::mat4 local2World = identity;
   glm::mat4 world2Local = identity;
-  glm::mat4 world2LocalT = identity;  // for normal transformation
+  glm::mat4 normalMatrix = identity;
 };
 }  // namespace RayTracingHistory

@@ -34,7 +34,8 @@ std::tuple<bool, float, glm::vec3> intersect(const Ray& ray,
   float det = glm::dot(edge1, pvec);
 
   // enable culling
-  if (det < glm::epsilon<float>()) return std::make_tuple(false, 0, glm::vec3(0));
+  if (det < glm::epsilon<float>())
+    return std::make_tuple(false, 0, glm::vec3(0));
 
   // calculate distance from v0 to ray origin
   glm::vec3 tvec = orig - v0;
@@ -51,7 +52,7 @@ std::tuple<bool, float, glm::vec3> intersect(const Ray& ray,
   if (v < 0.0f || u + v > det) return std::make_tuple(false, 0, glm::vec3(0));
 
   // calculate t, scale parameters, ray intersects triangle
-  float t = dot(edge2, qvec);
+  float t = glm::dot(edge2, qvec);
   float invDet = 1.0f / det;
 
   t *= invDet;

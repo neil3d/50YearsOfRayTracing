@@ -65,10 +65,10 @@ class MySceneObject {
     glm::vec4 wd(worldRay.direction, 0.0f);
     if (animTrans) {
       const glm::mat4& world2Local = animTrans->getWorld2Local();
-      return Ray(world2Local * wo, world2Local * wd);
+      return Ray(world2Local * wo, world2Local * wd, false);
     } else {
       const glm::mat4& world2Local = mTransform.getWorld2Local();
-      return Ray(world2Local * wo, world2Local * wd);
+      return Ray(world2Local * wo, world2Local * wd, false);
     }
   }
   HitRecord _makeHitRecord(const Ray& ray, const float t,
