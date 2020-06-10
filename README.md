@@ -49,17 +49,17 @@
 
 - [ ] Direct lighting
 - [ ] Indirect lighting
-- [x] Diffuse material / uniform sampling
-- [ ] Lambertian material / cosine sampling
+- [ ] Importance Sampling
+- [ ] BRDFs
 
-![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-07.png)
+![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-09.png)
 
 ## MyFramework
 
-- [x] cross platform
+- [x] Cross platform
     * [x] MacOS
     * [x] Windows 10
-- [x] multi-threaded rendering
-- [x] scene object instancing
-- [x] triangle mesh with BVH
-- [ ] bilinear texture filter
+- [x] Multi-threaded rendering
+- [x] Scene object instancing
+- [x] Triangle mesh with BVH
+- [ ] Bilinear texture filter
