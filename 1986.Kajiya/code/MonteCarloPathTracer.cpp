@@ -35,9 +35,7 @@ float MonteCarloPathTracer::getProgress() const {
 }
 
 bool MonteCarloPathTracer::isDone() const {
-  auto SPP = SPP_ROOT * SPP_ROOT;
-  auto total = mFrameWidth * mFrameHeight * SPP;
-  return mPixelCount >= total;
+  return mPresentLine == mFrameHeight && getProgress() == 1.0f;
 }
 
 void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
