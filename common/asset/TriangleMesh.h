@@ -38,29 +38,32 @@ class TriangleMesh : public MyAssetObject {
     std::unique_ptr<BVHNode> rightChild;
   };
 
-
  public:
+  struct Intersection {
+    bool hit = false;
+    float t = 0.0f;
+    glm::vec3 normal = {0, 1, 0};
+    glm::vec2 uv = {0, 0};
+    int mtlID = -1;
+  };
+
   using MyAssetObject::MyAssetObject;
 
   // load Wavefront .Obj file
   virtual void loadFromFile(const std::string& szPath) override;
 
-  std::tuple<bool, float, glm::vec3, glm::vec2, int> intersect(const Ray& ray,
-                                                               float tMin,
-                                                               float tMax);
+  Intersection intersect(const Ray& ray, float tMin, float tMax);
 
   std::vector<MyMaterial::Ptr> importMaterial(MaterialImporter* pImporter);
 
  private:
-  std::tuple<bool, float, glm::vec3, glm::vec2, int> _perFaceIntersect(
-      const Ray& ray, float tMin, float tMax);
+  Intersection _perFaceIntersect(const Ray& ray, float tMin, float tMax);
 
-  std::tuple<bool, float, glm::vec3, glm::vec2, int> _accelIntersect(
-      const BVHNode* pNode,
-      const Ray& ray, float tMin, float tMax);
+  Intersection _accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,
+                               float tMax);
 
-  std::tuple<bool, float, glm::vec3, glm::vec2, int> _faceIntersect(
-      const Face& face, const Ray& ray, float tMin, float tMax);
+  Intersection _faceIntersect(const Face& face, const Ray& ray, float tMin,
+                              float tMax);
 
   void _generateFaceNormal();
 

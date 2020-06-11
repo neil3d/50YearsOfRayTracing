@@ -30,20 +30,14 @@ bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
   // trangle mesh check
   auto result = mMesh->intersect(localRay, tMin, tMax);
 
-  bool hitAnyFace = std::get<0>(result);
-  if (hitAnyFace) {
-    float tnear = std::get<1>(result);
-    glm::vec3 hitNormal = std::get<2>(result);
-    glm::vec2 hitUV = std::get<3>(result);
-    int mtlID = std::get<4>(result);
+  if (result.hit) {
+    glm::vec3 WN(mTransform.getNormalMatrix() * glm::vec4(result.normal, 0));
 
-    glm::vec3 WN(mTransform.getNormalMatrix() * glm::vec4(hitNormal, 0));
+    outRec = _makeHitRecord(ray, result.t, WN, result.uv);
 
-    outRec = _makeHitRecord(ray, tnear, WN, hitUV);
-
-    if (mtlID != -1) outRec.mtl = mModelMtls[mtlID].get();
+    if (result.mtlID != -1) outRec.mtl = mModelMtls[result.mtlID].get();
   }
 
-  return hitAnyFace;
+  return result.hit;
 }
 }  // namespace RayTracingHistory

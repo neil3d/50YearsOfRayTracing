@@ -94,10 +94,9 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   _buildBVH(&mBVHRoot, std::move(faceList));
 }
 
-std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
-    const Ray& ray, float tMin, float tMax) {
-  if (!mBoundingBox.intersect(ray, tMin, tMax))
-    return std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
+TriangleMesh::Intersection TriangleMesh::intersect(const Ray& ray, float tMin,
+                                                   float tMax) {
+  if (!mBoundingBox.intersect(ray, tMin, tMax)) return Intersection();
 
 #if 0
   return _perFaceIntersect(ray, tMin, tMax);
@@ -106,10 +105,11 @@ std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::intersect(
 #endif
 }
 
-std::tuple<bool, float, glm::vec3, glm::vec2, int>
-TriangleMesh::_accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,
-                              float tMax) {
-  auto result = std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
+TriangleMesh::Intersection TriangleMesh::_accelIntersect(const BVHNode* pNode,
+                                                         const Ray& ray,
+                                                         float tMin,
+                                                         float tMax) {
+  Intersection result;
 
   if (!pNode) return result;
 
@@ -124,8 +124,8 @@ TriangleMesh::_accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,
       const auto& face = mFaces[faceIndex];
       auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
 
-      if (std::get<0>(hit)) {
-        float tnear = std::get<1>(hit);
+      if (hit.hit) {
+        float tnear = hit.t;
         if (tnear < closestSoFar) {
           result = hit;
           closestSoFar = tnear;
@@ -140,28 +140,26 @@ TriangleMesh::_accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,
   auto leftResult = _accelIntersect(pNode->leftChild.get(), ray, tMin, tMax);
   auto rightResult = _accelIntersect(pNode->rightChild.get(), ray, tMin, tMax);
 
-  if (std::get<0>(leftResult) && std::get<0>(rightResult)) {
-    float leftT = std::get<1>(leftResult);
-    float rightT = std::get<1>(rightResult);
+  if (leftResult.hit && rightResult.hit) {
+    float leftT = leftResult.t;
+    float rightT = rightResult.t;
     if (leftT < rightT)
       return leftResult;
     else
       return rightResult;
   } else {
-    if (std::get<0>(leftResult)) return leftResult;
-    if (std::get<0>(rightResult)) return rightResult;
+    if (leftResult.hit) return leftResult;
+    if (rightResult.hit) return rightResult;
   }
 
-  return std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
+  return Intersection();
 }
 
-std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::_faceIntersect(
-    const Face& face, const Ray& ray, float tMin, float tMax) {
-  bool hitAnyFace = false;
-  float tnear = 0;
-  glm::vec3 hitNormal(0, 1, 0);
-  glm::vec2 hitUV(0, 0);
-  int hitMtl = -1;
+TriangleMesh::Intersection TriangleMesh::_faceIntersect(const Face& face,
+                                                        const Ray& ray,
+                                                        float tMin,
+                                                        float tMax) {
+  Intersection result;
 
   const auto& v0 = mVertices[face.vertexIndex[0]];
   const auto& v1 = mVertices[face.vertexIndex[1]];
@@ -172,32 +170,33 @@ std::tuple<bool, float, glm::vec3, glm::vec2, int> TriangleMesh::_faceIntersect(
   float t = std::get<1>(check);
   glm::vec3 uvw = std::get<2>(check);
   if (bHit && t > tMin && t < tMax) {
-    hitAnyFace = true;
-    tnear = t;
-    hitNormal = face.normal;
-    hitMtl = face.materialID;
+    result.hit = true;
+    result.t = t;
+    result.normal = face.normal;
+    result.mtlID = face.materialID;
 
     if (!mTexcoords.empty() && face.texcoordIndex[0] != -1 &&
         face.texcoordIndex[1] != -1 && face.texcoordIndex[2] != -1) {
       const auto& uv0 = mTexcoords[face.texcoordIndex[0]];
       const auto& uv1 = mTexcoords[face.texcoordIndex[1]];
       const auto& uv2 = mTexcoords[face.texcoordIndex[2]];
-      hitUV = Triangle::barycentricInterpolation(uvw, uv0, uv1, uv2);
+      result.uv = Triangle::barycentricInterpolation(uvw, uv0, uv1, uv2);
     }
   }
 
-  return std::make_tuple(hitAnyFace, tnear, hitNormal, hitUV, hitMtl);
+  return result;
 }
 
-std::tuple<bool, float, glm::vec3, glm::vec2, int>
-TriangleMesh::_perFaceIntersect(const Ray& ray, float tMin, float tMax) {
-  auto result = std::make_tuple(false, 0, glm::vec3(), glm::vec2(), 0);
+TriangleMesh::Intersection TriangleMesh::_perFaceIntersect(const Ray& ray,
+                                                           float tMin,
+                                                           float tMax) {
+  Intersection result;
   float closestSoFar = tMax;
 
   for (auto& face : mFaces) {
     auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
-    if (std::get<0>(hit)) {
-      float tnear = std::get<1>(hit);
+    if (hit.hit) {
+      float tnear = hit.t;
       if (tnear < closestSoFar) {
         result = hit;
         closestSoFar = tnear;
@@ -265,7 +264,7 @@ void TriangleMesh::_buildBVH(BVHNode* pNode, std::vector<int> faceList) {
   pNode->leftChild = std::make_unique<BVHNode>();
   pNode->rightChild = std::make_unique<BVHNode>();
 
-  int split = faceList.size() / 2;
+  auto split = faceList.size() / 2;
   std::vector<int> leftArray(faceList.begin(), faceList.begin() + split);
   std::vector<int> rightArray(faceList.begin() + split, faceList.end());
 
