@@ -3,16 +3,13 @@
 #include "CornellBoxScene.h"
 #include "DemoScene.h"
 #include "MonteCarloPathTracer.h"
-#include "SimpleMonteCarloApproach.h"
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
 using namespace RayTracingHistory;
 
 // const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
-const char* const APP_NAME = "A Simple Monte Carlo Path Tracer";
-
-// const char* const APP_NAME = "A Simple Monte Carlo Approach";
+const char* const APP_NAME = "My Monte Carlo Path Tracer";
 
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
@@ -22,11 +19,7 @@ int main(int argc, char* argv[]) {
   try {
     app.init();
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
-#if 1
     auto renderer = app.createRenderer<MonteCarloPathTracer>();
-#else
-    auto renderer = app.createRenderer<SimpleMonteCarloApproach>();
-#endif
 
 #if 0
     auto scene = std::make_shared<CornellBoxScene>();

@@ -10,7 +10,6 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
-#include "LambertianMaterial.h"
 #include "asset/MaterialImporter.h"
 #include "scene/MeshInstance.h"
 #include "scene/MyScene.h"
@@ -59,7 +58,6 @@ class CornellBoxScene : public MyScene {
  public:
   virtual void init() override {
     const char* const szFileName = "content/cornell_box/cornell_box.obj";
-    // const char* const szFileName = "content/tank/tank.obj";
 
     auto& mesh = createObject<MeshInstance>("mesh");
     mesh.setMeshFile(szFileName);

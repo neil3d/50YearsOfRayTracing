@@ -45,13 +45,6 @@ class MaterialBase : public MyMaterial {
 
   float getEmission() const { return mEmission; }
 
-  virtual glm::vec3 scatter(const glm::vec3& normal) = 0;
-
-  virtual float pdf(const glm::vec3& dir, const glm::vec3& normal) = 0;
-
-  virtual float evaluate(const glm::vec3& wo, const glm::vec3& wi,
-                         const glm::vec3& normal) = 0;
-
  protected:
   std::shared_ptr<MyTexture> mBaseColor;
   float mEmission = 0;

@@ -8,9 +8,6 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 CornellBoxScene.h
                 DemoScene.h
                 DiffuseMaterial.h
-                SimpleMonteCarloApproach.h
-                SimpleMonteCarloApproach.cpp
-                LambertianMaterial.h
                 MaterialBase.h
                 MonteCarloPathTracer.h
                 MonteCarloPathTracer.cpp

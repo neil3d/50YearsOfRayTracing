@@ -10,7 +10,6 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
-#include "LambertianMaterial.h"
 #include "scene/MeshInstance.h"
 #include "scene/MyScene.h"
 #include "scene/Parallelogram.h"
