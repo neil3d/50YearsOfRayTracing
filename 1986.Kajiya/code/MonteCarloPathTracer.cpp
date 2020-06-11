@@ -10,7 +10,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 3;
+constexpr uint32_t SPP_ROOT = 1;
 constexpr uint32_t MAX_BOUNCES = 5;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
@@ -54,11 +54,11 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   int MAX_SPP = SPP_ROOT * SPP_ROOT;
 
   int SPP = 0;
-  std::vector<glm::vec4> tileBuffer;
+  std::vector<glm::vec3> tileBuffer;
 
   int tileW = tile.right - tile.left;
   int tileH = tile.bottom - tile.top;
-  tileBuffer.resize(tileW * tileH, glm::vec4(0));
+  tileBuffer.resize(tileW * tileH, glm::vec3(0));
 
   auto jit = jitteredPoints(SPP_ROOT, true);
 
@@ -70,21 +70,14 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       for (int x = tile.left; x < tile.right; x++) {
         if (!mRuning) break;
 
-        glm::vec4& buf = tileBuffer[index++];
-
         const glm::vec2& xi = jit[SPP];
         Ray primaryRay =
             pCamera->generateViewingRay((x + xi.x) / W, (y + xi.y) / H);
 
-        buf.w += 1.0f;
+        auto& buf = tileBuffer[index++];
+        buf += _traceRay(primaryRay, pScene);
 
-        glm::vec3 color = _traceRay(primaryRay, pScene);
-        buf.x += color.x;
-        buf.y += color.y;
-        buf.z += color.z;
-
-        color = glm::vec3(buf.x, buf.y, buf.z) / buf.w;
-        _writePixel(x, y, glm::vec4(color, 1), 1);
+        _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 1);
         mPixelCount++;
       }
 
