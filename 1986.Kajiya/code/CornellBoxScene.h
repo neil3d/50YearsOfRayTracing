@@ -44,11 +44,12 @@ class CornellBoxMtlImporter : public MaterialImporter {
       return mtl;
     }
 
-    if (szName == "light") {
+    // TODO
+    /*if (szName == "light") {
       auto mtl = std::make_shared<DiffuseMaterial>();
       mtl->setColor(glm::vec3(1)).setEmission(100.0f).enableLight();
       return mtl;
-    }
+    }*/
 
     return std::make_shared<DiffuseMaterial>();
   }

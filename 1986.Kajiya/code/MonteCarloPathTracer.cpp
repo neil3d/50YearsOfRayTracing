@@ -95,9 +95,6 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo, MyScene* pScene) {
   // error check
   if (!pMtl) return glm::abs(hitRec.normal);
 
-  // hit light
-  if (pMtl->isLight())
-    return pMtl->getEmission() * pMtl->getBaseColor(hitRec.uv, hitRec.p);
 
   // TODO: shading
   return glm::vec3(0.25f, 0.55f, 0.85f) * glm::abs(hitRec.normal);

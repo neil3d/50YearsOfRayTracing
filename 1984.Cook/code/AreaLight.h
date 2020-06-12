@@ -9,7 +9,6 @@
 #pragma once
 #include <algorithm>
 #include <glm/glm.hpp>
-#include <glm/gtc/random.hpp>
 
 #include "geometry/Ray.h"
 

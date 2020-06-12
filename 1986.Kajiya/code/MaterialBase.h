@@ -36,19 +36,11 @@ class MaterialBase : public MyMaterial {
     return *this;
   }
 
-  MaterialBase& enableLight() {
-    mLight = true;
-    return *this;
-  }
-
-  bool isLight() const { return mLight; }
-
   float getEmission() const { return mEmission; }
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;
   float mEmission = 0;
-  bool mLight = false;
 };
 
 }  // namespace RayTracingHistory

@@ -5,12 +5,16 @@ project(RayTracingHistory)
 set(SUB_PROJECT_NAME MonteCarloPathTracer)
 
 add_executable(${SUB_PROJECT_NAME} main.cpp
+                AreaLight.h
                 CornellBoxScene.h
                 DemoScene.h
                 DiffuseMaterial.h
                 MaterialBase.h
                 MonteCarloPathTracer.h
                 MonteCarloPathTracer.cpp
+                MySceneWithLight.h
+                ParallelogramLight.h
+                SkyLight.h
                 )
 
 target_link_libraries(${SUB_PROJECT_NAME} MyFramework)

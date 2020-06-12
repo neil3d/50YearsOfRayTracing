@@ -10,16 +10,21 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
+#include "MySceneWithLight.h"
+#include "ParallelogramLight.h"
 #include "scene/MeshInstance.h"
-#include "scene/MyScene.h"
 #include "scene/Parallelogram.h"
 #include "scene/Plane.h"
 #include "scene/Sphere.h"
 
 namespace RayTracingHistory {
 
-class DemoScene : public MyScene {
+class DemoScene : public MySceneWithLight {
+  ParallelogramLight mMainLight;
+
  public:
+  virtual const AreaLight* getMainLight() const override { return &mMainLight; }
+
   virtual void init() override {
     // create objects
     constexpr float W = 500;
@@ -27,13 +32,10 @@ class DemoScene : public MyScene {
     constexpr float H = 500;
     constexpr float LS = 3.5f;  // ligt size scale
 
-    createObject<Parallelogram>("light")
-        .setEdges(glm::vec3(0, 0, D / LS), glm::vec3(W / LS, 0, 0))
-        .setAnchor(glm::vec3(W / -2 / LS, H - 0.01f, D / -2 / LS))
-        .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1))
-        .setEmission(200.0f)
-        .enableLight();
+    glm::vec3 lightEdge1(0, 0, D / LS);
+    glm::vec3 lightEdge2(W / LS, 0, 0);
+    glm::vec3 lightPos(W / -2 / LS, H - 0.01f, D / -2 / LS);
+    mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
 
     createObject<Parallelogram>("ceiling")
         .setEdges(glm::vec3(W, 0, 0), glm::vec3(0, 0, D))
