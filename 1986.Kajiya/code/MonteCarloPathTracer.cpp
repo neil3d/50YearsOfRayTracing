@@ -12,7 +12,7 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 3;
+constexpr uint32_t SPP_ROOT = 4;
 constexpr uint32_t MAX_BOUNCES = 1;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
@@ -109,16 +109,24 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
   Ray shadowRay = std::get<0>(shadowRet);
   float lightDistance = std::get<1>(shadowRet);
+  glm::vec3 lightNormal = std::get<2>(shadowRet);
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
   bool bShadow =
       pScene->anyHit(shadowRay, SHADOW_E, lightDistance, stopWithAnyHit);
   if (bShadow) visibilityTerm = 0.125f;
 
+  // geometry term
+  glm::vec3 lightDir = shadowRay.direction;
+  float R = glm::min(1.0f, lightDistance / pScene->systemUnit());
+  float geometryTerm = glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
+                       glm::max(0.0f, glm::dot(lightDir, lightNormal)) /
+                       (R * R);
+
   glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
 
   // TODO: shading
-  return glm::vec3(visibilityTerm) * color;
+  return visibilityTerm * geometryTerm * color;
 }
 
 }  // namespace RayTracingHistory

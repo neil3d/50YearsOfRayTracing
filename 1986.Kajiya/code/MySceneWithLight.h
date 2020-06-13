@@ -16,5 +16,7 @@ namespace RayTracingHistory {
 class MySceneWithLight : public MyScene {
  public:
   virtual const AreaLight* getMainLight() const = 0;
+
+  virtual float systemUnit() const { return 100; }
 };
 }  // namespace RayTracingHistory

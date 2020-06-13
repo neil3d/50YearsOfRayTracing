@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<MonteCarloPathTracer>();
 
-#if 1
+#if 0
     auto scene = std::make_shared<CornellBoxScene>();
     scene->init();
 

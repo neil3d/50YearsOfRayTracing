@@ -22,7 +22,7 @@ class AreaLight {
   AreaLight() = default;
   virtual ~AreaLight() = default;
 
-  virtual std::tuple<Ray, float> generateShadowRay(
+  virtual std::tuple<Ray, float, glm::vec3> generateShadowRay(
       const glm::vec3& shadingPt, const glm::vec3& normal,
       const glm::vec2& xi) const = 0;
   virtual float getArea() const = 0;
