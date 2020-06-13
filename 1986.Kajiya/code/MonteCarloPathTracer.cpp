@@ -14,7 +14,7 @@ namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr uint32_t SPP_ROOT = 10;
-constexpr uint32_t MAX_BOUNCES = 1;
+constexpr uint32_t MAX_BOUNCES = 5;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -89,7 +89,7 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
             pCamera->generateViewingRay((x + xi.x) / W, (y + xi.y) / H);
 
         auto& buf = tileBuffer[index++];
-        buf += _traceRay(primaryRay, pScene, xi2[SPP]);
+        buf += _traceRay(primaryRay, pScene, xi2[SPP], 1.0f, 0);
 
         _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 1);
         mPixelCount++;
@@ -101,8 +101,11 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
 glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
                                           MySceneWithLight* pScene,
-                                          const glm::vec2& xi) {
+                                          const glm::vec2& xi, float weight,
+                                          int depth) {
   const glm::vec3 bgColor(0.f, 0.f, 0.f);
+
+  if (depth >= MAX_BOUNCES) return bgColor;
 
   HitRecord hitRec;
   bool bHit = pScene->closestHit(wo, 0.001f, FLOAT_MAX, hitRec);
@@ -115,8 +118,10 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   const AreaLight* pLight = pScene->getMainLight();
 
-  // hit light
-  if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
+  if (depth == 0) {
+    // hit light
+    if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
+  }
 
   // bounces == 0: light source
   if (MAX_BOUNCES == 0) return bgColor;
@@ -153,11 +158,19 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   glm::vec3 directLighting = Li * A * visibilityTerm * geometryTerm * color;
 
   // bounces==1: direct lighting, bounces>1: indirect lighting
-  if (MAX_BOUNCES > 1) {
-    // TODO:
+  glm::vec3 indirectLighting(0);
+  if (MAX_BOUNCES > 1 && weight > glm::epsilon<float>()) {
+    glm::vec3 p = hitRec.p;
+    glm::vec3 d = pMtl->scatter(wo.direction, hitRec.normal);
+
+    float reflectance =
+        pMtl->BRDF(d, wo.direction) * glm::dot(d, hitRec.normal);
+    indirectLighting =
+        _traceRay(Ray(p, d), pScene, xi, reflectance * weight, depth + 1);
+    indirectLighting = weight * indirectLighting;
   }
 
-  return directLighting;
+  return (directLighting + indirectLighting);
 }
 
 }  // namespace RayTracingHistory

@@ -31,7 +31,7 @@ class MonteCarloPathTracer : public TiledRenderer {
   virtual void _init(SDL_Window* pWnd) override;
 
   glm::vec3 _traceRay(const Ray& wo, MySceneWithLight* pScene,
-                      const glm::vec2& xi);
+                      const glm::vec2& xi, float weight, int depth);
 
  private:
   std::string mInfo;

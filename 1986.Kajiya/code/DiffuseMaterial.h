@@ -22,8 +22,17 @@ class DiffuseMaterial : public MaterialBase {
   float Kd = 0.5f;
 
  public:
-  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) override {
+  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) const override {
     return Kd / glm::pi<float>();
+  }
+
+  virtual glm::vec3 scatter(const glm::vec3& wo,
+                            const glm::vec3& normal) const override {
+    // uniform sampling the hemisphere
+    glm::vec3 rand = glm::sphericalRand(1.0f);
+    rand.z = fabsf(rand.z);
+    ONB onb(normal);
+    return glm::normalize(onb.localToWorld(rand));
   }
 };
 

@@ -93,16 +93,24 @@ class CornellBoxScene : public MySceneWithLight {
     _initLight();
 
 // add a ball
-#if 0
+#if 1
     constexpr float BALL_RADIUS = 50;
-    constexpr float BALL_Y = 165 + BALL_RADIUS;
-    constexpr float BALL_X = 240 - BALL_RADIUS;
+    constexpr float BALL_Z = 114;
+    constexpr float BALL_X = 290 + BALL_RADIUS * 2;
+    constexpr float BALL_S = 0.2f;
 
-    createObject<Sphere>("ball")
-        .setCenter(glm::vec3(BALL_X, BALL_Y, 0))
-        .setRadius(BALL_RADIUS)
-        .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1));
+    auto& tallEllipsoid = createObject<Sphere>("tall_ellipsoid")
+                              .setCenter(glm::vec3(BALL_X, 0, BALL_Z))
+                              .setRadius(BALL_RADIUS / BALL_S)
+                              .setScale(glm::vec3(BALL_S, 1.0f, BALL_S));
+    tallEllipsoid.createMaterial<DiffuseMaterial>().setColor(glm::vec3(1));
+
+    auto& shortEllipsoid =
+        createObject<Sphere>("short_ellipsoid")
+            .setCenter(glm::vec3(BALL_X, BALL_RADIUS * 3.8f, BALL_Z))
+            .setRadius(BALL_RADIUS * 1.5f)
+            .setScale(glm::vec3(1.5f, BALL_S*0.5f, 1.5f));
+    shortEllipsoid.createMaterial<DiffuseMaterial>().setColor(glm::vec3(1));
 #endif
   }
 };

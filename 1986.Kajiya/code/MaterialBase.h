@@ -44,7 +44,9 @@ class MaterialBase : public MyMaterial {
   bool isLight() const { return mLight; }
   float getEmission() const { return mEmission; }
 
-  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) = 0;
+  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) const = 0;
+  
+  virtual glm::vec3 scatter(const glm::vec3& wo, const glm::vec3& normal) const = 0;
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;

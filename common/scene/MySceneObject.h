@@ -51,6 +51,11 @@ class MySceneObject {
     return *this;
   }
 
+  MySceneObject& setScale(glm::vec3 s) {
+    mTransform.setScale(s);
+    return *this;
+  }
+
   MyAnimator& createAnimator(bool addInitKey) {
     mAnimator = std::make_shared<MyAnimator>();
     if (addInitKey) mAnimator->addKey(0, mTransform);
