@@ -22,10 +22,12 @@ class ParallelogramLight : public AreaLight {
   using AreaLight::AreaLight;
 
   virtual std::tuple<Ray, float> generateShadowRay(
-      const glm::vec3& shadingPt, const glm::vec2& xi) const override {
+      const glm::vec3& shadingPt, const glm::vec3& normal,
+      const glm::vec2& xi) const override {
+    glm::vec3 origin = shadingPt + normal * 0.001f;
     glm::vec3 pos = mCorner + xi.x * mEdge1 + xi.y * mEdge2;
-    glm::vec3 L = pos - shadingPt;
-    return std::make_tuple(Ray(shadingPt, L), glm::length(L));
+    glm::vec3 L = pos - origin;
+    return std::make_tuple(Ray(origin, L), glm::length(L));
     ;
   }
 

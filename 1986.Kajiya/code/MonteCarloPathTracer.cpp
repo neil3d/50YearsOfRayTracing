@@ -106,7 +106,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   float visibilityTerm = 1.0f;
   constexpr float SHADOW_E = 0.002f;
 
-  auto shadowRet = pLight->generateShadowRay(hitRec.p, xi);
+  auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
   Ray shadowRay = std::get<0>(shadowRet);
   float lightDistance = std::get<1>(shadowRet);
 
