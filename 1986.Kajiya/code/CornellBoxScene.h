@@ -10,9 +10,10 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
+#include "MySceneWithLight.h"
+#include "ParallelogramLight.h"
 #include "asset/MaterialImporter.h"
 #include "scene/MeshInstance.h"
-#include "scene/MyScene.h"
 #include "scene/Parallelogram.h"
 #include "scene/Sphere.h"
 
@@ -55,8 +56,23 @@ class CornellBoxMtlImporter : public MaterialImporter {
   }
 };
 
-class CornellBoxScene : public MyScene {
+class CornellBoxScene : public MySceneWithLight {
+  ParallelogramLight mMainLight;
+
+  void _initLight() {
+    glm::vec3 v1(343.0f, 548.0f, 227.0f);
+    glm::vec3 v2(343.0f, 548.0f, 332.0f);
+    glm::vec3 v3(213.0f, 548.0f, 332.0f);
+    glm::vec3 v4(213.0f, 548.0f, 227.0f);
+
+    glm::vec3 edge1 = v2 - v1;
+    glm::vec3 edge2 = v3 - v1;
+    mMainLight.setShape(edge1, edge2, v1);
+  }
+
  public:
+  virtual const AreaLight* getMainLight() const override { return &mMainLight; }
+
   virtual void init() override {
     const char* const szFileName = "content/cornell_box/cornell_box.obj";
 
@@ -65,6 +81,8 @@ class CornellBoxScene : public MyScene {
 
     CornellBoxMtlImporter mtlImporter;
     mesh.importMaterial(&mtlImporter);
+
+    _initLight();
 
 // add a ball
 #if 0
