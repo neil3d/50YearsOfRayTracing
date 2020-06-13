@@ -13,7 +13,9 @@
 
 namespace RayTracingHistory {
 
-std::vector<glm::vec2> jitteredPoints(int n, bool shuffle) {
+namespace JitteringSampling {
+
+std::vector<glm::vec2> generateSamples(int n, bool shuffle) {
   std::vector<glm::vec2> ret(n * n);
   float invN = 1.0f / n;
 
@@ -36,4 +38,5 @@ std::vector<glm::vec2> jitteredPoints(int n, bool shuffle) {
   return ret;
 }
 
+}  // namespace JitteringSampling
 }  // namespace RayTracingHistory

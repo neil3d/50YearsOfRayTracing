@@ -28,19 +28,19 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   constexpr int n = SPP_N;
   float invSPP = 1.0f / (n * n);
 
-  std::vector<glm::vec2> jitteredPointsR, jitteredPointsS;
+  std::vector<glm::vec2> xiR, xiS;
 
   for (int y = tile.top; y < tile.bottom; y++)
     for (int x = tile.left; x < tile.right; x++) {
       if (!mRuning) break;
 
-      jitteredPointsR = jitteredPoints(n, false);
-      jitteredPointsS = jitteredPoints(n, true);
+      xiR = JitteringSampling::generateSamples(n, false);
+      xiS = JitteringSampling::generateSamples(n, true);
 
       glm::vec3 color(0);
       for (int i = 0; i < n * n; i++) {
-        const glm::vec2& pixelXi = jitteredPointsR[i];
-        const glm::vec2& sampleXi = jitteredPointsS[i];
+        const glm::vec2& pixelXi = xiR[i];
+        const glm::vec2& sampleXi = xiS[i];
 
         Ray viewingRay = pCamera->jitteredViewingRay(
             (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight,

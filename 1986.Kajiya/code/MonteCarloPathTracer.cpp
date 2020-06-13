@@ -7,6 +7,7 @@
 
 #include "MaterialBase.h"
 #include "framework/PinholeCamera.h"
+#include "sampling//UniformSampling.h"
 #include "sampling/JitteringSampling.h"
 
 namespace RayTracingHistory {
@@ -60,8 +61,13 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   int tileH = tile.bottom - tile.top;
   tileBuffer.resize(tileW * tileH, glm::vec3(0));
 
-  auto xi1 = jitteredPoints(SPP_ROOT, false);
-  auto xi2 = jitteredPoints(SPP_ROOT, true);
+#if 0
+  auto xi1 = JitteringSampling::generateSamples(SPP_ROOT, false);
+  auto xi2 = JitteringSampling::generateSamples(SPP_ROOT, true);
+#else
+  auto xi1 = UniformSampling::generateSamples(SPP_ROOT);
+  auto xi2 = UniformSampling::generateSamples(SPP_ROOT);
+#endif
 
   while (SPP < MAX_SPP) {
     int index = 0;
