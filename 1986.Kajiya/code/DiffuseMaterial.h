@@ -22,7 +22,9 @@ class DiffuseMaterial : public MaterialBase {
   float Kd = 0.5f;
 
  public:
-
+  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) override {
+    return Kd / glm::pi<float>();
+  }
 };
 
 }  // namespace RayTracingHistory

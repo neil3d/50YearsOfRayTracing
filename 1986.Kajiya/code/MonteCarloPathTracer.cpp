@@ -12,8 +12,8 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 4;
-constexpr uint32_t MAX_BOUNCES = 1;
+constexpr uint32_t SPP_ROOT = 10;
+constexpr uint32_t MAX_BOUNCES = 0;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -102,6 +102,11 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   const AreaLight* pLight = pScene->getMainLight();
 
+  // hit light
+  if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
+
+  //-- direct lighting
+
   // visibility between the shading point and the light
   float visibilityTerm = 1.0f;
   constexpr float SHADOW_E = 0.002f;
@@ -117,16 +122,20 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   if (bShadow) visibilityTerm = 0.125f;
 
   // geometry term
+  const float sysUnit = pScene->systemUnit();
   glm::vec3 lightDir = shadowRay.direction;
-  float R = glm::min(1.0f, lightDistance / pScene->systemUnit());
+  float R = lightDistance / sysUnit;
   float geometryTerm = glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
                        glm::max(0.0f, glm::dot(lightDir, lightNormal)) /
                        (R * R);
 
   glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
+  float fr = pMtl->BRDF(lightDir, wo.direction);
+  float A = pLight->getArea() / sysUnit / sysUnit;
+  float Li = pLight->getIntensity();
 
   // TODO: shading
-  return visibilityTerm * geometryTerm * color;
+  return Li * A * visibilityTerm * geometryTerm * color;
 }
 
 }  // namespace RayTracingHistory

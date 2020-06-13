@@ -30,12 +30,19 @@ class DemoScene : public MySceneWithLight {
     constexpr float W = 500;
     constexpr float D = 500;
     constexpr float H = 500;
-    constexpr float LS = 50;  // ligt size
+    constexpr float LS = 120;  // ligt size
 
     glm::vec3 lightEdge1(0, 0, LS);
     glm::vec3 lightEdge2(LS, 0, 0);
     glm::vec3 lightPos(LS / -2, H - 0.1f, LS / -2);
     mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
+
+    createObject<Parallelogram>("light_shape")
+        .setEdges(lightEdge1, lightEdge2)
+        .setAnchor(lightPos)
+        .createMaterial<DiffuseMaterial>()
+        .setColor(glm::vec3(1))
+        .enableLight();
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
@@ -70,12 +77,12 @@ class DemoScene : public MySceneWithLight {
 #if 1
     float ball = W / 8;
     createObject<Sphere>("small_ball")
-        .setCenter(glm::vec3(1.15f, ball * 4, 0))
+        .setCenter(glm::vec3(120, ball * 3, 0))
         .setRadius(ball)
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-    ball *= 1.25f;
+    ball *= 1.5f;
     createObject<Sphere>("big_ball")
         .setCenter(glm::vec3(-ball, ball, 0))
         .setRadius(ball)

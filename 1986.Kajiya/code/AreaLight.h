@@ -27,8 +27,10 @@ class AreaLight {
       const glm::vec2& xi) const = 0;
   virtual float getArea() const = 0;
 
+  float getIntensity() const { return intensity; }
+
  protected:
-  float intensity = 2.0f;
+  float intensity = 10.0f;
 };
 
 }  // namespace RayTracingHistory

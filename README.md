@@ -47,12 +47,12 @@
 
 ## Path Tracing - James Kajiya, 1986
 
-- [ ] Direct lighting
+- [x] Monte Carlo Direct lighting
 - [ ] Indirect lighting
 - [ ] Importance Sampling
 - [ ] BRDFs
 
-![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-09.png)
+![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-13.png)
 
 ## MyFramework
 

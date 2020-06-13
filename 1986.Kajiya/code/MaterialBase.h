@@ -36,11 +36,20 @@ class MaterialBase : public MyMaterial {
     return *this;
   }
 
+  MaterialBase& enableLight() {
+    mLight = true;
+    return *this;
+  }
+
+  bool isLight() const { return mLight; }
   float getEmission() const { return mEmission; }
+
+  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) = 0;
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;
   float mEmission = 0;
+  bool mLight = false;  // for light shape rendering
 };
 
 }  // namespace RayTracingHistory

@@ -60,14 +60,22 @@ class CornellBoxScene : public MySceneWithLight {
   ParallelogramLight mMainLight;
 
   void _initLight() {
-    glm::vec3 v1(343.0f, 548.0f, 227.0f);
-    glm::vec3 v2(343.0f, 548.0f, 332.0f);
-    glm::vec3 v3(213.0f, 548.0f, 332.0f);
-    glm::vec3 v4(213.0f, 548.0f, 227.0f);
+    float h = 0.1f;
+    glm::vec3 v1(343.0f, 548.0f - h, 227.0f);
+    glm::vec3 v2(343.0f, 548.0f - h, 332.0f);
+    glm::vec3 v3(213.0f, 548.0f - h, 332.0f);
+    glm::vec3 v4(213.0f, 548.0f - h, 227.0f);
 
     glm::vec3 edge1 = v2 - v1;
-    glm::vec3 edge2 = v3 - v1;
-    mMainLight.setShape(edge1, edge2, v1);
+    glm::vec3 edge2 = v4 - v1;
+    mMainLight.setShape(edge2, edge1, v1);
+
+    createObject<Parallelogram>("light_shape")
+        .setEdges(edge1, edge2)
+        .setAnchor(v1)
+        .createMaterial<DiffuseMaterial>()
+        .setColor(glm::vec3(1))
+        .enableLight();
   }
 
  public:
