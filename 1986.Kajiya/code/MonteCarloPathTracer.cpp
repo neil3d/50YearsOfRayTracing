@@ -1,5 +1,7 @@
 #include "MonteCarloPathTracer.h"
 
+#include <spdlog/spdlog.h>
+
 #include <glm/glm.hpp>
 #include <random>
 
@@ -10,8 +12,8 @@
 namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 1;
-constexpr uint32_t MAX_BOUNCES = 5;
+constexpr uint32_t SPP_ROOT = 3;
+constexpr uint32_t MAX_BOUNCES = 1;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -41,14 +43,14 @@ bool MonteCarloPathTracer::isDone() const {
 void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
-  MyScene* pScene = scene.get();
+  MySceneWithLight* pScene = dynamic_cast<MySceneWithLight*>(scene.get());
 
   std::random_device randDevice;
   std::mt19937 stdRand(randDevice());
   std::uniform_real_distribution<float> uniformDist(0, 1);
 
-  int W = mFrameWidth;
-  int H = mFrameHeight;
+  float W = mFrameWidth;
+  float H = mFrameHeight;
   int MAX_SPP = SPP_ROOT * SPP_ROOT;
 
   int SPP = 0;
@@ -58,7 +60,8 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   int tileH = tile.bottom - tile.top;
   tileBuffer.resize(tileW * tileH, glm::vec3(0));
 
-  auto jit = jitteredPoints(SPP_ROOT, true);
+  auto xi1 = jitteredPoints(SPP_ROOT, false);
+  auto xi2 = jitteredPoints(SPP_ROOT, true);
 
   while (SPP < MAX_SPP) {
     int index = 0;
@@ -68,12 +71,12 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       for (int x = tile.left; x < tile.right; x++) {
         if (!mRuning) break;
 
-        const glm::vec2& xi = jit[SPP];
+        const glm::vec2& xi = xi1[SPP];
         Ray primaryRay =
             pCamera->generateViewingRay((x + xi.x) / W, (y + xi.y) / H);
 
         auto& buf = tileBuffer[index++];
-        buf += _traceRay(primaryRay, pScene);
+        buf += _traceRay(primaryRay, pScene, xi2[SPP]);
 
         _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 1);
         mPixelCount++;
@@ -83,11 +86,13 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   }  // end of while
 }
 
-glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo, MyScene* pScene) {
+glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
+                                          MySceneWithLight* pScene,
+                                          const glm::vec2& xi) {
   const glm::vec3 bgColor(0.f, 0.f, 0.f);
 
   HitRecord hitRec;
-  bool bHit = pScene->closestHit(wo, 0.01f, FLOAT_MAX, hitRec);
+  bool bHit = pScene->closestHit(wo, 0.001f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
 
   MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
@@ -95,9 +100,21 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo, MyScene* pScene) {
   // error check
   if (!pMtl) return glm::abs(hitRec.normal);
 
+  const AreaLight* pLight = pScene->getMainLight();
+
+  // visibility between the shading point and the light
+  float visibilityTerm = 1.0f;
+  constexpr float SHADOW_E = 0.001f;
+
+  auto stopWithAnyHit = [](const HitRecord&) { return true; };
+  Ray shadowRay = pLight->generateShadowRay(hitRec.p, xi);
+  bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
+  if (bShadow) visibilityTerm = 0.125f;
+
+  glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
 
   // TODO: shading
-  return glm::vec3(0.25f, 0.55f, 0.85f) * glm::abs(hitRec.normal);
+  return glm::vec3(visibilityTerm) * glm::abs(hitRec.normal);
 }
 
 }  // namespace RayTracingHistory

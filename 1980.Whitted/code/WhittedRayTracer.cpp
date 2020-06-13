@@ -35,8 +35,8 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
 
-  int W = mFrameWidth;
-  int H = mFrameHeight;
+  float W = mFrameWidth;
+  float H = mFrameHeight;
 
   for (int y = tile.top; y < tile.bottom; y++)
     for (int x = tile.left; x < tile.right; x++) {
@@ -45,7 +45,7 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);
       glm::vec3 color = _traceRay(eyeRay, scene.get(), 0);
 
-      constexpr float GAMA = 1.0f / 1.25f;
+      constexpr float GAMA = 1.0f / 1.05f;
       _writePixel(x, y, glm::vec4(color, 1), GAMA);
       mPixelCount++;
     }  // end of for(x)

@@ -30,22 +30,22 @@ class DemoScene : public MySceneWithLight {
     constexpr float W = 500;
     constexpr float D = 500;
     constexpr float H = 500;
-    constexpr float LS = 3.5f;  // ligt size scale
+    constexpr float LS = 50;  // ligt size
 
-    glm::vec3 lightEdge1(0, 0, D / LS);
-    glm::vec3 lightEdge2(W / LS, 0, 0);
-    glm::vec3 lightPos(W / -2 / LS, H - 0.01f, D / -2 / LS);
+    glm::vec3 lightEdge1(0, 0, LS);
+    glm::vec3 lightEdge2(LS, 0, 0);
+    glm::vec3 lightPos(LS / -2, H - 0.1f, LS / -2);
     mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
-
-    createObject<Parallelogram>("ceiling")
-        .setEdges(glm::vec3(W, 0, 0), glm::vec3(0, 0, D))
-        .setAnchor(glm::vec3(W / -2, H, D / -2))
-        .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1));
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
         .setAnchor(glm::vec3(W / -2, 0, D / -2))
+        .createMaterial<DiffuseMaterial>()
+        .setColor(glm::vec3(1));
+    /*
+    createObject<Parallelogram>("ceiling")
+        .setEdges(glm::vec3(W, 0, 0), glm::vec3(0, 0, D))
+        .setAnchor(glm::vec3(W / -2, H, D / -2))
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
@@ -65,9 +65,9 @@ class DemoScene : public MySceneWithLight {
         .setEdges(glm::vec3(0, H, 0), glm::vec3(W, 0, 0))
         .setAnchor(glm::vec3(W / -2, 0, D / 2))
         .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1));
+        .setColor(glm::vec3(1));*/
 
-#if 0
+#if 1
     float ball = W / 8;
     createObject<Sphere>("small_ball")
         .setCenter(glm::vec3(1.15f, ball * 4, 0))
@@ -75,7 +75,7 @@ class DemoScene : public MySceneWithLight {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-    ball *= 1.5f;
+    ball *= 1.25f;
     createObject<Sphere>("big_ball")
         .setCenter(glm::vec3(-ball, ball, 0))
         .setRadius(ball)
@@ -83,6 +83,7 @@ class DemoScene : public MySceneWithLight {
         .setColor(glm::vec3(1));
 #endif
 
+#if 0
     const char* const szFileName = "content/bunny/bunny.obj";
     auto& mesh = createObject<MeshInstance>("bunny");
     mesh.setMeshFile(szFileName);
@@ -90,6 +91,7 @@ class DemoScene : public MySceneWithLight {
     mesh.setScale(150)
         .setPosition(glm::vec3(0, 100, 0))
         .setRotation(0, glm::radians(180.0f), 0);
+#endif
   }
 };
 }  // namespace RayTracingHistory

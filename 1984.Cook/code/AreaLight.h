@@ -24,7 +24,7 @@ struct AreaLight {
 
   Ray jitteredShadowRay(const glm::vec3& shadingPt, const glm::vec2& xi) const {
     glm::vec3 pos = corner + xi.x * edge1 + xi.y * edge2;
-    glm::vec3 L = glm::normalize(pos - shadingPt);
+    glm::vec3 L = pos - shadingPt;
     return Ray(shadingPt, L);
   }
 

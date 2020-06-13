@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "framework/TiledRenderer.h"
+#include "MySceneWithLight.h"
 
 namespace RayTracingHistory {
 
@@ -29,7 +30,8 @@ class MonteCarloPathTracer : public TiledRenderer {
  private:
   virtual void _init(SDL_Window* pWnd) override;
 
-  glm::vec3 _traceRay(const Ray& wo, MyScene* pScene);
+  glm::vec3 _traceRay(const Ray& wo, MySceneWithLight* pScene,
+                      const glm::vec2& xi);
 
  private:
   std::string mInfo;

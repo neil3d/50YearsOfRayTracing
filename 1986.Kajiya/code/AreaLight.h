@@ -21,6 +21,8 @@ class AreaLight {
   AreaLight() = default;
   virtual ~AreaLight() = default;
 
+  virtual Ray generateShadowRay(const glm::vec3& shadingPt,
+                                const glm::vec2& xi) const = 0;
   virtual float getArea() const = 0;
 
  protected:
