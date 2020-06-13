@@ -92,8 +92,7 @@ class CornellBoxScene : public MySceneWithLight {
 
     _initLight();
 
-// add a ball
-#if 1
+#if 0  // add spheres
     constexpr float BALL_RADIUS = 50;
     constexpr float BALL_Z = 114;
     constexpr float BALL_X = 290 + BALL_RADIUS * 2;
@@ -109,8 +108,16 @@ class CornellBoxScene : public MySceneWithLight {
         createObject<Sphere>("short_ellipsoid")
             .setCenter(glm::vec3(BALL_X, BALL_RADIUS * 3.8f, BALL_Z))
             .setRadius(BALL_RADIUS * 1.5f)
-            .setScale(glm::vec3(1.5f, BALL_S*0.5f, 1.5f));
+            .setScale(glm::vec3(1.5f, BALL_S * 0.5f, 1.5f));
     shortEllipsoid.createMaterial<DiffuseMaterial>().setColor(glm::vec3(1));
+#endif
+
+#if 1  // add teapot
+    const char* const szTeapotFileName = "content/teapot/teapot.obj";
+    auto& teapot = createObject<MeshInstance>("teapot");
+    teapot.setMeshFile(szTeapotFileName);
+    teapot.importMaterial(&mtlImporter);
+    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setRotation(0, 15, 0);
 #endif
   }
 };
