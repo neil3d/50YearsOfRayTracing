@@ -19,6 +19,14 @@
 
 namespace RayTracingHistory {
 
+class TankMtlImporter : public MaterialImporter {
+  virtual MyMaterial::Ptr importObj(const std::string& szName) override {
+    auto mtl = std::make_shared<DiffuseMaterial>();
+    mtl->setColor(glm::vec3(1));
+    return mtl;
+  }
+};
+
 class DemoScene : public MySceneWithLight {
   ParallelogramLight mMainLight;
 
@@ -74,7 +82,7 @@ class DemoScene : public MySceneWithLight {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-#if 1
+#if 1  // balls
     float ball = W / 8;
     createObject<Sphere>("small_ball")
         .setCenter(glm::vec3(120, ball * 3, 0))
@@ -90,7 +98,7 @@ class DemoScene : public MySceneWithLight {
         .setColor(glm::vec3(1));
 #endif
 
-#if 0
+#if 0  // stanford bunny
     const char* const szFileName = "content/bunny/bunny.obj";
     auto& mesh = createObject<MeshInstance>("bunny");
     mesh.setMeshFile(szFileName);
@@ -98,6 +106,15 @@ class DemoScene : public MySceneWithLight {
     mesh.setScale(150)
         .setPosition(glm::vec3(0, 100, 0))
         .setRotation(0, glm::radians(180.0f), 0);
+#endif
+
+#if 0  // tank
+    const char* const szFileName = "content/tank/tank.obj";
+    auto& mesh = createObject<MeshInstance>("tank");
+    mesh.setMeshFile(szFileName);
+    TankMtlImporter mtlImporter;
+    mesh.importMaterial(&mtlImporter);
+    mesh.setScale(80);
 #endif
   }
 };
