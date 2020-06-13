@@ -9,7 +9,7 @@
 using namespace RayTracingHistory;
 
 // const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
-const char* const APP_NAME = "Monte Carlo Direct Lighting";
+const char* const APP_NAME = "Monte Carlo Path Tracing";
 
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;

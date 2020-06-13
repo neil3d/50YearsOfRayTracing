@@ -14,7 +14,7 @@ namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr uint32_t SPP_ROOT = 10;
-constexpr uint32_t MAX_BOUNCES = 0;
+constexpr uint32_t MAX_BOUNCES = 1;
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -22,8 +22,15 @@ void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   int SPP = SPP_ROOT * SPP_ROOT;
   mInfo = std::string(" - SPP: ");
   mInfo.append(std::to_string(SPP));
-  mInfo.append(", Bounces: ");
-  mInfo.append(std::to_string(MAX_BOUNCES));
+
+  if (MAX_BOUNCES == 0)
+    mInfo.append(", Light Source ");
+  else if (MAX_BOUNCES == 1)
+    mInfo.append(", Direct Lighting ");
+  else if (MAX_BOUNCES > 1) {
+    mInfo.append(", Bounces: ");
+    mInfo.append(std::to_string(MAX_BOUNCES));
+  }
 }
 
 std::string MonteCarloPathTracer::getInfo() const { return mInfo; }
@@ -111,6 +118,9 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   // hit light
   if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
 
+  // bounces == 0: light source
+  if (MAX_BOUNCES == 0) return bgColor;
+
   //-- direct lighting
 
   // visibility between the shading point and the light
@@ -140,8 +150,14 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   float A = pLight->getArea() / sysUnit / sysUnit;
   float Li = pLight->getIntensity();
 
-  // TODO: shading
-  return Li * A * visibilityTerm * geometryTerm * color;
+  glm::vec3 directLighting = Li * A * visibilityTerm * geometryTerm * color;
+
+  // bounces==1: direct lighting, bounces>1: indirect lighting
+  if (MAX_BOUNCES > 1) {
+    // TODO:
+  }
+
+  return directLighting;
 }
 
 }  // namespace RayTracingHistory
