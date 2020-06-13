@@ -104,17 +104,21 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   // visibility between the shading point and the light
   float visibilityTerm = 1.0f;
-  constexpr float SHADOW_E = 0.001f;
+  constexpr float SHADOW_E = 0.002f;
+
+  auto shadowRet = pLight->generateShadowRay(hitRec.p, xi);
+  Ray shadowRay = std::get<0>(shadowRet);
+  float lightDistance = std::get<1>(shadowRet);
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
-  Ray shadowRay = pLight->generateShadowRay(hitRec.p, xi);
-  bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
+  bool bShadow =
+      pScene->anyHit(shadowRay, SHADOW_E, lightDistance, stopWithAnyHit);
   if (bShadow) visibilityTerm = 0.125f;
 
   glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
 
   // TODO: shading
-  return glm::vec3(visibilityTerm) * glm::abs(hitRec.normal);
+  return glm::vec3(visibilityTerm) * color;
 }
 
 }  // namespace RayTracingHistory

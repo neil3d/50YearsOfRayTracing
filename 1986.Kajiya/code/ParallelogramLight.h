@@ -7,6 +7,7 @@
  */
 
 #pragma once
+
 #include "AreaLight.h"
 
 namespace RayTracingHistory {
@@ -20,11 +21,12 @@ class ParallelogramLight : public AreaLight {
  public:
   using AreaLight::AreaLight;
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt,
-                                const glm::vec2& xi) const override {
+  virtual std::tuple<Ray, float> generateShadowRay(
+      const glm::vec3& shadingPt, const glm::vec2& xi) const override {
     glm::vec3 pos = mCorner + xi.x * mEdge1 + xi.y * mEdge2;
     glm::vec3 L = pos - shadingPt;
-    return Ray(shadingPt, L);
+    return std::make_tuple(Ray(shadingPt, L), glm::length(L));
+    ;
   }
 
   ParallelogramLight& setShape(const glm::vec3& edge1, const glm::vec3& edge2,

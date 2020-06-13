@@ -42,12 +42,6 @@ class DemoScene : public MySceneWithLight {
         .setAnchor(glm::vec3(W / -2, 0, D / -2))
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
-    /*
-    createObject<Parallelogram>("ceiling")
-        .setEdges(glm::vec3(W, 0, 0), glm::vec3(0, 0, D))
-        .setAnchor(glm::vec3(W / -2, H, D / -2))
-        .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1));
 
     createObject<Parallelogram>("left_wall")
         .setEdges(glm::vec3(0, H, 0), glm::vec3(0, 0, D))
@@ -61,11 +55,17 @@ class DemoScene : public MySceneWithLight {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1, 0, 0));
 
+    createObject<Parallelogram>("ceiling")
+        .setEdges(glm::vec3(W, 0, 0), glm::vec3(0, 0, D))
+        .setAnchor(glm::vec3(W / -2, H, D / -2))
+        .createMaterial<DiffuseMaterial>()
+        .setColor(glm::vec3(1));
+
     createObject<Parallelogram>("back_wall")
         .setEdges(glm::vec3(0, H, 0), glm::vec3(W, 0, 0))
         .setAnchor(glm::vec3(W / -2, 0, D / 2))
         .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1));*/
+        .setColor(glm::vec3(1));
 
 #if 1
     float ball = W / 8;
