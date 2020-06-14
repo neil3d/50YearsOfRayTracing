@@ -167,10 +167,9 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
         pMtl->BRDF(d, wo.direction) * glm::dot(d, hitRec.normal);
     indirectLighting =
         _traceRay(Ray(p, d), pScene, xi, reflectance * weight, depth + 1);
-    indirectLighting = weight * indirectLighting;
   }
 
-  return (directLighting + indirectLighting);
+  return directLighting + weight * indirectLighting;
 }
 
 }  // namespace RayTracingHistory

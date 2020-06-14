@@ -19,11 +19,11 @@ namespace RayTracingHistory {
  * diffuse : uniform sampling
  */
 class DiffuseMaterial : public MaterialBase {
-  float Kd = 0.5f;
+  float Kd = 1.0f;
 
  public:
   virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) const override {
-    return Kd / glm::pi<float>();
+    return Kd / (2.0f * glm::pi<float>());
   }
 
   virtual glm::vec3 scatter(const glm::vec3& wo,
