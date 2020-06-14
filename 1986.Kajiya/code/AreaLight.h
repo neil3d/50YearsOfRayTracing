@@ -28,6 +28,10 @@ class AreaLight {
   virtual float getArea() const = 0;
 
   float getIntensity() const { return intensity; }
+  AreaLight& setIntensity(float value) {
+    intensity = value;
+    return *this;
+  }
 
  protected:
   float intensity = 10.0f;

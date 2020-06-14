@@ -12,6 +12,7 @@
 #include "DiffuseMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
+#include "geometry/ONB.h"
 #include "scene/Box.h"
 #include "scene/MeshInstance.h"
 #include "scene/Parallelogram.h"
@@ -28,14 +29,18 @@ class KajiyaScene : public MySceneWithLight {
   virtual void init() override {
     // create objects
     constexpr float W = 1500;
-    constexpr float D = 1500;
+    constexpr float D = 1800;
     constexpr float H = 1500;
-    constexpr float LS = 400;  // ligt size
+    constexpr float LS = 200;  // light size
 
-    glm::vec3 lightEdge1(0, 0, LS);
-    glm::vec3 lightEdge2(LS, 0, 0);
-    glm::vec3 lightPos(LS / -2, H - 0.1f, LS / -2);
+    glm::vec3 lightPos(W / 2, H * 1.5f, 0);
+    glm::vec3 lightDir = glm::normalize(lightPos);
+    ONB lightONB(lightDir);
+
+    glm::vec3 lightEdge1 = lightONB.U * LS;
+    glm::vec3 lightEdge2 = lightONB.V * LS;
     mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
+    mMainLight.setIntensity(100);
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
@@ -84,7 +89,7 @@ class KajiyaScene : public MySceneWithLight {
         boxPos + glm::vec3(0, boxExtends.y + tallBoxExtends.y + RADIUS, 0));
 
     // create sphere stack
-    const glm::vec3 stackPos(RADIUS * 1.5f, 0, -RADIUS * 1.5f);
+    const glm::vec3 stackPos(RADIUS * 1.5f, 0, -RADIUS * 3.5f);
     for (int h = 0; h < 3; h++) {
       for (int m = 1; m <= 3 - h; m++) {
         _createLineOfSpheres(
