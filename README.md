@@ -48,7 +48,7 @@
 ## Path Tracing - James Kajiya, 1986
 
 - [x] Monte Carlo Direct lighting
-- [ ] Indirect lighting
+- [x] Indirect lighting with Russian Roulette termination
 - [ ] Importance Sampling
 - [ ] BRDFs
 
