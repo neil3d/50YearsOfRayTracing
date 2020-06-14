@@ -109,6 +109,9 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
     SPP++;
   }  // end of while
+
+  spdlog::info("Tile[{0}] rendering finished, max depth = {1}.", tile.id,
+               (int)mMaxDepth);
 }
 
 glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
@@ -116,6 +119,8 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
                                           const glm::vec2& xi, float weight,
                                           int depth) {
   const glm::vec3 bgColor(0.f, 0.f, 0.f);
+
+  if (depth > mMaxDepth) mMaxDepth = depth;
 
   if (depth >= MAX_BOUNCES) return bgColor;
 

@@ -18,6 +18,7 @@ constexpr int NUM_TILE_X = 4;
 constexpr int NUM_TILE_Y = 4;
 
 struct Tile {
+  int id;
   int left, top;
   int right, bottom;
 };
@@ -39,6 +40,7 @@ class TiledRenderer : public MyRenderer {
     for (int y = 0; y < NUM_TILE_Y; y++) {
       for (int x = 0; x < NUM_TILE_X; x++) {
         Tile tile;
+        tile.id = x + y * NUM_TILE_X;
         tile.left = x * tileW;
         tile.top = y * tileH;
 
@@ -76,7 +78,7 @@ class TiledRenderer : public MyRenderer {
       for (int x = tile.left; x < tile.right; x++) {
         if (mRuning) {
           float r = (float)y / mFrameHeight;
-          _writePixel(x, y, bottomColor * r + topColor * (1.0f - r),1.0f);
+          _writePixel(x, y, bottomColor * r + topColor * (1.0f - r), 1.0f);
         } else
           break;
       }  // end of for(x)

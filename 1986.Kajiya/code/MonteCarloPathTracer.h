@@ -11,8 +11,8 @@
 #include <tuple>
 #include <vector>
 
-#include "framework/TiledRenderer.h"
 #include "MySceneWithLight.h"
+#include "framework/TiledRenderer.h"
 
 namespace RayTracingHistory {
 
@@ -35,5 +35,6 @@ class MonteCarloPathTracer : public TiledRenderer {
 
  private:
   std::string mInfo;
+  std::atomic<int> mMaxDepth = {-1};
 };
 }  // namespace RayTracingHistory
