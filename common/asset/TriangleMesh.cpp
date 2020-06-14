@@ -172,8 +172,18 @@ TriangleMesh::Intersection TriangleMesh::_faceIntersect(const Face& face,
   if (bHit && t > tMin && t < tMax) {
     result.hit = true;
     result.t = t;
-    result.normal = face.normal;
     result.mtlID = face.materialID;
+
+    if (!mNormals.empty() && face.normalIndex[0] != -1 &&
+        face.normalIndex[1] != -1 && face.normalIndex[2] != -1) {
+      const auto& n0 = mNormals[face.normalIndex[0]];
+      const auto& n1 = mNormals[face.normalIndex[1]];
+      const auto& n2 = mNormals[face.normalIndex[2]];
+
+      result.normal = Triangle::barycentricInterpolation(uvw, n0, n1, n2);
+    } else {
+      result.normal = face.normal;
+    }
 
     if (!mTexcoords.empty() && face.texcoordIndex[0] != -1 &&
         face.texcoordIndex[1] != -1 && face.texcoordIndex[2] != -1) {
