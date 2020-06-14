@@ -1,4 +1,5 @@
 #include <iostream>
+#include <tuple>
 
 #include "CornellBoxScene.h"
 #include "DemoScene.h"
@@ -17,6 +18,9 @@ const uint32_t WINDOW_HEIGHT = 720;
 
 enum class EMyTestScenes { Demo, CornellBox, MoriKnob };
 
+std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
+    EMyTestScenes sceneType);
+
 int main(int argc, char* argv[]) {
   MyApp app;
   try {
@@ -24,29 +28,10 @@ int main(int argc, char* argv[]) {
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<MonteCarloPathTracer>();
 
-    EMyTestScenes sceneType = EMyTestScenes::MoriKnob;
-    MyScene::Ptr scene;
-    glm::vec3 eyePos;
-    glm::vec3 lookAt;
-
-    switch (sceneType) {
-      case EMyTestScenes::CornellBox:
-        scene = std::make_shared<CornellBoxScene>();
-        eyePos = glm::vec3(278, 278, -656);
-        lookAt = glm::vec3(278, 278, 0);
-        break;
-      case EMyTestScenes::MoriKnob:
-        scene = std::make_shared<MoriKnobScene>();
-        eyePos = glm::vec3(0, 1, -2);
-        lookAt = glm::vec3(0, 0, 0);
-        break;
-      case EMyTestScenes::Demo:
-      default:
-        scene = std::make_shared<DemoScene>();
-        eyePos = glm::vec3(0, 250, -850);
-        lookAt = glm::vec3(0, 250, 0);
-        break;
-    }  // end of scene
+    auto sceneRet = _createDemoScene(EMyTestScenes::CornellBox);
+    MyScene::Ptr scene = std::get<0>(sceneRet);
+    glm::vec3 eyePos = std::get<1>(sceneRet);
+    glm::vec3 lookAt = std::get<2>(sceneRet);
     scene->init();
 
     auto camera = std::make_shared<PinholeCamera>();
@@ -66,4 +51,32 @@ int main(int argc, char* argv[]) {
 
   app.shutdown();
   return 0;
+}
+
+std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
+    EMyTestScenes sceneType) {
+  MyScene::Ptr scene;
+  glm::vec3 eyePos;
+  glm::vec3 lookAt;
+
+  switch (sceneType) {
+    case EMyTestScenes::CornellBox:
+      scene = std::make_shared<CornellBoxScene>();
+      eyePos = glm::vec3(278, 278, -656);
+      lookAt = glm::vec3(278, 278, 0);
+      break;
+    case EMyTestScenes::MoriKnob:
+      scene = std::make_shared<MoriKnobScene>();
+      eyePos = glm::vec3(0, 1, -2);
+      lookAt = glm::vec3(0, 0, 0);
+      break;
+    case EMyTestScenes::Demo:
+    default:
+      scene = std::make_shared<DemoScene>();
+      eyePos = glm::vec3(0, 250, -850);
+      lookAt = glm::vec3(0, 250, 0);
+      break;
+  }  // end of scene
+
+  return std::make_tuple(scene, eyePos, lookAt);
 }
