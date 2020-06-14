@@ -28,7 +28,7 @@ class DiffuseMaterial : public MaterialBase {
 
   virtual glm::vec3 scatter(const glm::vec3& wo,
                             const glm::vec3& normal) const override {
-    // uniform sampling the hemisphere
+    // uniform sampling the upper hemisphere
     glm::vec3 rand = glm::sphericalRand(1.0f);
     rand.z = fabsf(rand.z);
     ONB onb(normal);

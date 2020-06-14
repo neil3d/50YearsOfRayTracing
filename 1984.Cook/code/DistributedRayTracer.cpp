@@ -95,7 +95,9 @@ std::tuple<float, glm::vec3> DistributedRayTracer::_shade(
   const auto& light = pScene->getMainLight();
   Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 
-  Ray shadowRay = light.jitteredShadowRay(shadingPoint.p, xi);
+  auto shadowRet = light.jitteredShadowRay(shadingPoint.p, xi);
+  Ray shadowRay = std::get<0>(shadowRet);
+  float lightDistance = std::get<1>(shadowRet);
   shadowRay.time = xi.x;
   HitRecord hitRecS;
   constexpr float SHADOW_E = 0.001f;
@@ -106,7 +108,8 @@ std::tuple<float, glm::vec3> DistributedRayTracer::_shade(
   if (mtl) baseColor = mtl->sampleBaseColor(shadingPoint.uv, shadingPoint.p);
 
   glm::vec3 color;
-  bool bShadow = pScene->anyHit(shadowRay, SHADOW_E, FLOAT_MAX, stopWithAnyHit);
+  bool bShadow =
+      pScene->anyHit(shadowRay, SHADOW_E, lightDistance, stopWithAnyHit);
   if (bShadow) {
     float a = light.ambient;
     color = a * baseColor;

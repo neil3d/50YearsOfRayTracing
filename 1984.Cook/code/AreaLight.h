@@ -9,6 +9,7 @@
 #pragma once
 #include <algorithm>
 #include <glm/glm.hpp>
+#include <tuple>
 
 #include "geometry/Ray.h"
 
@@ -22,10 +23,11 @@ struct AreaLight {
   float intensity = 2.0f;
   float range = 10;
 
-  Ray jitteredShadowRay(const glm::vec3& shadingPt, const glm::vec2& xi) const {
+  std::tuple<Ray, float> jitteredShadowRay(const glm::vec3& shadingPt,
+                                           const glm::vec2& xi) const {
     glm::vec3 pos = corner + xi.x * edge1 + xi.y * edge2;
     glm::vec3 L = pos - shadingPt;
-    return Ray(shadingPt, L);
+    return std::make_tuple(Ray(shadingPt, L), glm::length(L));
   }
 
   float lighting(const glm::vec3& shadingPt, const glm::vec3& normal,
