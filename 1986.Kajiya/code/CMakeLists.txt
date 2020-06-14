@@ -9,6 +9,7 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 CornellBoxScene.h
                 DemoScene.h
                 DiffuseMaterial.h
+                KajiyaScene.h
                 MaterialBase.h
                 MonteCarloPathTracer.h
                 MonteCarloPathTracer.cpp

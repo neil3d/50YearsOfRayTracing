@@ -3,6 +3,7 @@
 
 #include "CornellBoxScene.h"
 #include "DemoScene.h"
+#include "KajiyaScene.h"
 #include "MonteCarloPathTracer.h"
 #include "MoriKnobScene.h"
 #include "framework/MyApp.h"
@@ -16,7 +17,7 @@ const char* const APP_NAME = "Monte Carlo Path Tracing";
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
-enum class EMyTestScenes { Demo, CornellBox, MoriKnob };
+enum class EMyTestScenes { Demo, CornellBox, MoriKnob, Kajiya };
 
 std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
     EMyTestScenes sceneType);
@@ -28,7 +29,7 @@ int main(int argc, char* argv[]) {
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<MonteCarloPathTracer>();
 
-    auto sceneRet = _createDemoScene(EMyTestScenes::CornellBox);
+    auto sceneRet = _createDemoScene(EMyTestScenes::Kajiya);
     MyScene::Ptr scene = std::get<0>(sceneRet);
     glm::vec3 eyePos = std::get<1>(sceneRet);
     glm::vec3 lookAt = std::get<2>(sceneRet);
@@ -69,6 +70,11 @@ std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
       scene = std::make_shared<MoriKnobScene>();
       eyePos = glm::vec3(0, 1, -2);
       lookAt = glm::vec3(0, 0, 0);
+      break;
+    case EMyTestScenes::Kajiya:
+      scene = std::make_shared<KajiyaScene>();
+      eyePos = glm::vec3(200, 250, -1200);
+      lookAt = glm::vec3(0, 250, 0);
       break;
     case EMyTestScenes::Demo:
     default:
