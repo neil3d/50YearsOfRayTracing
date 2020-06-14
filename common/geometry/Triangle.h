@@ -59,7 +59,7 @@ std::tuple<bool, float, glm::vec3> intersect(const Ray& ray,
   u *= invDet;
   v *= invDet;
 
-  return std::make_tuple(true, t, glm::vec3(u, v, 1.0f - u - v));
+  return std::make_tuple(true, t, glm::vec3(1.0f - u - v, u, v));
 }
 
 template <typename T>
