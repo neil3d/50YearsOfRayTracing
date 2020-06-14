@@ -24,7 +24,6 @@ class MaterialBase : public MyMaterial {
       return glm::vec3(1);
   }
 
-
   MaterialBase& setColor(const glm::vec3& color) {
     auto ct = std::make_shared<ConstantTexture>();
     ct->setColor(color);
@@ -39,9 +38,16 @@ class MaterialBase : public MyMaterial {
 
   bool isLight() const { return mLight; }
 
-  virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) const = 0;
-  
-  virtual glm::vec3 scatter(const glm::vec3& wo, const glm::vec3& normal) const = 0;
+  // for a given incident, outgoing direction, evaluate the corresponding BRDF
+  // value
+  virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo) const = 0;
+
+  // given outgoing direction, sample a incident direction to continue the path
+  virtual glm::vec3 sample(const glm::vec3& wo,
+                           const glm::vec3& normal) const = 0;
+
+  //  TODO
+  // virtual float PDF();
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;
