@@ -3,6 +3,7 @@
 #include <spdlog/spdlog.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 #include <random>
 
 #include "MaterialBase.h"
@@ -12,9 +13,15 @@
 
 namespace RayTracingHistory {
 
+#define RUSSIAN_ROULETTE true
+
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 10;
+constexpr uint32_t SPP_ROOT = 8;
+#if RUSSIAN_ROULETTE
+constexpr uint32_t MAX_BOUNCES = 1024;
+#else
 constexpr uint32_t MAX_BOUNCES = 5;
+#endif
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -29,7 +36,12 @@ void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
     mInfo.append(", Direct Lighting ");
   else if (MAX_BOUNCES > 1) {
     mInfo.append(", Bounces: ");
+
+#if RUSSIAN_ROULETTE
+    mInfo.append("INFINITY");
+#else
     mInfo.append(std::to_string(MAX_BOUNCES));
+#endif
   }
 }
 
@@ -107,6 +119,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   if (depth >= MAX_BOUNCES) return bgColor;
 
+  // trace the ray
   HitRecord hitRec;
   bool bHit = pScene->closestHit(wo, 0.001f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
@@ -118,6 +131,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   const AreaLight* pLight = pScene->getMainLight();
 
+  // avoid double counting the light source
   if (depth == 0) {
     // hit light
     if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
@@ -144,16 +158,16 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   // geometry term
   const float sysUnit = pScene->systemUnit();
-  glm::vec3 lightDir = shadowRay.direction;
-  float R = lightDistance / sysUnit;
-  float geometryTerm = glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
-                       glm::max(0.0f, glm::dot(lightDir, lightNormal)) /
-                       (R * R);
+  const glm::vec3 lightDir = shadowRay.direction;
+  const float R = lightDistance / sysUnit;
+  const float geometryTerm = glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
+                             glm::max(0.0f, glm::dot(lightDir, lightNormal)) /
+                             (R * R);
 
   glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
-  float fr = pMtl->BRDF(lightDir, wo.direction);
-  float A = pLight->getArea() / sysUnit / sysUnit;
-  float Li = pLight->getIntensity();
+  const float fr = pMtl->BRDF(lightDir, wo.direction);
+  const float A = pLight->getArea() / sysUnit / sysUnit;
+  const float Li = pLight->getIntensity();
 
   glm::vec3 directLighting = Li * A * visibilityTerm * geometryTerm * color;
 
@@ -163,10 +177,18 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     glm::vec3 p = hitRec.p;
     glm::vec3 d = pMtl->scatter(wo.direction, hitRec.normal);
 
-    float reflectance =
-        pMtl->BRDF(d, wo.direction) * glm::dot(d, hitRec.normal);
-    indirectLighting =
-        _traceRay(Ray(p, d), pScene, xi, reflectance * weight, depth + 1);
+    float reflectance = pMtl->BRDF(d, wo.direction) *
+                        glm::max(0.0f, glm::dot(d, hitRec.normal));
+
+    // Russian Roulette termination, only applied in indirect lighting
+    float RR_Pr = 1 - glm::min(1.0f, reflectance);
+    if (glm::linearRand(0.0f, 1.0f) > RR_Pr) {
+      float RR_Boost = 1 / (1 - RR_Pr);
+
+      indirectLighting =
+          _traceRay(Ray(p, d), pScene, xi, reflectance * weight, depth + 1);
+      indirectLighting = RR_Boost * indirectLighting;
+    }
   }
 
   return directLighting + weight * indirectLighting;
