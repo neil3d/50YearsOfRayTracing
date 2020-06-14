@@ -24,10 +24,6 @@ class MaterialBase : public MyMaterial {
       return glm::vec3(1);
   }
 
-  MaterialBase& setEmission(float val) {
-    mEmission = val;
-    return *this;
-  }
 
   MaterialBase& setColor(const glm::vec3& color) {
     auto ct = std::make_shared<ConstantTexture>();
@@ -42,7 +38,6 @@ class MaterialBase : public MyMaterial {
   }
 
   bool isLight() const { return mLight; }
-  float getEmission() const { return mEmission; }
 
   virtual float BRDF(const glm::vec3& wi, const glm::vec3& w0) const = 0;
   
@@ -50,7 +45,6 @@ class MaterialBase : public MyMaterial {
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;
-  float mEmission = 0;
   bool mLight = false;  // for light shape rendering
 };
 
