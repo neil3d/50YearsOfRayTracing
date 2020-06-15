@@ -40,12 +40,8 @@ class ParallelogramLight : public AreaLight {
 
     mNormal = glm::normalize(glm::cross(edge1, edge2));
 
-    // area = a*b*sin(x)
-    float a = glm::length(edge1);
-    float b = glm::length(edge2);
-    float cosx = glm::dot(mEdge1, mEdge2) / (a * b);
-    float sinx = sqrtf(1.0f - cosx * cosx);
-    mArea = a * b * sinx;
+    // |a x b| = |a||b|sin(q)
+    mArea = glm::length(glm::cross(edge1, edge2));
     return *this;
   }
 
