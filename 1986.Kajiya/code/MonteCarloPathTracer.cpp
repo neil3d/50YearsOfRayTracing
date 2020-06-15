@@ -17,11 +17,8 @@ namespace RayTracingHistory {
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr uint32_t SPP_ROOT = 8;
-#if RUSSIAN_ROULETTE
+constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
-#else
-constexpr uint32_t MAX_BOUNCES = 5;
-#endif
 
 void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
   TiledRenderer::_init(pWnd);
@@ -36,12 +33,8 @@ void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
     mInfo.append(", Direct Lighting ");
   else if (MAX_BOUNCES > 1) {
     mInfo.append(", Bounces: ");
-
-#if RUSSIAN_ROULETTE
-    mInfo.append("INFINITY");
-#else
-    mInfo.append(std::to_string(MAX_BOUNCES));
-#endif
+    mInfo.append(std::to_string(RUSSIAN_ROULETTE_MIN_BOUNCES));
+    mInfo.append("+");
   }
 }
 
@@ -174,6 +167,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   const float A = pLight->getArea() / sysUnit / sysUnit;
   const float Li = pLight->getIntensity();
 
+  // uniform sampling the light source, PDF = 1/A
   glm::vec3 directLighting = Li * A * visibilityTerm * geometryTerm * color;
 
   // bounces==1: direct lighting, bounces>1: indirect lighting
@@ -187,9 +181,14 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
     // Russian Roulette termination, only applied in indirect lighting
     float RR_Pr = 1 - glm::min(1.0f, reflectance);
+    
+    // my hack
+    if (depth < RUSSIAN_ROULETTE_MIN_BOUNCES) RR_Pr = 0.0f;
+
     if (glm::linearRand(0.0f, 1.0f) > RR_Pr) {
       float RR_Boost = 1 / (1 - RR_Pr);
 
+      // TODO: where is my dear PDF?
       indirectLighting =
           _traceRay(Ray(p, d), pScene, xi, reflectance * weight, depth + 1);
       indirectLighting = RR_Boost * indirectLighting;

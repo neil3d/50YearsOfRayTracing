@@ -180,7 +180,8 @@ TriangleMesh::Intersection TriangleMesh::_faceIntersect(const Face& face,
       const auto& n1 = mNormals[face.normalIndex[1]];
       const auto& n2 = mNormals[face.normalIndex[2]];
 
-      result.normal = Triangle::barycentricInterpolation(uvw, n0, n1, n2);
+      result.normal =
+          glm::normalize(Triangle::barycentricInterpolation(uvw, n0, n1, n2));
     } else {
       result.normal = face.normal;
     }
