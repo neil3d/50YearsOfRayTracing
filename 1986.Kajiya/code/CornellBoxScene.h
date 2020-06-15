@@ -95,9 +95,12 @@ class CornellBoxScene : public MySceneWithLight {
 #if 1  // add teapot
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot = createObject<MeshInstance>("teapot");
-    teapot.setMeshFile(szTeapotFileName);
-    teapot.importMaterial(&mtlImporter);
-    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setRotation(0, 15, 0);
+    teapot.setMeshFile(szTeapotFileName)
+        .createMaterial<DiffuseMaterial>()
+        .setColor(glm::vec3(1));
+    teapot.setPosition(glm::vec3(185.5f, 165, 169))
+        .setRotation(0, 15, 0)
+        .setScale(66);
 #endif
   }
 };
