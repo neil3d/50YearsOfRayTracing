@@ -1,4 +1,4 @@
-# 光线追踪简史 
+# A Brief History of Ray Tracing
 
 用代码叙述光线追踪技术对发展历程
 
@@ -53,6 +53,11 @@
 - [ ] BRDFs
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-13b.png)
+
+## State of the Art
+
+- [ ] Importance Sampling GGX
+- [ ] Multiple Importance Sampling
 
 ## MyFramework
 
