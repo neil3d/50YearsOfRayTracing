@@ -113,6 +113,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
                                           int depth) {
   const glm::vec3 bgColor(0.f, 0.f, 0.f);
 
+  // NEE == Next Event Estimation
   if (depth > mMaxDepth) mMaxDepth = depth;
 
   if (depth >= MAX_BOUNCES) return bgColor;
@@ -133,6 +134,9 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   if (depth == 0) {
     // hit light
     if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
+  } else {
+    // if the indirect light ray hit the light source, terminates immediately
+    return glm::vec3(0);
   }
 
   // bounces == 0: light source
@@ -181,7 +185,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
     // Russian Roulette termination, only applied in indirect lighting
     float RR_Pr = 1 - glm::min(1.0f, reflectance);
-    
+
     // my hack
     if (depth < RUSSIAN_ROULETTE_MIN_BOUNCES) RR_Pr = 0.0f;
 
