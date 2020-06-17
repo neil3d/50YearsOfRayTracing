@@ -134,9 +134,6 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   if (depth == 0) {
     // hit light
     if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
-  } else {
-    // if the indirect light ray hit the light source, terminates immediately
-    return glm::vec3(0);
   }
 
   // bounces == 0: light source
