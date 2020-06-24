@@ -24,8 +24,7 @@ int main(int argc, char* argv[]) {
     glm::vec3 eyePos(0, 1.25f, -8);
     glm::vec3 lookAt(0, 1, 0);
     auto camera = std::make_shared<PinholeCamera>();
-    camera->setZNear(1.0f)
-        .setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
+    camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
         .setFOV(45);
     camera->init();

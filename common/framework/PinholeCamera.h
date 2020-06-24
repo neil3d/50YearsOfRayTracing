@@ -14,11 +14,6 @@ namespace RayTracingHistory {
 
 class PinholeCamera : public MyCamera {
  public:
-  MyCamera& setZNear(float d) {
-    mZNear = d;
-    return *this;
-  }
-
   Ray generateViewingRay(float u, float v) {
     glm::vec3 origin = mEyePos;
     return Ray(origin, mImagePlaneLeftTop + u * mImagePlaneH -
@@ -26,17 +21,18 @@ class PinholeCamera : public MyCamera {
   }
 
   void init() {
-    float halfHeight = tanf(mFov * 0.5f) * mZNear;
+    constexpr float DIST = 1.0f;
+
+    float halfHeight = tanf(mFov * 0.5f) * DIST;
     float halfWidth = mAspect * halfHeight;
 
-    glm::vec3 center = mEyePos + mForward * mZNear;
+    glm::vec3 center = mEyePos - mForward * DIST;
     mImagePlaneLeftTop = center - halfWidth * mRight + halfHeight * mUp;
     mImagePlaneH = 2 * halfWidth * mRight;
     mImagePlaneV = 2 * halfHeight * mUp;
   }
 
  private:
-  float mZNear;
   glm::vec3 mImagePlaneH, mImagePlaneV, mImagePlaneLeftTop;
 };
 }  // namespace RayTracingHistory

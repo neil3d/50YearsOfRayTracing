@@ -35,8 +35,8 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
 
-  float W = mFrameWidth;
-  float H = mFrameHeight;
+  float W = static_cast<float>(mFrameWidth);
+  float H = static_cast<float>(mFrameHeight);
 
   for (int y = tile.top; y < tile.bottom; y++)
     for (int x = tile.left; x < tile.right; x++) {

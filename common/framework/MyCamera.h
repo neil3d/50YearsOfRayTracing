@@ -19,7 +19,7 @@ class MyCamera {
   MyCamera& setView(glm::vec3 eyePos, glm::vec3 lookAt, glm::vec3 up) {
     mEyePos = eyePos;
 
-    mForward = glm::normalize(lookAt - eyePos);
+    mForward = glm::normalize(eyePos - lookAt);
     mRight = glm::normalize(glm::cross(up, mForward));
     mUp = glm::cross(mForward, mRight);
 
@@ -41,7 +41,7 @@ class MyCamera {
  protected:
   glm::vec3 mEyePos;
   glm::vec3 mForward, mRight, mUp;
-  float mFov;
-  float mAspect;
+  float mFov = 60.0f;
+  float mAspect = 1.0f;
 };
 }  // namespace RayTracingHistory

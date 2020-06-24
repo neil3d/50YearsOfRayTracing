@@ -20,7 +20,8 @@ class MyAssetManager {
  public:
   MyAssetManager() {
     mSearchPath.emplace_back("./");               // vs code start path
-    mSearchPath.emplace_back("../../../../../");  // visual studio start path
+    mSearchPath.emplace_back("../../../../");  // visual studio start path
+    mSearchPath.emplace_back("../../../../../");     // visual studio start path
   }
 
   static MyAssetManager& instance() {

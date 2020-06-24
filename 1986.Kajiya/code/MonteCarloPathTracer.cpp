@@ -62,8 +62,8 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   std::mt19937 stdRand(randDevice());
   std::uniform_real_distribution<float> uniformDist(0, 1);
 
-  float W = mFrameWidth;
-  float H = mFrameHeight;
+  float W = static_cast<float>(mFrameWidth);
+  float H = static_cast<float>(mFrameHeight);
   int MAX_SPP = SPP_ROOT * SPP_ROOT;
 
   int SPP = 0;

@@ -28,5 +28,12 @@ struct Ray {
   }
 
   glm::vec3 getPoint(float t) const { return origin + direction * t; }
+
+  void applayBiasOffset(const glm::vec3& N, float maxBias,
+                        float minBias = 0.01f) {
+    float a = glm::max(0.0f, glm::dot(N, glm::normalize(direction)));
+    float bias = glm::mix(maxBias, minBias, a);
+    origin += N * bias;
+  }
 };
 }  // namespace RayTracingHistory

@@ -35,7 +35,7 @@ class ThinLensCamera : public MyCamera {
     float halfHeight = tanf(mFov * 0.5f) * mFocusDist;
     float halfWidth = mAspect * halfHeight;
 
-    glm::vec3 center = mEyePos + mForward * mFocusDist;
+    glm::vec3 center = mEyePos - mForward * mFocusDist;
     mFocalPlaneLeftTop = center - halfWidth * mRight + halfHeight * mUp;
     mFocalPlaneH = 2 * halfWidth * mRight;
     mFocalPlaneV = 2 * halfHeight * mUp;
