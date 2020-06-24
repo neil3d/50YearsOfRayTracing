@@ -45,15 +45,12 @@ glm::vec4 RayCastingRenderer::_castRay(float u, float v, MyScene* pScene,
   if (!bHit) return color;
 
   Ray shadowRay = _generateShadowRay(hitRec.p);
+  shadowRay.applayBiasOffset(hitRec.normal, 0.001f);
   const float lightDistance = glm::distance(hitRec.p, mLightPos);
 
-  constexpr float SHADOW_E = 0.001f;
-
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
-
-  HitRecord hitRecS;
   bool bShadow =
-      pScene->anyHit(shadowRay, SHADOW_E, lightDistance, stopWithAnyHit);
+      pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
   if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
   } else {

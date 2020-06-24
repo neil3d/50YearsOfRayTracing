@@ -143,16 +143,17 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
   // visibility between the shading point and the light
   float visibilityTerm = 1.0f;
-  constexpr float SHADOW_E = 0.002f;
 
   auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
   Ray shadowRay = std::get<0>(shadowRet);
+  shadowRay.applayBiasOffset(hitRec.normal, 0.001f);
+
   float lightDistance = std::get<1>(shadowRet);
   glm::vec3 lightNormal = std::get<2>(shadowRet);
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
   bool bShadow =
-      pScene->anyHit(shadowRay, SHADOW_E, lightDistance, stopWithAnyHit);
+      pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
   if (bShadow) visibilityTerm = 0.125f;
 
   // geometry term

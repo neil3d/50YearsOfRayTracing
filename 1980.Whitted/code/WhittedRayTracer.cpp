@@ -116,9 +116,9 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
   const auto& lights = scene->getLights();
   for (const auto& light : lights) {
     Ray shadowRay = light->generateShadowRay(hitRec.p);
-    HitRecord hitRecS;
-    constexpr float SHADOW_E = 0.001f;
+    shadowRay.applayBiasOffset(hitRec.normal, 0.001f);
 
+    HitRecord hitRecS;
     float attenuation = 1.0f;
     auto shadowHitCallback = [&attenuation](const HitRecord& hit) {
       Material* mtl = dynamic_cast<Material*>(hit.mtl);
@@ -126,7 +126,7 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
       return attenuation > 0.0f;
     };
 
-    pScene->anyHit(shadowRay, SHADOW_E, fMax, shadowHitCallback);
+    pScene->anyHit(shadowRay, 0, fMax, shadowHitCallback);
 
     // lighting
     glm::vec3 lgt =
