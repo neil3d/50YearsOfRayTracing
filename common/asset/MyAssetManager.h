@@ -28,6 +28,18 @@ class MyAssetManager {
     return gInstance;
   }
 
+  std::string makeFullPath(const std::string& szPath) const {
+    for (const auto& szBasePath : mSearchPath) {
+      std::filesystem::path fullPath(szBasePath);
+      fullPath.append(szPath);
+
+      if (std::filesystem::exists(fullPath)) {
+        return fullPath.string();
+      }
+    }  // end of for
+    return std::string();
+  }
+
   template <typename T>
   std::shared_ptr<T> loadAssetObject(const std::string& szPath) {
     // find existing
@@ -35,16 +47,7 @@ class MyAssetManager {
     if (iter != mAssetDict.end())
       return std::dynamic_pointer_cast<T>(iter->second);
 
-    std::string szFullPath;
-    for (const auto& szBasePath : mSearchPath) {
-      std::filesystem::path fullPath(szBasePath);
-      fullPath.append(szPath);
-
-      if (std::filesystem::exists(fullPath)) {
-        szFullPath = fullPath.string();
-        break;
-      }
-    }  // end of for
+    std::string szFullPath = makeFullPath(szPath);
 
     if (szFullPath.empty()) {
       std::string szError("Asset file NOT exist: ");

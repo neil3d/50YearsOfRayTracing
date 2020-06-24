@@ -46,6 +46,10 @@ class MySceneObject {
     return *this;
   }
 
+  MySceneObject& setRotation(const glm::quat& rot) {
+    mTransform.setRotation(rot);
+    return *this;
+  }
   MySceneObject& setScale(float s) {
     mTransform.setScale(glm::vec3(s, s, s));
     return *this;

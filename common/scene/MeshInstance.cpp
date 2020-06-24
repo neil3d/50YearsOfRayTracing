@@ -11,6 +11,14 @@ MeshInstance& MeshInstance::setMeshFile(const std::string& szObjFileName) {
   return *this;
 }
 
+MeshInstance& MeshInstance::createDynamic(
+    const std::vector<glm::vec3>& vertices, const std::vector<int>& indices) {
+  mMesh = std::make_shared<TriangleMesh>(mName + ".dynamic");
+  mMesh->createDynamic(vertices, indices);
+
+  return *this;
+}
+
 size_t MeshInstance::importMaterial(MaterialImporter* pImporter) {
   if (!mMesh) return 0;
 

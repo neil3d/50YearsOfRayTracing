@@ -1,6 +1,8 @@
 #include "MyRenderer.h"
 
 #include <spdlog/spdlog.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
 #include <algorithm>
 
@@ -26,13 +28,43 @@ void MyRenderer::_init(SDL_Window* pWnd) {
   if (bytesPerPixel != 4) {
     spdlog::warn("BytesPerPixel != 4");
   }
+
   mFrameBuffer.resize(mSurface->h * mSurface->pitch / bytesPerPixel);
   SDL_UnlockSurface(mSurface);
+
+  // log info
+  spdlog::info("SDL surface format = {0}.",
+               SDL_GetPixelFormatName(mSurface->format->format));
 }
 
 bool MyRenderer::nextPresentReady() const {
   uint32_t line = mPixelCount / mFrameWidth;
   return line > mPresentLine;
+}
+
+void MyRenderer::screenshot(const std::string& szFileName) {
+  std::lock_guard lock(mMutex);
+
+  // convert to RGB
+  struct RGB {
+    uint8_t R, G, B;
+  };
+  size_t count = mFrameBuffer.size();
+  std::vector<RGB> buf(count);
+
+  for (int i = 0; i < count; i++) {
+    auto& out = buf[i];
+    SDL_GetRGB(mFrameBuffer[i], mSurface->format, &out.R, &out.G, &out.B);
+  }
+
+  // write png
+  int ret = stbi_write_png(szFileName.c_str(), mFrameWidth, mFrameHeight, 3,
+                           buf.data(), sizeof(RGB));
+  if (ret) {
+    spdlog::info("screenshot {0}{1}.", SDL_GetBasePath(), szFileName);
+  } else {
+    spdlog::error("screenshot FAILED!");
+  }
 }
 
 bool MyRenderer::isDone() const { return mPresentLine == mFrameHeight; }

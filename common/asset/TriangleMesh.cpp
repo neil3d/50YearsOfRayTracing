@@ -83,6 +83,11 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
     }  // end of for_each(index_t)
   }
 
+  // build internal states
+  _postMeshCreated();
+}
+
+void TriangleMesh::_postMeshCreated() {
   // generation
   _generateFaceNormal();
   _buildBoundingBox();
@@ -92,6 +97,27 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   std::generate(faceList.begin(), faceList.end(), [&i] { return i++; });
 
   _buildBVH(&mBVHRoot, std::move(faceList));
+}
+
+void TriangleMesh::createDynamic(const std::vector<glm::vec3>& vertices,
+                                 const std::vector<int>& indices) {
+  // copy vertices
+  mVertices.resize(vertices.size());
+  std::memcpy(mVertices.data(), vertices.data(),
+              vertices.size() * sizeof(glm::vec3));
+
+  // indices --> triangle faces
+  mFaces.resize(indices.size() / 3);
+  for (size_t i = 0; i < indices.size(); i += 3) {
+    auto& face = mFaces[i / 3];
+    face.vertexIndex[0] = indices[i];
+    face.vertexIndex[1] = indices[i + 1];
+    face.vertexIndex[2] = indices[i + 2];
+    face.materialID = -1;
+  }
+
+  // build internal states
+  _postMeshCreated();
 }
 
 TriangleMesh::Intersection TriangleMesh::intersect(const Ray& ray, float tMin,

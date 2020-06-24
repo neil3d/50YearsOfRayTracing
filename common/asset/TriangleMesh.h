@@ -52,11 +52,16 @@ class TriangleMesh : public MyAssetObject {
   // load Wavefront .Obj file
   virtual void loadFromFile(const std::string& szPath) override;
 
+  void createDynamic(const std::vector<glm::vec3>& vertices,
+                     const std::vector<int>& indices);
+
   Intersection intersect(const Ray& ray, float tMin, float tMax);
 
   std::vector<MyMaterial::Ptr> importMaterial(MaterialImporter* pImporter);
 
  private:
+  void _postMeshCreated();
+
   Intersection _perFaceIntersect(const Ray& ray, float tMin, float tMax);
 
   Intersection _accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,

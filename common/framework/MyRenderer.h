@@ -36,6 +36,8 @@ class MyRenderer {
 
   bool nextPresentReady() const;
 
+  void screenshot(const std::string& szFileName);
+
  public:
   virtual void _init(SDL_Window* pWnd);
   virtual void _present();

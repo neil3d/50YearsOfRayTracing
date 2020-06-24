@@ -13,7 +13,7 @@
 #include "MyRenderer.h"
 
 namespace RayTracingHistory {
-class MyApp final {
+class MyApp {
  public:
   MyApp() = default;
   ~MyApp() = default;
@@ -34,10 +34,12 @@ class MyApp final {
   }
 
  private:
+  virtual void _onSDLEvent(const SDL_Event& evt) {}
+
   void _tick();
   void _showProgress();
 
- private:
+ protected:
   std::string mWindowTitle;
   MyRenderer::Ptr mRenderer;
   SDL_Window* mMainWindow = nullptr;

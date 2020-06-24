@@ -23,6 +23,7 @@ class MeshInstance : public MySceneObject {
   using MySceneObject::MySceneObject;
 
   MeshInstance& setMeshFile(const std::string& szObjFileName);
+  MeshInstance& createDynamic(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices);
 
   size_t importMaterial(MaterialImporter* pImporter);
 

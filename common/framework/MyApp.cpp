@@ -20,9 +20,11 @@ void MyApp::createWindow(int width, int height, const char* szTitle) {
 }
 
 void MyApp::mainLoop() {
-  SDL_Event event = {};
-  while (event.type != SDL_QUIT) {
-    if (!SDL_PollEvent(&event)) {
+  SDL_Event evt = {};
+  while (evt.type != SDL_QUIT) {
+    if (SDL_PollEvent(&evt)) {
+      _onSDLEvent(evt);
+    } else {
       _tick();
     }
   }  // end of while
