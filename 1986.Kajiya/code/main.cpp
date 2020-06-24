@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<MonteCarloPathTracer>();
 
-    auto sceneRet = _createDemoScene(EMyTestScenes::Demo);
+    auto sceneRet = _createDemoScene(EMyTestScenes::Kajiya);
     MyScene::Ptr scene = std::get<0>(sceneRet);
     glm::vec3 eyePos = std::get<1>(sceneRet);
     glm::vec3 lookAt = std::get<2>(sceneRet);
@@ -72,7 +72,7 @@ std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
       break;
     case EMyTestScenes::Kajiya:
       scene = std::make_shared<KajiyaScene>();
-      eyePos = glm::vec3(250, 250, -1400);
+      eyePos = glm::vec3(-250, 250, -1400);
       lookAt = glm::vec3(0, 250, 0);
       break;
     case EMyTestScenes::Demo:

@@ -22,7 +22,7 @@ class RayCastingRenderer : public DirectRenderer {
   glm::vec4 _castRay(float u, float v, MyScene* pScene, PinholeCamera* camera);
 
   // light
-  glm::vec3 mLightPos = {-10, 10, 0};
+  glm::vec3 mLightPos = {10, 10, 0};
 
 };
 

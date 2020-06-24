@@ -85,14 +85,14 @@ class DemoScene : public MySceneWithLight {
 #if 1  // balls
     float ball = W / 8;
     createObject<Sphere>("small_ball")
-        .setCenter(glm::vec3(120, ball * 3, 0))
+        .setCenter(glm::vec3(-120, ball * 3, 0))
         .setRadius(ball)
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
     ball *= 1.5f;
     createObject<Sphere>("big_ball")
-        .setCenter(glm::vec3(-ball, ball, 0))
+        .setCenter(glm::vec3(ball, ball, 0))
         .setRadius(ball)
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));

@@ -52,7 +52,7 @@ class KajiyaScene : public MySceneWithLight {
     const glm::vec3 tallBoxExtends = boxExtends * glm::vec3(0.5f, 6.0f, 0.5f);
     const float RADIUS = tallBoxExtends.x * 0.45f;
     // right box
-    glm::vec3 boxPos = glm::vec3(W / 4, 0, -D / 4);
+    glm::vec3 boxPos = glm::vec3(-W / 4, 0, -D / 4);
     _createBox(boxExtends, boxPos);
 
     constexpr float ELLIPS_RADIUS = 77;
@@ -73,7 +73,7 @@ class KajiyaScene : public MySceneWithLight {
     shortEllipsoid.createMaterial<DiffuseMaterial>().setColor(glm::vec3(1));
 
     // left near box
-    boxPos = glm::vec3(-W / 4, 0, -D / 5);
+    boxPos = glm::vec3(W / 4, 0, -D / 5);
     _createBox(boxExtends, boxPos);
     _createBox(tallBoxExtends, boxPos + glm::vec3(0, boxExtends.y, 0));
     _createSphere(
@@ -81,7 +81,7 @@ class KajiyaScene : public MySceneWithLight {
         boxPos + glm::vec3(0, boxExtends.y + tallBoxExtends.y + RADIUS, 0));
 
     // left rear box
-    boxPos = glm::vec3(-W / 4, 0, D / 3.5f);
+    boxPos = glm::vec3(W / 4, 0, D / 3.5f);
     _createBox(boxExtends, boxPos);
     _createBox(tallBoxExtends, boxPos + glm::vec3(0, boxExtends.y, 0));
     _createSphere(

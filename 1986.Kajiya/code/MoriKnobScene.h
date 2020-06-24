@@ -82,7 +82,6 @@ class MoriKnobScene : public MySceneWithLight {
 
     auto& mesh = createObject<MeshInstance>("mori_knob");
     mesh.setMeshFile(szFileName);
-    mesh.setScale(glm::vec3(-1, 1, 1));
 
     MoriKnobMtlImporter mtlImporter;
     mesh.importMaterial(&mtlImporter);

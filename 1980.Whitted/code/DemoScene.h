@@ -45,7 +45,7 @@ class DemoScene : public MyScene {
         .setParam(0.7f, 0.3f, 0.0f, 80, 1.0f);
 
     createObject<Sphere>("GlassSphere")
-        .setCenter(glm::vec3(1.25f, 2, -2))
+        .setCenter(glm::vec3(-1.25f, 2, -2))
         .setRadius(1.2f)
         .createMaterial<Material>()
         .setColor(glm::vec3(1))

@@ -23,7 +23,7 @@ class DemoScene : public MyScene {
         .setRadius(1.0f);
 
     createObject<Sphere>("sphereB")
-        .setCenter(glm::vec3(2, 0.5f, 0))
+        .setCenter(glm::vec3(-2, 0.5f, 0))
         .setRadius(0.5f);
   }
 };
