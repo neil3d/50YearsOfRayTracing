@@ -25,6 +25,7 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   std::filesystem::path filePath(szFileName);
   std::filesystem::path basePath = filePath.remove_filename();
   std::string szBasePath = basePath.string();
+  std::string szMainFileName = std::filesystem::path(szFileName).filename().string();
 
   bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
                               szFileName.c_str(), szBasePath.c_str(), true);
@@ -82,6 +83,9 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
       }
     }  // end of for_each(index_t)
   }
+
+  spdlog::info("triangle mesh loaded: {0}, num vertices = {1}, num faces = {2}",
+               szMainFileName, mVertices.size(), mFaces.size());
 
   // build internal states
   _postMeshCreated();

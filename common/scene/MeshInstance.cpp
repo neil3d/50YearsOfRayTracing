@@ -43,7 +43,8 @@ bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
 
     outRec = _makeHitRecord(ray, result.t, WN, result.uv);
 
-    if (result.mtlID != -1) outRec.mtl = mModelMtls[result.mtlID].get();
+    if (result.mtlID != -1 && !mModelMtls.empty())
+      outRec.mtl = mModelMtls[result.mtlID].get();
   }
 
   return result.hit;
