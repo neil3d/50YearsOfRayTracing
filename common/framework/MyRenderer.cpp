@@ -59,7 +59,7 @@ void MyRenderer::screenshot(const std::string& szFileName) {
 
   // write png
   int ret = stbi_write_png(szFileName.c_str(), mFrameWidth, mFrameHeight, 3,
-                           buf.data(), sizeof(RGB));
+                           buf.data(), mFrameWidth * sizeof(RGB));
   if (ret) {
     spdlog::info("screenshot {0}{1}.", SDL_GetBasePath(), szFileName);
   } else {

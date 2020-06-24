@@ -20,6 +20,8 @@ namespace RayTracingHistory {
 
 class MySceneObject {
  public:
+  struct UserData {};
+
   typedef std::shared_ptr<MySceneObject> Ptr;
   MySceneObject(const std::string& szName) : mName(szName) {}
   virtual ~MySceneObject() = default;
@@ -68,6 +70,10 @@ class MySceneObject {
 
   const std::string& getName() const { return mName; }
 
+  void setUserData(std::shared_ptr<UserData> userData) { mUserData = userData; }
+
+  std::shared_ptr<UserData> getUserData() const { return mUserData; }
+
  protected:
   Ray _makeLocalRay(const Ray& worldRay, Transform* animTrans) {
     glm::vec4 wo(worldRay.origin, 1.0f);
@@ -98,6 +104,7 @@ class MySceneObject {
   Transform mTransform;
   MyMaterial::Ptr mMaterial;
   MyAnimator::Ptr mAnimator;
+  std::shared_ptr<UserData> mUserData;
 
  public:
   MySceneObject(const MySceneObject&) = delete;
