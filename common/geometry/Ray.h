@@ -31,6 +31,8 @@ struct Ray {
 
   void applayBiasOffset(const glm::vec3& N, float maxBias,
                         float minBias = 0.0001f) {
+    if (maxBias < minBias) std::swap(maxBias, minBias);
+
     float a = glm::max(0.0f, glm::dot(N, glm::normalize(direction)));
     float bias = glm::mix(maxBias, minBias, a);
     origin += N * bias;
