@@ -30,10 +30,13 @@ class DiffuseMaterial : public MaterialBase {
   virtual glm::vec3 sample(const glm::vec3& wo,
                            const glm::vec3& normal) const override {
     // uniform sampling the upper hemisphere
+    // rejection sampling
     glm::vec3 rand = glm::sphericalRand(1.0f);
-    rand.z = fabsf(rand.z);
-    ONB onb(normal);
-    return glm::normalize(onb.localToWorld(rand));
+    float t = glm::length(rand);
+    if (glm::dot(rand, normal) > 0)
+      return rand;
+    else
+      return -rand;
   }
 
   virtual float pdf(const glm::vec3& wi, const glm::vec3& normal) {

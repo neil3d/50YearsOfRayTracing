@@ -17,7 +17,7 @@ const char* const APP_NAME = "Monte Carlo Path Tracing";
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
-enum class EMyTestScenes { Demo, CornellBox, MoriKnob, Kajiya };
+enum class EMyTestScenes { MyDemo, CornellBox, MoriKnob, Kajiya };
 
 std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
     EMyTestScenes sceneType);
@@ -75,7 +75,7 @@ std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
       eyePos = glm::vec3(-250, 250, -1400);
       lookAt = glm::vec3(0, 250, 0);
       break;
-    case EMyTestScenes::Demo:
+    case EMyTestScenes::MyDemo:
     default:
       scene = std::make_shared<DemoScene>();
       eyePos = glm::vec3(0, 250, -850);

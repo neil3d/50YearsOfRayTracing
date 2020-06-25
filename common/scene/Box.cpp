@@ -17,6 +17,11 @@ bool Box::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
     }
   }  // end of for
 
+  if (hitAnySide) {
+    glm::vec3 N(mTransform.getNormalMatrix() * glm::vec4(outRec.normal, 0));
+    outRec = _makeHitRecord(ray, outRec.t, N, outRec.uv);
+  }
+
   return hitAnySide;
 }
 
@@ -28,8 +33,7 @@ void Box::init() {
   // top
   Parallelogram::Ptr top = std::make_shared<Parallelogram>("box.top");
   mSides[0] = top;
-  top->setEdges(glm::vec3(W, 0, 0), glm::vec3(0, 0, D))
-      .flipFace()
+  top->setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
       .setAnchor(glm::vec3(W / -2, H, D / -2))
       .setMaterial(mMaterial);
 
@@ -50,14 +54,13 @@ void Box::init() {
   // left
   Parallelogram::Ptr left = std::make_shared<Parallelogram>("box.left");
   mSides[3] = left;
-  left->setEdges(glm::vec3(0, H, 0), glm::vec3(0, 0, D))
-      .flipFace()
+  left->setEdges(glm::vec3(0, 0, D), glm::vec3(0, H, 0))
       .setAnchor(glm::vec3(W / -2, 0, D / -2))
       .setMaterial(mMaterial);
 
   Parallelogram::Ptr back = std::make_shared<Parallelogram>("box.back");
   mSides[4] = back;
-  back->setEdges(glm::vec3(0, H, 0), glm::vec3(W, 0, 0))
+  back->setEdges(glm::vec3(W, 0, 0), glm::vec3(0, H, 0))
       .setAnchor(glm::vec3(W / -2, 0, D / 2))
       .setMaterial(mMaterial);
 

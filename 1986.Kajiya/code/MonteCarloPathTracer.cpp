@@ -73,7 +73,7 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   int tileH = tile.bottom - tile.top;
   tileBuffer.resize(tileW * tileH, glm::vec3(0));
 
-#if 0
+#if 1
   auto xi1 = JitteringSampling::generateSamples(SPP_ROOT, false);
   auto xi2 = JitteringSampling::generateSamples(SPP_ROOT, true);
 #else
@@ -175,7 +175,6 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   }
   //----- end of direct lighting -----------------------------------------
 
-
   // bounces==1: direct lighting, bounces>1: indirect lighting
   glm::vec3 indirectLighting(0);
   if (MAX_BOUNCES > 1 && weight > glm::epsilon<float>()) {
@@ -195,8 +194,10 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     if (glm::linearRand(0.0f, 1.0f) > RR_Pr) {
       float RR_Boost = 1 / (1 - RR_Pr);
 
+      Ray secondaryRay(p, d);
+      secondaryRay.applayBiasOffset(hitRec.normal, 0.001f);
       indirectLighting =
-          _traceRay(Ray(p, d), pScene, xi, weight * reflectance, depth + 1);
+          _traceRay(secondaryRay, pScene, xi, weight * reflectance, depth + 1);
       indirectLighting = RR_Boost / pdf * indirectLighting;
     }
   }

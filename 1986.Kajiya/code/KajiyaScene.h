@@ -92,10 +92,11 @@ class KajiyaScene : public MySceneWithLight {
     const glm::vec3 stackPos(RADIUS * 1.5f, 0, -RADIUS * 3.5f);
     for (int h = 0; h < 3; h++) {
       for (int m = 1; m <= 3 - h; m++) {
-        _createLineOfSpheres(
-            m, RADIUS,
-            stackPos + glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,
-                                 RADIUS * m * 2 + h * RADIUS));
+        glm::vec3 bias(m * 0.002f, h * 0.002f, m * 0.002f);
+        _createLineOfSpheres(m, RADIUS,
+                             stackPos + bias +
+                                 glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,
+                                           RADIUS * m * 2 + h * RADIUS));
       }
     }  // end of for
   }
