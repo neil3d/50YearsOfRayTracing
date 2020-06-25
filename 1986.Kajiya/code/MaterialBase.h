@@ -40,7 +40,8 @@ class MaterialBase : public MyMaterial {
 
   // for a given incident, outgoing direction, evaluate the corresponding BRDF
   // value
-  virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo) const = 0;
+  virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo,
+                         const glm::vec3& normal) const = 0;
 
   // given outgoing direction, sample a incident direction to continue the path
   virtual glm::vec3 sample(const glm::vec3& wo,

@@ -171,7 +171,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
         glm::max(0.0f, glm::dot(lightDir, lightNormal)) / (R * R);
 
     glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
-    const float fr = pMtl->evaluate(lightDir, wo.direction);
+    const float fr = pMtl->evaluate(lightDir, wo.direction, hitRec.normal);
     const float A = pLight->getArea() / sysUnit / sysUnit;
     const float Li = pLight->getIntensity();
 
@@ -189,7 +189,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     glm::vec3 d = pMtl->sample(wo.direction, hitRec.normal);
     float pdf = pMtl->pdf(d, hitRec.normal);
 
-    float reflectance = pMtl->evaluate(d, wo.direction) *
+    float reflectance = pMtl->evaluate(d, wo.direction, hitRec.normal) *
                         glm::max(0.0f, glm::dot(d, hitRec.normal));
 
     // Russian Roulette termination, only applied in indirect lighting

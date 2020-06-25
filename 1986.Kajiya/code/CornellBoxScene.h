@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
+#include "LambertianMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
 #include "asset/MaterialImporter.h"
@@ -96,10 +97,9 @@ class CornellBoxScene : public MySceneWithLight {
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot = createObject<MeshInstance>("teapot");
     teapot.setMeshFile(szTeapotFileName)
-        .createMaterial<DiffuseMaterial>()
+        .createMaterial<LambertianMaterial>()
         .setColor(glm::vec3(1));
-    teapot.setPosition(glm::vec3(185.5f, 165, 169))
-        .setScale(68);
+    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setScale(68);
 #endif
   }
 };

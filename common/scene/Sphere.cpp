@@ -32,11 +32,14 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
   float t0, t1;
   if (!_solveQuadratic(a, b, c, t0, t1)) return false;
 
-  if (t0 * t1 < 0) {
-      // TODO:
-  }
-
   float tnear = std::min(t0, t1);
+
+  if (t0 * t1 < 0) {
+    if (t0 > 0)
+      tnear = t0;
+    else
+      tnear = t1;
+  }
 
   if (tnear > tMin && tnear < tMax) {
     constexpr float PI = glm::pi<float>();

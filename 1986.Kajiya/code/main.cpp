@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
     auto renderer = app.createRenderer<MonteCarloPathTracer>();
 
-    auto sceneRet = _createDemoScene(EMyTestScenes::CornellBox);
+    auto sceneRet = _createDemoScene(EMyTestScenes::MyDemo);
     MyScene::Ptr scene = std::get<0>(sceneRet);
     glm::vec3 eyePos = std::get<1>(sceneRet);
     glm::vec3 lookAt = std::get<2>(sceneRet);

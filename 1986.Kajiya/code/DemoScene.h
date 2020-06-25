@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
+#include "LambertianMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
 #include "scene/MeshInstance.h"
@@ -83,18 +84,18 @@ class DemoScene : public MySceneWithLight {
         .setColor(glm::vec3(1));
 
 #if 1  // balls
-    float ball = W / 8;
+    float ball = W / 6;
     createObject<Sphere>("small_ball")
-        .setCenter(glm::vec3(-120, ball * 3, 0))
+        .setCenter(glm::vec3(-120, ball * 2, 0))
         .setRadius(ball)
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-    ball *= 1.5f;
+    ball *= 1.25f;
     createObject<Sphere>("big_ball")
         .setCenter(glm::vec3(ball, ball, 0))
         .setRadius(ball)
-        .createMaterial<DiffuseMaterial>()
+        .createMaterial<LambertianMaterial>()
         .setColor(glm::vec3(1));
 #endif
 
