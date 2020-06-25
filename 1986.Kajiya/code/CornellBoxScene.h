@@ -99,8 +99,7 @@ class CornellBoxScene : public MySceneWithLight {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
     teapot.setPosition(glm::vec3(185.5f, 165, 169))
-        .setRotation(0, 15, 0)
-        .setScale(66);
+        .setScale(68);
 #endif
   }
 };

@@ -46,8 +46,7 @@ class MaterialBase : public MyMaterial {
   virtual glm::vec3 sample(const glm::vec3& wo,
                            const glm::vec3& normal) const = 0;
 
-  //  TODO
-  // virtual float PDF();
+  virtual float pdf(const glm::vec3& wi, const glm::vec3& normal) { return 1; }
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;

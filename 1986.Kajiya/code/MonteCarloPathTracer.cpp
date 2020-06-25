@@ -139,44 +139,49 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   // bounces == 0: light source
   if (MAX_BOUNCES == 0) return bgColor;
 
-  //-- direct lighting
+  //----- begin of direct lighting -----------------------------------------
+  glm::vec3 directLighting(0);
+  {
+    // visibility between the shading point and the light
+    float visibilityTerm = 1.0f;
 
-  // visibility between the shading point and the light
-  float visibilityTerm = 1.0f;
+    auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
+    Ray shadowRay = std::get<0>(shadowRet);
+    shadowRay.applayBiasOffset(hitRec.normal, 0.001f);
 
-  auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
-  Ray shadowRay = std::get<0>(shadowRet);
-  shadowRay.applayBiasOffset(hitRec.normal, 0.001f);
+    float lightDistance = std::get<1>(shadowRet);
+    glm::vec3 lightNormal = std::get<2>(shadowRet);
 
-  float lightDistance = std::get<1>(shadowRet);
-  glm::vec3 lightNormal = std::get<2>(shadowRet);
+    auto stopWithAnyHit = [](const HitRecord&) { return true; };
+    bool bShadow =
+        pScene->anyHit(shadowRay, 0.0001f, lightDistance, stopWithAnyHit);
+    if (bShadow) visibilityTerm = 0.125f;
 
-  auto stopWithAnyHit = [](const HitRecord&) { return true; };
-  bool bShadow =
-      pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
-  if (bShadow) visibilityTerm = 0.125f;
+    // geometry term
+    const float sysUnit = pScene->systemUnit();
+    const glm::vec3 lightDir = shadowRay.direction;
+    const float R = lightDistance / sysUnit;
+    const float geometryTerm =
+        glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
+        glm::max(0.0f, glm::dot(lightDir, lightNormal)) / (R * R);
 
-  // geometry term
-  const float sysUnit = pScene->systemUnit();
-  const glm::vec3 lightDir = shadowRay.direction;
-  const float R = lightDistance / sysUnit;
-  const float geometryTerm = glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
-                             glm::max(0.0f, glm::dot(lightDir, lightNormal)) /
-                             (R * R);
+    glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
+    const float fr = pMtl->evaluate(lightDir, wo.direction);
+    const float A = pLight->getArea() / sysUnit / sysUnit;
+    const float Li = pLight->getIntensity();
 
-  glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
-  const float fr = pMtl->evaluate(lightDir, wo.direction);
-  const float A = pLight->getArea() / sysUnit / sysUnit;
-  const float Li = pLight->getIntensity();
+    // uniform sampling the light source, PDF = 1/A
+    directLighting = Li * A * visibilityTerm * geometryTerm * color;
+  }
+  //----- end of direct lighting -----------------------------------------
 
-  // uniform sampling the light source, PDF = 1/A
-  glm::vec3 directLighting = Li * A * visibilityTerm * geometryTerm * color;
 
   // bounces==1: direct lighting, bounces>1: indirect lighting
   glm::vec3 indirectLighting(0);
   if (MAX_BOUNCES > 1 && weight > glm::epsilon<float>()) {
     glm::vec3 p = hitRec.p;
     glm::vec3 d = pMtl->sample(wo.direction, hitRec.normal);
+    float pdf = pMtl->pdf(d, hitRec.normal);
 
     float reflectance = pMtl->evaluate(d, wo.direction) *
                         glm::max(0.0f, glm::dot(d, hitRec.normal));
@@ -190,14 +195,13 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     if (glm::linearRand(0.0f, 1.0f) > RR_Pr) {
       float RR_Boost = 1 / (1 - RR_Pr);
 
-      // TODO: where is my dear PDF?
       indirectLighting =
-          _traceRay(Ray(p, d), pScene, xi, reflectance * weight, depth + 1);
-      indirectLighting = RR_Boost * indirectLighting;
+          _traceRay(Ray(p, d), pScene, xi, weight * reflectance, depth + 1);
+      indirectLighting = RR_Boost / pdf * indirectLighting;
     }
   }
 
-  return directLighting + weight * indirectLighting;
+  return (directLighting + indirectLighting) * weight;
 }
 
 }  // namespace RayTracingHistory

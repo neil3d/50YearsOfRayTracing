@@ -35,6 +35,14 @@ class DiffuseMaterial : public MaterialBase {
     ONB onb(normal);
     return glm::normalize(onb.localToWorld(rand));
   }
+
+  virtual float pdf(const glm::vec3& wi, const glm::vec3& normal) {
+    // area of the hemishpere
+    if (glm::dot(wi, normal) > 0.0f)
+      return 1.0f / (2.0f * glm::pi<float>());
+    else
+      return 0.0f;
+  }
 };
 
 }  // namespace RayTracingHistory
