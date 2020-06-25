@@ -7,19 +7,19 @@ bool Box::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
 
   bool hitAnySide = false;
   float closestSoFar = tMax;
-  HitRecord rec;
+  HitRecord rec, nearestRec;
 
   for (const auto& side : mSides) {
     if (side->intersect(localRay, tMin, closestSoFar, rec)) {
       hitAnySide = true;
       closestSoFar = rec.t;
-      outRec = rec;
+      nearestRec = rec;
     }
   }  // end of for
 
   if (hitAnySide) {
-    glm::vec3 N(mTransform.getNormalMatrix() * glm::vec4(outRec.normal, 0));
-    outRec = _makeHitRecord(ray, outRec.t, N, outRec.uv);
+    glm::vec3 N(mTransform.getNormalMatrix() * glm::vec4(nearestRec.normal, 0));
+    outRec = _makeHitRecord(ray, nearestRec.t, N, nearestRec.uv);
   }
 
   return hitAnySide;
