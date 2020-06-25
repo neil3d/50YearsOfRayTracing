@@ -33,7 +33,7 @@ class KajiyaScene : public MySceneWithLight {
     constexpr float H = 1500;
     constexpr float LS = 200;  // light size
 
-    glm::vec3 lightPos(W / 2, H * 1.5f, 0);
+    glm::vec3 lightPos(-W / 2, H * 1.5f, 0);
     glm::vec3 lightDir = glm::normalize(lightPos);
     ONB lightONB(lightDir);
 
@@ -92,7 +92,7 @@ class KajiyaScene : public MySceneWithLight {
     const glm::vec3 stackPos(RADIUS * 1.5f, 0, -RADIUS * 3.5f);
     for (int h = 0; h < 3; h++) {
       for (int m = 1; m <= 3 - h; m++) {
-        glm::vec3 bias(m * 0.002f, h * 0.002f, m * 0.002f);
+        glm::vec3 bias(m * 0.001f, h * 0.001f, m * 0.001f);
         _createLineOfSpheres(m, RADIUS,
                              stackPos + bias +
                                  glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,

@@ -82,7 +82,7 @@ class DemoScene : public MySceneWithLight {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-#if 0  // balls
+#if 1  // balls
     float ball = W / 8;
     createObject<Sphere>("small_ball")
         .setCenter(glm::vec3(-120, ball * 3, 0))
@@ -98,7 +98,7 @@ class DemoScene : public MySceneWithLight {
         .setColor(glm::vec3(1));
 #endif
 
-#if 1  // stanford dragon
+#if 0  // stanford dragon
     const char* const szFileName = "content/dragon/dragon.obj";
     auto& mesh = createObject<MeshInstance>("dragon");
     mesh.setMeshFile(szFileName);

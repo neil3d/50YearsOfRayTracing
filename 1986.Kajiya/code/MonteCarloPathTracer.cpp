@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 8;
+constexpr uint32_t SPP_ROOT = 32;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
@@ -139,6 +139,12 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   // bounces == 0: light source
   if (MAX_BOUNCES == 0) return bgColor;
 
+  constexpr float NEE_Pr = 0.5f;
+  constexpr float NEE_PDF_LIGHT = 1.0f / NEE_Pr;
+  constexpr float NEE_PDF_REFLECT = 1.0f / (1 - NEE_Pr);
+
+  bool sampleLight = glm::linearRand(0.0f, 1.0f) < NEE_Pr;
+
   //----- begin of direct lighting -----------------------------------------
   glm::vec3 directLighting(0);
   {
@@ -154,7 +160,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
     auto stopWithAnyHit = [](const HitRecord&) { return true; };
     bool bShadow = pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
-    if (bShadow) visibilityTerm = 0.125f;
+    if (bShadow) visibilityTerm = 0;
 
     // geometry term
     const float sysUnit = pScene->systemUnit();
@@ -172,6 +178,8 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     // uniform sampling the light source, PDF = 1/A
     directLighting = Li * A * visibilityTerm * geometryTerm * color;
   }
+
+  if (sampleLight) return (directLighting / NEE_PDF_LIGHT);
   //----- end of direct lighting -----------------------------------------
 
   // bounces==1: direct lighting, bounces>1: indirect lighting
@@ -197,11 +205,11 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
       secondaryRay.applayBiasOffset(hitRec.normal, 0.001f);
       indirectLighting =
           _traceRay(secondaryRay, pScene, xi, weight * reflectance, depth + 1);
-      indirectLighting = RR_Boost / pdf * indirectLighting;
+      indirectLighting = weight * RR_Boost / pdf * indirectLighting;
     }
   }
 
-  return (directLighting + indirectLighting) * weight;
+  return (indirectLighting / NEE_PDF_REFLECT);
 }
 
 }  // namespace RayTracingHistory
