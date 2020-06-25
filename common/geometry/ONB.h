@@ -26,8 +26,8 @@ struct ONB {
       T = glm::vec3(1, 0, 0);
 
     // constructing orthonormal bases
-    U = glm::cross(T, N);
-    V = glm::cross(N, U);
+    U = glm::cross(T, W);
+    V = glm::cross(W, U);
   }
 
   glm::vec3 localToWorld(const glm::vec3& p) {

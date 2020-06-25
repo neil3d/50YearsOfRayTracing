@@ -27,24 +27,20 @@ class DiffuseMaterial : public MaterialBase {
     return Kd / glm::pi<float>();
   }
 
-  virtual glm::vec3 sample(const glm::vec3& wo,
-                           const glm::vec3& normal) const override {
+  virtual SampleResult sample(const glm::vec3& wo,
+                              const glm::vec3& normal) const override {
     // uniform sampling the upper hemisphere
     // rejection sampling
     glm::vec3 rand = glm::sphericalRand(1.0f);
     float t = glm::length(rand);
-    if (glm::dot(rand, normal) > 0)
-      return rand;
-    else
-      return -rand;
-  }
 
-  virtual float pdf(const glm::vec3& wi, const glm::vec3& normal) {
-    // area of the hemishpere
-    if (glm::dot(wi, normal) > 0.0f)
-      return 1.0f / (2.0f * glm::pi<float>());
+    SampleResult ret;
+    ret.pdf = 1.0f / (2.0f * glm::pi<float>());
+    if (glm::dot(rand, normal) > 0)
+      ret.scattered = rand;
     else
-      return 0.0f;
+      ret.scattered = -rand;
+    return ret;
   }
 };
 

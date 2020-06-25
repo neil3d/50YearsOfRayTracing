@@ -15,6 +15,11 @@
 
 namespace RayTracingHistory {
 
+struct SampleResult {
+  glm::vec3 scattered;
+  float pdf;
+};
+
 class MaterialBase : public MyMaterial {
  public:
   glm::vec3 getBaseColor(const glm::vec2& uv, const glm::vec3& p) {
@@ -44,10 +49,8 @@ class MaterialBase : public MyMaterial {
                          const glm::vec3& normal) const = 0;
 
   // given outgoing direction, sample a incident direction to continue the path
-  virtual glm::vec3 sample(const glm::vec3& wo,
+  virtual SampleResult sample(const glm::vec3& wo,
                            const glm::vec3& normal) const = 0;
-
-  virtual float pdf(const glm::vec3& wi, const glm::vec3& normal) { return 1; }
 
  protected:
   std::shared_ptr<MyTexture> mBaseColor;

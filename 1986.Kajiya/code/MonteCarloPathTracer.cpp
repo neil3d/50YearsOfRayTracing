@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 32;
+constexpr uint32_t SPP_ROOT = 16;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
@@ -186,8 +186,9 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   glm::vec3 indirectLighting(0);
   if (MAX_BOUNCES > 1 && weight > glm::epsilon<float>()) {
     glm::vec3 p = hitRec.p;
-    glm::vec3 d = pMtl->sample(wo.direction, hitRec.normal);
-    float pdf = pMtl->pdf(d, hitRec.normal);
+    auto sampleRet = pMtl->sample(wo.direction, hitRec.normal);
+    glm::vec3 d = sampleRet.scattered;
+    float pdf = sampleRet.pdf;
 
     float reflectance = pMtl->evaluate(d, wo.direction, hitRec.normal) *
                         glm::max(0.0f, glm::dot(d, hitRec.normal));

@@ -28,8 +28,8 @@ class LambertianMaterial : public MaterialBase {
     return Kd * glm::max(0.0f, d);
   }
 
-  virtual glm::vec3 sample(const glm::vec3& wo,
-                           const glm::vec3& normal) const override {
+  virtual SampleResult sample(const glm::vec3& wo,
+                              const glm::vec3& normal) const override {
     float r1 = glm::linearRand(0.0f, 1.0f);
     float r2 = glm::linearRand(0.0f, 1.0f);
 
@@ -40,16 +40,13 @@ class LambertianMaterial : public MaterialBase {
 
     glm::vec3 localSample(x, y, z);
     ONB onb(normal);
-    return onb.localToWorld(localSample);
-  }
 
-  virtual float pdf(const glm::vec3& wi, const glm::vec3& normal) {
-    // area of the hemishpere
-    float d = glm::dot(wi, normal);
-    if (d > 0.0f)
-      return d / glm::pi<float>();
-    else
-      return 0.0f;
+    SampleResult ret;
+    ret.scattered = onb.localToWorld(localSample);
+
+    // pdf > 0
+    ret.pdf = glm::dot(ret.scattered, normal) / glm::pi<float>();
+    return ret;
   }
 };
 
