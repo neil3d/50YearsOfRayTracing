@@ -144,6 +144,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   constexpr float NEE_PDF_REFLECT = 1.0f / (1 - NEE_Pr);
 
   bool sampleLight = glm::linearRand(0.0f, 1.0f) < NEE_Pr;
+  const float sysUnit = pScene->systemUnit();
 
   //----- begin of direct lighting -----------------------------------------
   glm::vec3 directLighting(0);
@@ -163,12 +164,12 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     if (bShadow) visibilityTerm = 0;
 
     // geometry term
-    const float sysUnit = pScene->systemUnit();
     const glm::vec3 lightDir = shadowRay.direction;
     const float R = lightDistance / sysUnit;
+    const float attenuation = glm::min(1.0f, 1.0f / (R * R));
     const float geometryTerm =
         glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
-        glm::max(0.0f, glm::dot(lightDir, lightNormal)) / (R * R);
+        glm::max(0.0f, glm::dot(lightDir, lightNormal)) * attenuation;
 
     glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
     const float fr = pMtl->evaluate(lightDir, wo.direction, hitRec.normal);

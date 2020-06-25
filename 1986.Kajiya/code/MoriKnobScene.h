@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
+#include "LambertianMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
 #include "asset/MaterialImporter.h"
@@ -21,6 +22,9 @@ namespace RayTracingHistory {
 
 class MoriKnobMtlImporter : public MaterialImporter {
   virtual MyMaterial::Ptr importObj(const std::string& szName) override {
+    constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+    constexpr glm::vec3 YELLOW(1, 1, 0);
+
     if (szName == "BackGroundMat") {
       auto mtl = std::make_shared<DiffuseMaterial>();
       mtl->setColor(glm::vec3(0.25f));
@@ -34,14 +38,14 @@ class MoriKnobMtlImporter : public MaterialImporter {
     }
 
     if (szName == "LTELogo") {
-      auto mtl = std::make_shared<DiffuseMaterial>();
-      mtl->setColor(glm::vec3(1, 1, 0));
+      auto mtl = std::make_shared<LambertianMaterial>();
+      mtl->setColor(YELLOW);
       return mtl;
     }
 
     if (szName == "OuterMat") {
-      auto mtl = std::make_shared<DiffuseMaterial>();
-      mtl->setColor(glm::vec3(0, 1, 1));
+      auto mtl = std::make_shared<LambertianMaterial>();
+      mtl->setColor(GOLD);
       return mtl;
     }
 

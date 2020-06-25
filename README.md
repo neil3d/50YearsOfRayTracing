@@ -52,7 +52,7 @@
 - [ ] Importance Sampling
 - [ ] BRDFs
 
-![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-13b.png)
+![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-25.png)
 
 ## State of the Art
 
