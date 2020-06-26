@@ -17,13 +17,9 @@ class DirectRenderer : public MyRenderer {
  public:
   virtual void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                            const glm::vec4& clearColor) override {
+    // restart
+    _shutdown();
     MyRenderer::renderScene(scene, camera, clearColor);
-
-    // stop current
-    if (mRenderingThread.joinable()) {
-      mRuning = false;
-      mRenderingThread.join();
-    }
 
     // start new
     mRuning = true;

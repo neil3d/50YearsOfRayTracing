@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 1;
+constexpr uint32_t SPP_ROOT = 8;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
@@ -47,10 +47,6 @@ float MonteCarloPathTracer::getProgress() const {
     return 1.0f;
   else
     return (float)mPixelCount / total;
-}
-
-bool MonteCarloPathTracer::isDone() const {
-  return mPresentLine == mFrameHeight && getProgress() == 1.0f;
 }
 
 void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,

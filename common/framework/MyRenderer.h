@@ -8,8 +8,9 @@
 
 #pragma once
 #include <SDL2/SDL.h>
-#include <chrono>
+
 #include <atomic>
+#include <chrono>
 #include <glm/glm.hpp>
 #include <memory>
 #include <mutex>
@@ -30,7 +31,7 @@ class MyRenderer {
  public:
   virtual void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                            const glm::vec4& clearColor);
-  virtual bool isDone() const;
+  virtual bool isDone() const { return mFinished; }
   virtual float getProgress() const;
   virtual std::string getInfo() const { return ""; }
 
@@ -56,6 +57,7 @@ class MyRenderer {
 
   SDL_Surface* mSurface = nullptr;
   std::atomic<bool> mRuning = {true};
+  std::atomic<bool> mFinished = {false};
 
   std::mutex mMutex;
   std::atomic<uint32_t> mPresentLine = {0};

@@ -30,9 +30,8 @@ class TiledRenderer : public MyRenderer {
  public:
   virtual void renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                            const glm::vec4& clearColor) override {
-    // stop current
+    // restart
     _shutdown();
-
     MyRenderer::renderScene(scene, camera, clearColor);
 
     // start new threads

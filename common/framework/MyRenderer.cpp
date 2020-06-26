@@ -70,9 +70,9 @@ void MyRenderer::screenshot(const std::string& szFileName) {
 void MyRenderer::renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
                              const glm::vec4& clearColor) {
   mStartupTime = std::chrono::steady_clock::now();
+  mRuning = true;
+  mFinished = false;
 }
-
-bool MyRenderer::isDone() const { return mPresentLine == mFrameHeight; }
 
 void MyRenderer::_present() {
   int ret = SDL_LockSurface(mSurface);
@@ -97,8 +97,8 @@ void MyRenderer::_present() {
 void MyRenderer::_onRenderFinished() {
   std::lock_guard lock(mMutex);
   auto finishTime = std::chrono::steady_clock::now();
-  auto time = std::chrono::duration_cast<std::chrono::duration<float>>(finishTime -
-                                                               mStartupTime);
+  auto time = std::chrono::duration_cast<std::chrono::duration<float>>(
+      finishTime - mStartupTime);
   spdlog::info("render finished in {0} seconds.", time.count());
 }
 
