@@ -49,6 +49,8 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       _writePixel(x, y, glm::vec4(color, 1), GAMA);
       mPixelCount++;
     }  // end of for(x)
+
+  _onTileFinished();
 }
 
 glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {

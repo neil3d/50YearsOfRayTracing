@@ -67,6 +67,11 @@ void MyRenderer::screenshot(const std::string& szFileName) {
   }
 }
 
+void MyRenderer::renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
+                             const glm::vec4& clearColor) {
+  mStartupTime = std::chrono::steady_clock::now();
+}
+
 bool MyRenderer::isDone() const { return mPresentLine == mFrameHeight; }
 
 void MyRenderer::_present() {
@@ -87,6 +92,14 @@ void MyRenderer::_present() {
   SDL_UnlockSurface(mSurface);
 
   mPresentLine = mPixelCount / mFrameWidth;
+}
+
+void MyRenderer::_onRenderFinished() {
+  std::lock_guard lock(mMutex);
+  auto finishTime = std::chrono::steady_clock::now();
+  auto time = std::chrono::duration_cast<std::chrono::duration<float>>(finishTime -
+                                                               mStartupTime);
+  spdlog::info("render finished in {0} seconds.", time.count());
 }
 
 void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {

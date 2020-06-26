@@ -26,6 +26,8 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
       _writePixel(x, y, color, 1.25f);
 
     }  // end of for(x)
+
+  _onRenderFinished();
 }
 
 Ray RayCastingRenderer::_generateShadowRay(const glm::vec3& point) {
@@ -49,8 +51,7 @@ glm::vec4 RayCastingRenderer::_castRay(float u, float v, MyScene* pScene,
   const float lightDistance = glm::distance(hitRec.p, mLightPos);
 
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
-  bool bShadow =
-      pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
+  bool bShadow = pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
   if (bShadow) {
     color = glm::vec4(0, 0, 0, 1);
   } else {

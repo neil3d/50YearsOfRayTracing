@@ -53,6 +53,8 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), GAMA);
       mPixelCount++;
     }  // end of for(x)
+
+  _onTileFinished();
 }
 
 glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,

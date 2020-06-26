@@ -33,10 +33,14 @@ class TiledRenderer : public MyRenderer {
     // stop current
     _shutdown();
 
+    MyRenderer::renderScene(scene, camera, clearColor);
+
     // start new threads
     mRuning = true;
     int tileW = mFrameWidth / NUM_TILE_X;
     int tileH = mFrameHeight / NUM_TILE_Y;
+    mRuningTile = NUM_TILE_X * NUM_TILE_Y;
+
     for (int y = 0; y < NUM_TILE_Y; y++) {
       for (int x = 0; x < NUM_TILE_X; x++) {
         Tile tile;
@@ -85,7 +89,13 @@ class TiledRenderer : public MyRenderer {
   }
 
  protected:
+  void _onTileFinished() {
+    mRuningTile--;
+    if (mRuningTile <= 0) _onRenderFinished();
+  }
+
  private:
+  std::atomic<int> mRuningTile = {0};
   std::array<std::thread, NUM_TILE_X * NUM_TILE_Y> mRenderingThreads;
-};  // namespace RayTracingHistory
+};
 }  // namespace RayTracingHistory
