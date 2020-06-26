@@ -72,6 +72,8 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
     size_t meshFaceIndex = 0;
 
     subMesh.faces.resize(indexCount / 3);
+    totalFaceCount += subMesh.faces.size();
+
     for (size_t i = 0; i < indexCount; i += 3) {
       auto& face = subMesh.faces[meshFaceIndex];
       face.materialID = shape.mesh.material_ids[meshFaceIndex];
@@ -334,6 +336,53 @@ void TriangleMesh::_buildBVH(SubMesh* subMesh, BVHNode* pNode,
   if (faceList.size() <= LEAF_FACE_COUNT) {
     pNode->faceList = std::move(faceList);
     return;
+  }
+
+  // sort the face list along the max axis extend
+  char maxExt = pNode->boudingBox.maxExtent();
+  switch (maxExt) {
+    case 'x':
+      std::sort(std::begin(faceList), std::end(faceList),
+                [this, subMesh](int f1, int f2) {
+                  const auto& face1 = subMesh->faces[f1];
+                  const auto& face2 = subMesh->faces[f2];
+                  float x1 = 0, x2 = 0;
+                  for (int i = 0; i < 3; i++) {
+                    x1 += this->mVertices[face1.vertexIndex[i]].x;
+                    x2 += this->mVertices[face2.vertexIndex[i]].x;
+                  }
+                  return x1 < x2;
+                });
+      break;
+    case 'y':
+      std::sort(std::begin(faceList), std::end(faceList),
+                [this, subMesh](int f1, int f2) {
+                  const auto& face1 = subMesh->faces[f1];
+                  const auto& face2 = subMesh->faces[f2];
+                  float y1 = 0, y2 = 0;
+                  for (int i = 0; i < 3; i++) {
+                    y1 += this->mVertices[face1.vertexIndex[i]].y;
+                    y2 += this->mVertices[face2.vertexIndex[i]].y;
+                  }
+                  return y1 < y2;
+                });
+      break;
+    case 'z':
+      std::sort(std::begin(faceList), std::end(faceList),
+                [this, subMesh](int f1, int f2) {
+                  const auto& face1 = subMesh->faces[f1];
+                  const auto& face2 = subMesh->faces[f2];
+                  float z1 = 0, z2 = 0;
+                  for (int i = 0; i < 3; i++) {
+                    z1 += this->mVertices[face1.vertexIndex[i]].z;
+                    z2 += this->mVertices[face2.vertexIndex[i]].z;
+                  }
+                  return z1 < z2;
+                });
+      break;
+    default:
+      spdlog::error("max extent error");
+      break;
   }
 
   // split face list to children nodes

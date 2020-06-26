@@ -41,5 +41,15 @@ struct AABBox {
     max.y = std::max(box1.max.y, box2.max.y);
     max.z = std::max(box1.max.z, box2.max.z);
   }
+
+  char maxExtent() const {
+    glm::vec3 d = max - min;
+    if (d.x > d.y && d.x > d.z)
+      return 'x';
+    else if (d.y > d.z)
+      return 'y';
+    else
+      return 'z';
+  }
 };
 }  // namespace RayTracingHistory
