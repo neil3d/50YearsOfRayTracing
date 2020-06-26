@@ -38,6 +38,12 @@ class TriangleMesh : public MyAssetObject {
     std::unique_ptr<BVHNode> rightChild;
   };
 
+  struct SubMesh {
+    std::vector<Face> faces;
+    AABBox boundingBox;
+    BVHNode BVHRoot;
+  };
+
  public:
   struct Intersection {
     bool hit = false;
@@ -64,7 +70,8 @@ class TriangleMesh : public MyAssetObject {
 
   Intersection _perFaceIntersect(const Ray& ray, float tMin, float tMax);
 
-  Intersection _accelIntersect(const BVHNode* pNode, const Ray& ray, float tMin,
+  Intersection _accelIntersect(const SubMesh* subMesh, const BVHNode* pNode,
+                               const Ray& ray, float tMin,
                                float tMax);
 
   Intersection _faceIntersect(const Face& face, const Ray& ray, float tMin,
@@ -74,20 +81,23 @@ class TriangleMesh : public MyAssetObject {
 
   void _buildBoundingBox();
 
-  void _buildBVH(BVHNode* pNode, std::vector<int> faceList);
+  void _buildBVH(SubMesh* subMesh, BVHNode* pNode, std::vector<int> faceList);
 
-  AABBox _buildBoundingBox(const std::vector<int>& faceList);
+  AABBox _buildBoundingBox(SubMesh* subMesh,
+                           const std::vector<int>& faceList);
 
  private:
+  AABBox mBoundingBox;
+
+  // vertex buffer
   std::vector<glm::vec3> mVertices;
   std::vector<glm::vec3> mNormals;
   std::vector<glm::vec2> mTexcoords;
-  std::vector<Face> mFaces;
 
+  // sub mesh / shapes
+  std::vector<SubMesh> mSubMeshes;
+
+  // material
   std::vector<MtlDesc> mMaterials;
-
-  AABBox mBoundingBox;
-
-  BVHNode mBVHRoot;
 };
 }  // namespace RayTracingHistory

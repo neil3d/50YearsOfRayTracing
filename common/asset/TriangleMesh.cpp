@@ -25,7 +25,8 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   std::filesystem::path filePath(szFileName);
   std::filesystem::path basePath = filePath.remove_filename();
   std::string szBasePath = basePath.string();
-  std::string szMainFileName = std::filesystem::path(szFileName).filename().string();
+  std::string szMainFileName =
+      std::filesystem::path(szFileName).filename().string();
 
   bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
                               szFileName.c_str(), szBasePath.c_str(), true);
@@ -60,47 +61,55 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   }
 
   // convert sub meshes
-  size_t faceCount = 0, faceIndex = 0;
-  for (const auto& shape : shapes) {
-    size_t indexCount = shape.mesh.indices.size();
-    faceCount += indexCount / 3;
-  }
-  mFaces.resize(faceCount);
+  size_t totalFaceCount = 0;
 
-  for (const auto& shape : shapes) {
-    const auto& mesh = shape.mesh;
-    size_t indexCount = mesh.indices.size();
+  mSubMeshes.resize(shapes.size());
+  for (size_t i = 0; i < shapes.size(); i++) {
+    const auto& shape = shapes[i];
+    auto& subMesh = mSubMeshes[i];
+
+    size_t indexCount = shape.mesh.indices.size();
     size_t meshFaceIndex = 0;
+
+    subMesh.faces.resize(indexCount / 3);
     for (size_t i = 0; i < indexCount; i += 3) {
-      auto& face = mFaces[faceIndex++];
-      face.materialID = mesh.material_ids[meshFaceIndex++];
+      auto& face = subMesh.faces[meshFaceIndex];
+      face.materialID = shape.mesh.material_ids[meshFaceIndex];
+      meshFaceIndex++;
 
       for (size_t j = 0; j < 3; j++) {
-        const tinyobj::index_t& tinyIndex = mesh.indices[i + j];
+        const tinyobj::index_t& tinyIndex = shape.mesh.indices[i + j];
         face.vertexIndex[j] = tinyIndex.vertex_index;
         face.normalIndex[j] = tinyIndex.normal_index;
         face.texcoordIndex[j] = tinyIndex.texcoord_index;
       }
-    }  // end of for_each(index_t)
-  }
+    }  // end of for each index
+  }    // end of for each shape
 
-  spdlog::info("triangle mesh loaded: {0}, num vertices = {1}, num faces = {2}",
-               szMainFileName, mVertices.size(), mFaces.size());
+  spdlog::info(
+      "triangle mesh loaded: {0}, num vertices = {1}, num faces = {2}, num sub "
+      "meshes = {3}",
+      szMainFileName, mVertices.size(), totalFaceCount, mSubMeshes.size());
 
   // build internal states
   _postMeshCreated();
-}
+}  // namespace RayTracingHistory
 
 void TriangleMesh::_postMeshCreated() {
   // generation
   _generateFaceNormal();
   _buildBoundingBox();
 
-  std::vector<int> faceList(mFaces.size());
-  int i = 0;
-  std::generate(faceList.begin(), faceList.end(), [&i] { return i++; });
+  // build BVH for each sub mesh
+  for (auto& subMesh : mSubMeshes) {
+    std::vector<int> faceList(subMesh.faces.size());
+    int i = 0;
+    std::generate(faceList.begin(), faceList.end(), [&i] { return i++; });
 
-  _buildBVH(&mBVHRoot, std::move(faceList));
+    _buildBVH(&subMesh, &subMesh.BVHRoot, std::move(faceList));
+
+    subMesh.boundingBox = subMesh.BVHRoot.boudingBox;
+  }
 }
 
 void TriangleMesh::createDynamic(const std::vector<glm::vec3>& vertices,
@@ -111,9 +120,12 @@ void TriangleMesh::createDynamic(const std::vector<glm::vec3>& vertices,
               vertices.size() * sizeof(glm::vec3));
 
   // indices --> triangle faces
-  mFaces.resize(indices.size() / 3);
+  mSubMeshes.resize(1);
+  auto& subMesh = mSubMeshes[0];
+
+  subMesh.faces.resize(indices.size() / 3);
   for (size_t i = 0; i < indices.size(); i += 3) {
-    auto& face = mFaces[i / 3];
+    auto& face = subMesh.faces[i / 3];
     face.vertexIndex[0] = indices[i];
     face.vertexIndex[1] = indices[i + 1];
     face.vertexIndex[2] = indices[i + 2];
@@ -131,11 +143,25 @@ TriangleMesh::Intersection TriangleMesh::intersect(const Ray& ray, float tMin,
 #if 0
   return _perFaceIntersect(ray, tMin, tMax);
 #else
-  return _accelIntersect(&mBVHRoot, ray, tMin, tMax);
+  Intersection result;
+  float closestSoFar = tMax;
+
+  for (auto& subMesh : mSubMeshes) {
+    auto hit = _accelIntersect(&subMesh, &subMesh.BVHRoot, ray, tMin, tMax);
+    if (hit.hit) {
+      float tnear = hit.t;
+      if (tnear < closestSoFar) {
+        result = hit;
+        closestSoFar = tnear;
+      }
+    }
+  }
+  return result;
 #endif
 }
 
-TriangleMesh::Intersection TriangleMesh::_accelIntersect(const BVHNode* pNode,
+TriangleMesh::Intersection TriangleMesh::_accelIntersect(const SubMesh* subMesh,
+                                                         const BVHNode* pNode,
                                                          const Ray& ray,
                                                          float tMin,
                                                          float tMax) {
@@ -151,7 +177,7 @@ TriangleMesh::Intersection TriangleMesh::_accelIntersect(const BVHNode* pNode,
     float closestSoFar = tMax;
 
     for (int faceIndex : pNode->faceList) {
-      const auto& face = mFaces[faceIndex];
+      const auto& face = subMesh->faces[faceIndex];
       auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
 
       if (hit.hit) {
@@ -167,8 +193,10 @@ TriangleMesh::Intersection TriangleMesh::_accelIntersect(const BVHNode* pNode,
   }  // end of if
 
   // recursive
-  auto leftResult = _accelIntersect(pNode->leftChild.get(), ray, tMin, tMax);
-  auto rightResult = _accelIntersect(pNode->rightChild.get(), ray, tMin, tMax);
+  auto leftResult =
+      _accelIntersect(subMesh, pNode->leftChild.get(), ray, tMin, tMax);
+  auto rightResult =
+      _accelIntersect(subMesh, pNode->rightChild.get(), ray, tMin, tMax);
 
   if (leftResult.hit && rightResult.hit) {
     float leftT = leftResult.t;
@@ -234,16 +262,20 @@ TriangleMesh::Intersection TriangleMesh::_perFaceIntersect(const Ray& ray,
   Intersection result;
   float closestSoFar = tMax;
 
-  for (auto& face : mFaces) {
-    auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
-    if (hit.hit) {
-      float tnear = hit.t;
-      if (tnear < closestSoFar) {
-        result = hit;
-        closestSoFar = tnear;
-      }
-    }
-  }  // end of for
+  for (auto& subMesh : mSubMeshes) {
+    if (subMesh.boundingBox.intersect(ray, tMin, closestSoFar)) {
+      for (auto& face : subMesh.faces) {
+        auto hit = _faceIntersect(face, ray, tMin, closestSoFar);
+        if (hit.hit) {
+          float tnear = hit.t;
+          if (tnear < closestSoFar) {
+            result = hit;
+            closestSoFar = tnear;
+          }
+        }
+      }  // end of for each face
+    }    // end of if
+  }
 
   return result;
 }
@@ -257,13 +289,15 @@ std::vector<MyMaterial::Ptr> TriangleMesh::importMaterial(
   return result;
 }
 void TriangleMesh::_generateFaceNormal() {
-  for (auto& face : mFaces) {
-    const auto& v0 = mVertices[face.vertexIndex[0]];
-    const auto& v1 = mVertices[face.vertexIndex[1]];
-    const auto& v2 = mVertices[face.vertexIndex[2]];
+  for (auto& subMesh : mSubMeshes) {
+    for (auto& face : subMesh.faces) {
+      const auto& v0 = mVertices[face.vertexIndex[0]];
+      const auto& v1 = mVertices[face.vertexIndex[1]];
+      const auto& v2 = mVertices[face.vertexIndex[2]];
 
-    face.normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));
-  }  // end of for
+      face.normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));
+    }  // end of for each face
+  }
 }
 
 void TriangleMesh::_buildBoundingBox() {
@@ -289,11 +323,12 @@ void TriangleMesh::_buildBoundingBox() {
   mBoundingBox.min = min - e;
 }
 
-void TriangleMesh::_buildBVH(BVHNode* pNode, std::vector<int> faceList) {
+void TriangleMesh::_buildBVH(SubMesh* subMesh, BVHNode* pNode,
+                             std::vector<int> faceList) {
   constexpr size_t LEAF_FACE_COUNT = 5;
 
   // build bounding box for this node
-  pNode->boudingBox = _buildBoundingBox(faceList);
+  pNode->boudingBox = _buildBoundingBox(subMesh, faceList);
 
   // is a leaf node
   if (faceList.size() <= LEAF_FACE_COUNT) {
@@ -309,11 +344,12 @@ void TriangleMesh::_buildBVH(BVHNode* pNode, std::vector<int> faceList) {
   std::vector<int> leftArray(faceList.begin(), faceList.begin() + split);
   std::vector<int> rightArray(faceList.begin() + split, faceList.end());
 
-  _buildBVH(pNode->leftChild.get(), std::move(leftArray));
-  _buildBVH(pNode->rightChild.get(), std::move(rightArray));
+  _buildBVH(subMesh, pNode->leftChild.get(), std::move(leftArray));
+  _buildBVH(subMesh, pNode->rightChild.get(), std::move(rightArray));
 }
 
-AABBox TriangleMesh::_buildBoundingBox(const std::vector<int>& faceList) {
+AABBox TriangleMesh::_buildBoundingBox(SubMesh* subMesh,
+                                       const std::vector<int>& faceList) {
   constexpr float S = std::numeric_limits<float>::min();
   constexpr float B = std::numeric_limits<float>::max();
 
@@ -321,7 +357,7 @@ AABBox TriangleMesh::_buildBoundingBox(const std::vector<int>& faceList) {
   glm::vec3 min(B, B, B);
 
   for (const auto& i : faceList) {
-    const Face& face = mFaces[i];
+    const Face& face = subMesh->faces[i];
     for (int j = 0; j < 3; j++) {
       const auto& v = mVertices[face.vertexIndex[j]];
       if (v.x > max.x) max.x = v.x;
