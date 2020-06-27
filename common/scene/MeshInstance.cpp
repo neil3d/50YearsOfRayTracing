@@ -39,7 +39,8 @@ bool MeshInstance::intersect(const Ray& ray, float tMin, float tMax,
   auto result = mMesh->intersect(localRay, tMin, tMax);
 
   if (result.hit) {
-    glm::vec3 WN(mTransform.getNormalMatrix() * glm::vec4(result.normal, 0));
+    glm::vec4 HN = mTransform.getNormalMatrix() * glm::vec4(result.normal, 0);
+    glm::vec3 WN = glm::normalize(glm::vec3(HN));
 
     outRec = _makeHitRecord(ray, result.t, WN, result.uv);
 

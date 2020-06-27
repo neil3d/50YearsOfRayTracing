@@ -18,7 +18,9 @@ bool Box::intersect(const Ray& ray, float tMin, float tMax, HitRecord& outRec) {
   }  // end of for
 
   if (hitAnySide) {
-    glm::vec3 N(mTransform.getNormalMatrix() * glm::vec4(nearestRec.normal, 0));
+    glm::vec4 HN =
+        mTransform.getNormalMatrix() * glm::vec4(nearestRec.normal, 0);
+    glm::vec3 N = glm::normalize(glm::vec3(HN));
     outRec = _makeHitRecord(ray, nearestRec.t, N, nearestRec.uv);
   }
 
