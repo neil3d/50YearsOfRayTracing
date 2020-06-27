@@ -187,9 +187,10 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     auto sampleRet = pMtl->sample(wo.direction, hitRec.normal);
     glm::vec3 d = sampleRet.scattered;
     float pdf = sampleRet.pdf;
+    float brdf = pMtl->evaluate(d, wo.direction, hitRec.normal);
+    float reflectance = brdf * glm::max(0.0f, glm::dot(d, hitRec.normal));
 
-    float reflectance = pMtl->evaluate(d, wo.direction, hitRec.normal) *
-                        glm::max(0.0f, glm::dot(d, hitRec.normal));
+    if (reflectance < glm::epsilon<float>()) return glm::vec3(0);
 
     // Russian Roulette termination, only applied in indirect lighting
     float RR_Pr = 1 - glm::min(1.0f, reflectance);
@@ -202,8 +203,8 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
       Ray secondaryRay(p, d);
       secondaryRay.applayBiasOffset(hitRec.normal, 0.001f);
-      indirectLighting =
-          _traceRay(secondaryRay, pScene, xi, weight * reflectance, depth + 1);
+      weight *= reflectance;
+      indirectLighting = _traceRay(secondaryRay, pScene, xi, weight, depth + 1);
       indirectLighting = weight * RR_Boost / pdf * indirectLighting;
     }
   }

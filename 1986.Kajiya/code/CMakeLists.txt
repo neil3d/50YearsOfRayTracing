@@ -18,6 +18,7 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 MoriKnobScene.h
                 MySceneWithLight.h
                 ParallelogramLight.h
+                PhongMaterial.h
                 SkyLight.h
                 )
 

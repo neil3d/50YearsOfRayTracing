@@ -35,11 +35,12 @@ class DiffuseMaterial : public MaterialBase {
     float t = glm::length(rand);
 
     SampleResult ret;
-    ret.pdf = 1.0f / (2.0f * glm::pi<float>());
     if (glm::dot(rand, normal) > 0)
       ret.scattered = rand;
     else
       ret.scattered = -rand;
+
+    ret.pdf = 1.0f / (2.0f * glm::pi<float>());
     return ret;
   }
 };

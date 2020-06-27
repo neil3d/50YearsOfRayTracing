@@ -13,6 +13,7 @@
 #include "LambertianMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
+#include "PhongMaterial.h"
 #include "scene/MeshInstance.h"
 #include "scene/Parallelogram.h"
 #include "scene/Plane.h"
@@ -83,23 +84,23 @@ class DemoScene : public MySceneWithLight {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-#if 0  // balls
+#if 1  // ball
     float ball = W / 6;
-    createObject<Sphere>("small_ball")
+    /*createObject<Sphere>("small_ball")
         .setCenter(glm::vec3(-120, ball * 2, 0))
         .setRadius(ball)
         .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1));
+        .setColor(glm::vec3(1));*/
 
-    ball *= 1.25f;
+    ball *= 1.5f;
     createObject<Sphere>("big_ball")
-        .setCenter(glm::vec3(ball, ball, 0))
+        .setCenter(glm::vec3(0, ball, 0))
         .setRadius(ball)
-        .createMaterial<LambertianMaterial>()
+        .createMaterial<PhongMaterial>()
         .setColor(glm::vec3(1));
 #endif
 
-#if 1  // stanford dragon
+#if 0  // stanford dragon
     constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
 
     const char* const szFileName = "content/dragon/dragon.obj";

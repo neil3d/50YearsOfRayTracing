@@ -16,7 +16,7 @@
 namespace RayTracingHistory {
 
 /**
- * Cosine Importance Sampling
+ * cosine weighted diffuse material
  */
 class LambertianMaterial : public MaterialBase {
   float Kd = 1.0f;
@@ -24,8 +24,7 @@ class LambertianMaterial : public MaterialBase {
  public:
   virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo,
                          const glm::vec3& normal) const override {
-    float d = glm::dot(wi, normal);
-    return Kd * glm::max(0.0f, d);
+    return Kd / glm::pi<float>();
   }
 
   virtual SampleResult sample(const glm::vec3& wo,
