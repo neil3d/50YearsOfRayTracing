@@ -22,7 +22,7 @@ class PhongMaterial : public MaterialBase {
  public:
   float Kd = 0.25f;
   float Ks = 4;
-  float Shiness = 66;
+  float Shininess = 66;
 
  public:
   virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo,
@@ -32,7 +32,7 @@ class PhongMaterial : public MaterialBase {
     float NdotH = glm::max(0.0f, glm::dot(normal, H));
 
     float diffuse = NdotL * Kd;
-    float specular = std::powf(NdotH, Shiness) * Ks;
+    float specular = std::powf(NdotH, Shininess) * Ks;
     return diffuse + specular;
   }
 
@@ -50,7 +50,7 @@ class PhongMaterial : public MaterialBase {
       theta = glm::acos(sqrt(r1));
     } else {
       // sample specular direction arround the ideal mirror direction
-      theta = glm::acos(pow(r1, 1 / (Shiness + 1)));
+      theta = glm::acos(pow(r1, 1 / (Shininess + 1)));
     }
 
     glm::vec3 scattered;

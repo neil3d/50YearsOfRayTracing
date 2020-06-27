@@ -58,7 +58,7 @@ struct Transform {
     local2World = glm::scale(local2World, scale);
 
     world2Local = glm::inverse(local2World);
-    normalMatrix = glm::transpose(glm::inverse(matRotation));
+    normalMatrix = glm::transpose(glm::inverse(local2World));
   }
 
   glm::vec3 position = {0, 0, 0};
