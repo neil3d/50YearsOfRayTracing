@@ -102,7 +102,7 @@ class CornellBoxScene : public MySceneWithLight {
     teapot.setMeshFile(szTeapotFileName)
         .createMaterial<PhongMaterial>()
         .setColor(GOLD);
-    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setScale(88);
+    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setScale(100);
 #endif
   }
 };

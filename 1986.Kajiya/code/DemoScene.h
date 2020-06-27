@@ -128,7 +128,7 @@ class DemoScene : public MySceneWithLight {
     auto& mesh = createObject<MeshInstance>("dragon");
     mesh.setMeshFile(szFileName);
     mesh.createMaterial<PhongMaterial>().setColor(GOLD);
-    mesh.setScale(25)
+    mesh.setScale(28)
         .setPosition(glm::vec3(0, 100, 0))
         .setRotation(0, glm::radians(180.0f), 0);
 #endif

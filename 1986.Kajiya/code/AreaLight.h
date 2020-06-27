@@ -34,7 +34,7 @@ class AreaLight {
   }
 
  protected:
-  float intensity = 100;
+  float intensity = 120;
 };
 
 }  // namespace RayTracingHistory

@@ -176,7 +176,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     // uniform sampling the light source, PDF = 1/A
     directLighting = Li * A * brdf * visibilityTerm * geometryTerm * color;
   }
-  if (sampleLight) return directLighting * (weight / NEE_PDF_LIGHT);
+  if (sampleLight) return directLighting / NEE_PDF_LIGHT;
   //----- end of direct lighting -----------------------------------------
 
   // bounces==1: direct lighting, bounces>1: indirect lighting
@@ -205,7 +205,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
       indirectLighting =
           _traceRay(secondaryRay, pScene, xi, reflectance, depth + 1);
       indirectLighting =
-          indirectLighting * (brdf * RR_Boost / pdf / NEE_PDF_REFLECT);
+          indirectLighting * (weight * brdf * RR_Boost / pdf / NEE_PDF_REFLECT);
     }
   }
 
