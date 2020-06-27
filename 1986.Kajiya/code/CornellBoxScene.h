@@ -13,6 +13,7 @@
 #include "LambertianMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
+#include "PhongMaterial.h"
 #include "asset/MaterialImporter.h"
 #include "scene/MeshInstance.h"
 #include "scene/Parallelogram.h"
@@ -93,13 +94,15 @@ class CornellBoxScene : public MySceneWithLight {
 
     _initLight();
 
+    constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+    
 #if 1  // add teapot
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot = createObject<MeshInstance>("teapot");
     teapot.setMeshFile(szTeapotFileName)
-        .createMaterial<LambertianMaterial>()
-        .setColor(glm::vec3(1));
-    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setScale(68);
+        .createMaterial<PhongMaterial>()
+        .setColor(GOLD);
+    teapot.setPosition(glm::vec3(185.5f, 165, 169)).setScale(88);
 #endif
   }
 };

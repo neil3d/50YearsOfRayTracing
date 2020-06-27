@@ -20,14 +20,14 @@ namespace RayTracingHistory {
  */
 class PhongMaterial : public MaterialBase {
  public:
-  float Kd = 0.5f;
-  float Ks = 2;
-  float Shiness = 20;
+  float Kd = 0.25f;
+  float Ks = 4;
+  float Shiness = 66;
 
  public:
   virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo,
                          const glm::vec3& normal) const override {
-    glm::vec3 H = glm::normalize(wi - wo);
+    glm::vec3 H = glm::normalize(wi + wo);
     float NdotL = glm::max(0.0f, glm::dot(normal, wi));
     float NdotH = glm::max(0.0f, glm::dot(normal, H));
 
@@ -46,11 +46,10 @@ class PhongMaterial : public MaterialBase {
 
     float diffuse = Kd / (Kd + Ks);
     if (diffuse > r0) {
-      // for diffuse
+      // sample diffuse direction
       theta = glm::acos(sqrt(r1));
-
     } else {
-      // for specular
+      // sample specular direction arround the ideal mirror direction
       theta = glm::acos(pow(r1, 1 / (Shiness + 1)));
     }
 
@@ -59,7 +58,7 @@ class PhongMaterial : public MaterialBase {
     scattered.y = sin(phi) * sin(theta);
     scattered.z = cos(phi);
 
-    glm::vec3 R = glm::reflect(glm::normalize(-wo), normal);
+    glm::vec3 R = glm::reflect(glm::normalize(wo), normal);
     ONB onb(R);
 
     SampleResult ret;

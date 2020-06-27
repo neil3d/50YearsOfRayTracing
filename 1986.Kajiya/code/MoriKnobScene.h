@@ -13,6 +13,7 @@
 #include "LambertianMaterial.h"
 #include "MySceneWithLight.h"
 #include "ParallelogramLight.h"
+#include "PhongMaterial.h"
 #include "asset/MaterialImporter.h"
 #include "scene/MeshInstance.h"
 #include "scene/Parallelogram.h"
@@ -44,7 +45,7 @@ class MoriKnobMtlImporter : public MaterialImporter {
     }
 
     if (szName == "OuterMat") {
-      auto mtl = std::make_shared<LambertianMaterial>();
+      auto mtl = std::make_shared<PhongMaterial>();
       mtl->setColor(GOLD);
       return mtl;
     }

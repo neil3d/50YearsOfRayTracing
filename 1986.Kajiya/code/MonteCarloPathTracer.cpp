@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 8;
+constexpr uint32_t SPP_ROOT = 32;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
@@ -158,7 +158,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
     auto stopWithAnyHit = [](const HitRecord&) { return true; };
     bool bShadow = pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
-    if (bShadow) visibilityTerm = 0;
+    if (bShadow) visibilityTerm = 0.f;
 
     // geometry term
     const glm::vec3 lightDir = shadowRay.direction;
@@ -169,26 +169,25 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
         glm::max(0.0f, glm::dot(lightDir, lightNormal)) * attenuation;
 
     glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
-    const float fr = pMtl->evaluate(lightDir, wo.direction, hitRec.normal);
+    const float brdf = pMtl->evaluate(lightDir, -wo.direction, hitRec.normal);
     const float A = pLight->getArea() / sysUnit / sysUnit;
     const float Li = pLight->getIntensity();
 
     // uniform sampling the light source, PDF = 1/A
-    directLighting = Li * A * visibilityTerm * geometryTerm * color;
+    directLighting = Li * A * brdf * visibilityTerm * geometryTerm * color;
   }
-
-  if (sampleLight) return (directLighting / NEE_PDF_LIGHT);
+  if (sampleLight) return directLighting * (weight / NEE_PDF_LIGHT);
   //----- end of direct lighting -----------------------------------------
 
   // bounces==1: direct lighting, bounces>1: indirect lighting
   glm::vec3 indirectLighting(0);
   if (MAX_BOUNCES > 1 && weight > glm::epsilon<float>()) {
     glm::vec3 p = hitRec.p;
-    auto sampleRet = pMtl->sample(wo.direction, hitRec.normal);
+    auto sampleRet = pMtl->sample(-wo.direction, hitRec.normal);
     glm::vec3 d = sampleRet.scattered;
     float pdf = sampleRet.pdf;
-    float brdf = pMtl->evaluate(d, wo.direction, hitRec.normal);
-    float reflectance = brdf * glm::max(0.0f, glm::dot(d, hitRec.normal));
+    float brdf = pMtl->evaluate(d, -wo.direction, hitRec.normal);
+    float reflectance = weight * glm::max(0.0f, glm::dot(d, hitRec.normal));
 
     if (reflectance < glm::epsilon<float>()) return glm::vec3(0);
 
@@ -203,13 +202,14 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
 
       Ray secondaryRay(p, d);
       secondaryRay.applayBiasOffset(hitRec.normal, 0.001f);
-      weight *= reflectance;
-      indirectLighting = _traceRay(secondaryRay, pScene, xi, weight, depth + 1);
-      indirectLighting = weight * RR_Boost / pdf * indirectLighting;
+      indirectLighting =
+          _traceRay(secondaryRay, pScene, xi, reflectance, depth + 1);
+      indirectLighting =
+          indirectLighting * (brdf * RR_Boost / pdf / NEE_PDF_REFLECT);
     }
   }
 
-  return (indirectLighting / NEE_PDF_REFLECT);
+  return indirectLighting;
 }
 
 }  // namespace RayTracingHistory

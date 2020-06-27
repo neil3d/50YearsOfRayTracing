@@ -40,7 +40,7 @@ class DiffuseMaterial : public MaterialBase {
     else
       ret.scattered = -rand;
 
-    ret.pdf = 1.0f / (2.0f * glm::pi<float>());
+    ret.pdf = Kd / (2.0f * glm::pi<float>());
     return ret;
   }
 };

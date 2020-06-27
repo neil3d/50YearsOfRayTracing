@@ -78,8 +78,9 @@ std::tuple<MyScene::Ptr, glm::vec3, glm::vec3> _createDemoScene(
     case EMyTestScenes::MyDemo:
     default:
       scene = std::make_shared<DemoScene>();
-      eyePos = glm::vec3(0, 250, -850);
-      lookAt = glm::vec3(0, 250, 0);
+      //eyePos = glm::vec3(0, 250, -850);
+      eyePos = glm::vec3(0, 200, -450);
+      lookAt = glm::vec3(0, 100, 0);
       break;
   }  // end of scene
 
