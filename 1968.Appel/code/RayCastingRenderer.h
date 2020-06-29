@@ -24,8 +24,10 @@ class RayCastingRenderer : public DirectRenderer {
 
   void _drawDrakSign(int x, int y, float darkness);
 
+  void _drawWireframe(MyScene* pScene, PinholeCamera* camera);
+
   // light
-  glm::vec3 mLightPos = {10, 50, 0};
+  glm::vec3 mLightPos = {-10, 20, 0};
 };
 
 }  // namespace RayTracingHistory
