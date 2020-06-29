@@ -19,11 +19,13 @@ class RayCastingRenderer : public DirectRenderer {
  private:
   Ray _generateShadowRay(const glm::vec3& point);
 
-  glm::vec4 _castRay(float u, float v, MyScene* pScene, PinholeCamera* camera);
+  /* return degree of drakness*/
+  float _castRay(float u, float v, MyScene* pScene, PinholeCamera* camera);
+
+  void _drawDrakSign(int x, int y, float darkness);
 
   // light
   glm::vec3 mLightPos = {10, 50, 0};
-
 };
 
 }  // namespace RayTracingHistory
