@@ -7,24 +7,24 @@
  */
 
 #pragma once
+#include "scene/MeshInstance.h"
 #include "scene/MyScene.h"
-#include "scene/Plane.h"
-#include "scene/Sphere.h"
+#include "scene/Parallelogram.h"
 
 namespace RayTracingHistory {
 
 class DemoScene : public MyScene {
  public:
   virtual void init() override {
-    createObject<Plane>("ground");
+    constexpr float W = 8;
+    constexpr float H = 8;
+    createObject<Parallelogram>("ground")
+        .setEdges(glm::vec3(0, 0, H), glm::vec3(W, 0, 0))
+        .setAnchor(glm::vec3(W / -2, 0, H / -2));
 
-    createObject<Sphere>("sphereA")
-        .setCenter(glm::vec3(0, 1, 0))
-        .setRadius(1.0f);
-
-    createObject<Sphere>("sphereB")
-        .setCenter(glm::vec3(-2, 0.5f, 0))
-        .setRadius(0.5f);
+    const char* const szFileName = "content/machine/machine.obj";
+    auto& mesh = createObject<MeshInstance>("machine");
+    mesh.setMeshFile(szFileName).setPosition(glm::vec3(0, 1.5f, 0));
   }
 };
 

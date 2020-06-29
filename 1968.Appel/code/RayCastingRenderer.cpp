@@ -53,7 +53,7 @@ glm::vec4 RayCastingRenderer::_castRay(float u, float v, MyScene* pScene,
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
   bool bShadow = pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
   if (bShadow) {
-    color = glm::vec4(0, 0, 0, 1);
+    color = glm::vec4(0.2f, 0.2f, 0.2f, 1);
   } else {
     glm::vec3 L = glm::normalize(mLightPos - hitRec.p);
     float c = std::max(0.0f, glm::dot(hitRec.normal, L));

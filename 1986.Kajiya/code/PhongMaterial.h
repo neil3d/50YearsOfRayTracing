@@ -44,25 +44,29 @@ class PhongMaterial : public MaterialBase {
     float phi = 2 * glm::pi<float>() * r2;
     float theta = 0.0f;
 
-    float diffuse = Kd / (Kd + Ks);
-    if (diffuse > r0) {
-      // sample diffuse direction
-      theta = glm::acos(sqrt(r1));
-    } else {
-      // sample specular direction arround the ideal mirror direction
-      theta = glm::acos(pow(r1, 1 / (Shininess + 1)));
-    }
-
     glm::vec3 scattered;
     scattered.x = sin(phi) * cos(theta);
     scattered.y = sin(phi) * sin(theta);
     scattered.z = cos(phi);
 
-    glm::vec3 R = glm::reflect(glm::normalize(wo), normal);
-    ONB onb(R);
-
     SampleResult ret;
-    ret.scattered = onb.localToWorld(scattered);
+
+    float diffuse = Kd / (Kd + Ks);
+    if (diffuse > r0) {
+      // sample diffuse direction
+      theta = glm::acos(sqrt(r1));
+      // coord. frame: normal
+      ONB onb(normal);
+      ret.scattered = onb.localToWorld(scattered);
+    } else {
+      // sample specular direction arround the ideal mirror direction
+      theta = glm::acos(pow(r1, 1 / (Shininess + 1)));
+
+      // coord. frame: mirror direction
+      glm::vec3 R = glm::reflect(glm::normalize(wo), normal);
+      ONB onb(R);
+      ret.scattered = onb.localToWorld(scattered);
+    }
 
     // TODO
     ret.pdf = 1.0f / (2.0f * glm::pi<float>());
