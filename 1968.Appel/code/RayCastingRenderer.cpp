@@ -15,9 +15,6 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MyScene* pScene = scene.get();
 
-  // just for fun
-  _drawWireframe(pScene, pCamera);
-
   // Ray casting
   int W = mFrameWidth;
   int H = mFrameHeight;
@@ -35,6 +32,10 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
       mPixelCount += SIGN_SIZE * SIGN_SIZE;
     }  // end of for(x)
 
+  // just for fun
+  _drawWireframe(pScene, pCamera);
+
+  // done
   mPixelCount = W * H;
   _onRenderFinished();
 }
