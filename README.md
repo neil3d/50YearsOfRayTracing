@@ -26,7 +26,7 @@
 - [x] Lambertian shading
 - [x] Sharp shadow
 
-![Screen Shot](./1968.Appel/images/Screen-Shot-2020-06-30.png)
+![Screen Shot](./1968.Appel/images/Screen-Shot-2020-06-30b.png)
 
 ## Recursive Ray Tracing - Turner Whitted, 1980
 
