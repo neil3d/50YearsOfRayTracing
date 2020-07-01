@@ -83,13 +83,20 @@ class MoriKnobScene : public MySceneWithLight {
   virtual float systemUnit() const { return 1; }
 
   virtual void init() override {
-    const char* const szFileName = "content/mori_knob/testObj.obj";
-
-    auto& mesh = createObject<MeshInstance>("mori_knob");
-    mesh.setMeshFile(szFileName);
-
     MoriKnobMtlImporter mtlImporter;
-    mesh.importMaterial(&mtlImporter);
+
+    auto& background = createObject<MeshInstance>("background");
+    background.setMeshFile("content/mori_knob/background.obj");
+    background.importMaterial(&mtlImporter);
+
+    auto& knob = createObject<MeshInstance>("knob");
+    knob.setMeshFile("content/mori_knob/knob.obj");
+    knob.importMaterial(&mtlImporter);
+
+    auto& equation = createObject<MeshInstance>("equation");
+    equation.setMeshFile("content/mori_knob/equation.obj");
+    equation.importMaterial(&mtlImporter);
+
 
     _initLight();
   }
