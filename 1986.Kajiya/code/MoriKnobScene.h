@@ -21,11 +21,11 @@
 
 namespace RayTracingHistory {
 
+constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+constexpr glm::vec3 YELLOW(1, 1, 0);
+
 class MoriKnobMtlImporter : public MaterialImporter {
   virtual MyMaterial::Ptr importObj(const std::string& szName) override {
-    constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
-    constexpr glm::vec3 YELLOW(1, 1, 0);
-
     if (szName == "BackGroundMat") {
       auto mtl = std::make_shared<DiffuseMaterial>();
       mtl->setColor(glm::vec3(0.25f));
@@ -89,14 +89,22 @@ class MoriKnobScene : public MySceneWithLight {
     background.setMeshFile("content/mori_knob/background.obj");
     background.importMaterial(&mtlImporter);
 
-    auto& knob = createObject<MeshInstance>("knob");
-    knob.setMeshFile("content/mori_knob/knob.obj");
-    knob.importMaterial(&mtlImporter);
-
     auto& equation = createObject<MeshInstance>("equation");
     equation.setMeshFile("content/mori_knob/equation.obj");
     equation.importMaterial(&mtlImporter);
 
+#if 0
+    auto& knob = createObject<MeshInstance>("knob");
+    knob.setMeshFile("content/mori_knob/knob.obj");
+    knob.importMaterial(&mtlImporter);
+#endif
+
+#if 1  // stanford dragon
+    auto& mesh = createObject<MeshInstance>("dragon");
+    mesh.setMeshFile("content/dragon/dragon.obj");
+    mesh.createMaterial<PhongMaterial>().setColor(GOLD);
+    mesh.setScale(0.1f).setPosition(glm::vec3(0, -0.25f, 0));
+#endif
 
     _initLight();
   }
