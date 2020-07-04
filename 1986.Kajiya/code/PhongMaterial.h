@@ -68,7 +68,6 @@ class PhongMaterial : public MaterialBase {
       ret.scattered = onb.localToWorld(scattered);
     }
 
-    // TODO
     ret.pdf = 1.0f / (2.0f * glm::pi<float>());
     return ret;
   }

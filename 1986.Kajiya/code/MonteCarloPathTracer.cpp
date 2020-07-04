@@ -192,13 +192,13 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
     if (reflectance < glm::epsilon<float>()) return glm::vec3(0);
 
     // Russian Roulette termination, only applied in indirect lighting
-    float RR_Pr = 1 - glm::min(1.0f, reflectance);
+    float RR_Pr = glm::pow(0.95f, depth);
 
-    // my hack
-    if (depth < RUSSIAN_ROULETTE_MIN_BOUNCES) RR_Pr = 0.0f;
+    // minimal bounces
+    if (depth < RUSSIAN_ROULETTE_MIN_BOUNCES) RR_Pr = 1.0f;
 
-    if (glm::linearRand(0.0f, 1.0f) > RR_Pr) {
-      float RR_Boost = 1 / (1 - RR_Pr);
+    if (glm::linearRand(0.0f, 1.0f) < RR_Pr) {
+      float RR_Boost = 1 / RR_Pr;
 
       Ray secondaryRay(p, d);
       secondaryRay.applayBiasOffset(hitRec.normal, 0.001f);
