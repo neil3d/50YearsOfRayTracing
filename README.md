@@ -49,8 +49,8 @@
 
 - [x] Monte Carlo Direct lighting
 - [x] Indirect lighting with Russian Roulette termination
-- [ ] Importance Sampling
-- [ ] BRDFs
+- [x] Next Event Estimation
+- [ ] Phong Importance Sampling
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-06-27.png)
 

@@ -13,6 +13,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
+find_package(unofficial-concurrentqueue CONFIG REQUIRED)
 
 # target
 aux_source_directory(./asset ASSET_SRC)
@@ -37,9 +38,10 @@ target_include_directories(${SUB_PROJECT_NAME}
 
 # libs
 target_link_libraries(${SUB_PROJECT_NAME} PUBLIC 
+                        glm
                         SDL2::SDL2main SDL2::SDL2-static
                         spdlog::spdlog spdlog::spdlog_header_only
-                        glm
                         tinyobjloader::tinyobjloader
+                        unofficial::concurrentqueue::concurrentqueue
                     )
 
