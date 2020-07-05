@@ -43,7 +43,7 @@
 - [x] Glossy reflection
 - [x] Motion blur
 
-![Screen Shot](./1984.Cook/images/ScreenShot-2020-05-30.png)
+![Screen Shot](./1984.Cook/images/ScreenShot-2020-07-05b.png)
 
 ## Path Tracing - James Kajiya, 1986
 

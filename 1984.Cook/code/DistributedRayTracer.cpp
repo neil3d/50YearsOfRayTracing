@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 #include <random>
 
 #include "Material.h"
@@ -13,7 +14,7 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
-constexpr int SPP_N = 3;
+constexpr int SPP_N = 16;
 constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
@@ -46,7 +47,7 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
             (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight,
             sampleXi);
 
-        viewingRay.time = (sampleXi.x + sampleXi.y) * 0.5f;
+        viewingRay.time = glm::linearRand(0.0f, 1.0f);
         color += _traceRay(viewingRay, pScene, 0, sampleXi, 1.0f);
       }
 
@@ -76,7 +77,7 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,
   glm::vec3 baseColor(1);
   if (mtl) baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
 
-  auto shading = _shade(-ray.direction, hitRec, pScene, xi);
+  auto shading = _shade(-ray.direction, hitRec, pScene, xi, ray.time);
   float Ka = std::get<0>(shading);
   float Kd = std::get<1>(shading);
 
@@ -95,7 +96,7 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,
 
 std::tuple<float, float> DistributedRayTracer::_shade(
     const glm::vec3& wo, const HitRecord& shadingPoint,
-    MySceneWithLight* pScene, const glm::vec2 xi) {
+    MySceneWithLight* pScene, const glm::vec2 xi, float time) {
   const auto& light = pScene->getMainLight();
   Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 
@@ -104,7 +105,7 @@ std::tuple<float, float> DistributedRayTracer::_shade(
   float lightDistance = std::get<1>(shadowRet);
 
   shadowRay.applayBiasOffset(shadingPoint.normal, 0.001f);
-  shadowRay.time = xi.x;
+  shadowRay.time = time;
   HitRecord hitRecS;
 
   float ambient, diffuse;
@@ -115,7 +116,8 @@ std::tuple<float, float> DistributedRayTracer::_shade(
     ambient = light.ambient;
     diffuse = 0;
   } else {
-    diffuse = light.lighting(shadingPoint.p, shadingPoint.normal, wo, xi, mtl->shininess);
+    diffuse = light.lighting(shadingPoint.p, shadingPoint.normal, wo, xi,
+                             mtl->shininess);
     ambient = light.ambient;
   }
   return std::make_tuple(ambient, diffuse);
