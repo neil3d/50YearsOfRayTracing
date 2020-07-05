@@ -31,11 +31,11 @@ struct AreaLight {
   }
 
   float lighting(const glm::vec3& shadingPt, const glm::vec3& normal,
-                 const glm::vec3& viewDir, const glm::vec2& xi) const {
+                 const glm::vec3& wo, const glm::vec2& xi) const {
     glm::vec3 pos = corner + xi.x * edge1 + xi.y * edge2;
 
     glm::vec3 L = glm::normalize(pos - shadingPt);
-    glm::vec3 H = glm::normalize(L - viewDir);
+    glm::vec3 H = glm::normalize(L + wo);
     float NdotH = glm::dot(normal, H);
     float NdotL = glm::dot(normal, L);
 

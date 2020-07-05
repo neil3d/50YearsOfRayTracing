@@ -24,9 +24,9 @@ class DistributedRayTracer : public TiledRenderer {
 
  private:
   glm::vec3 _traceRay(const Ray& ray, MySceneWithLight* pScene, int depth,
-                      const glm::vec2 xi);
+                      const glm::vec2 xi, float weight);
 
-  std::tuple<float, glm::vec3> _shade(const glm::vec3& dir,
+  std::tuple<float, float> _shade(const glm::vec3& wo,
                                             const HitRecord& shadingPoint,
                                             MySceneWithLight* pScene,
                                             const glm::vec2 xi);

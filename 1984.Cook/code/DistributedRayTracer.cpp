@@ -13,7 +13,7 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
-constexpr int SPP_N = 3;
+constexpr int SPP_N = 4;
 constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
@@ -47,7 +47,7 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
             sampleXi);
 
         viewingRay.time = (sampleXi.x + sampleXi.y) * 0.5f;
-        color += _traceRay(viewingRay, pScene, 0, sampleXi);
+        color += _traceRay(viewingRay, pScene, 0, sampleXi, 1.0f);
       }
 
       _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), GAMA);
@@ -59,7 +59,7 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
 
 glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,
                                           MySceneWithLight* pScene, int depth,
-                                          const glm::vec2 xi) {
+                                          const glm::vec2 xi, float weight) {
   const glm::vec3 bgColor(0.25f, 0.25f, 0.25f);
 
   if (depth > MAX_BOUNCES) return glm::vec3(0);
@@ -69,58 +69,56 @@ glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,
   bool bHit = pScene->closestHit(ray, 0.01f, FLOAT_MAX, hitRec);
   if (!bHit) return bgColor;
 
-  auto shading = _shade(ray.direction, hitRec, pScene, xi);
-  float shadowFactor = std::get<0>(shading);
-  glm::vec3 color = std::get<1>(shading);
+  // error check
+  Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
+  if (!mtl) return glm::abs(hitRec.normal);
+
+  glm::vec3 baseColor(1);
+  if (mtl) baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
+
+  auto shading = _shade(-ray.direction, hitRec, pScene, xi);
+  float Ka = std::get<0>(shading);
+  float Kd = std::get<1>(shading);
 
   // reflection
-  Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
-  if (!mtl) return glm::vec3(1, 0, 0);
-
-  float Kr = shadowFactor;
-  if (mtl) Kr *= mtl->Kr;
+  glm::vec3 reflectionColor(0);
+  float Kr = mtl->Kr;
   if (Kr > 0) {
     Ray rRay = _jitteredReflectionRay(ray.direction, hitRec.p, hitRec.normal,
                                       xi, mtl->gloss);
     rRay.time = ray.time;
-    glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1, xi);
-
-    color += Kr * rColor;
+    reflectionColor = Kr * _traceRay(rRay, pScene, depth + 1, xi, Kr * weight);
   }
 
-  return color;
+  return Ka * baseColor + (Kd * baseColor + reflectionColor) * (weight);
 }
 
-std::tuple<float, glm::vec3> DistributedRayTracer::_shade(
-    const glm::vec3& dir, const HitRecord& shadingPoint,
+std::tuple<float, float> DistributedRayTracer::_shade(
+    const glm::vec3& wo, const HitRecord& shadingPoint,
     MySceneWithLight* pScene, const glm::vec2 xi) {
   const auto& light = pScene->getMainLight();
   Material* mtl = dynamic_cast<Material*>(shadingPoint.mtl);
 
   auto shadowRet = light.jitteredShadowRay(shadingPoint.p, xi);
   Ray shadowRay = std::get<0>(shadowRet);
-  shadowRay.applayBiasOffset(shadingPoint.normal, 0.001f);
-
   float lightDistance = std::get<1>(shadowRet);
+
+  shadowRay.applayBiasOffset(shadingPoint.normal, 0.001f);
   shadowRay.time = xi.x;
   HitRecord hitRecS;
 
+  float ambient, diffuse;
+
   auto stopWithAnyHit = [](const HitRecord&) { return true; };
-
-  glm::vec3 baseColor(1);
-  if (mtl) baseColor = mtl->sampleBaseColor(shadingPoint.uv, shadingPoint.p);
-
-  glm::vec3 color;
-  bool bShadow =
-      pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
+  bool bShadow = pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
   if (bShadow) {
-    float a = light.ambient;
-    color = a * baseColor;
+    ambient = light.ambient;
+    diffuse = 0;
   } else {
-    float lgt = light.lighting(shadingPoint.p, shadingPoint.normal, dir, xi);
-    color = lgt * baseColor;
+    diffuse = light.lighting(shadingPoint.p, shadingPoint.normal, wo, xi);
+    ambient = light.ambient;
   }
-  return std::make_tuple(bShadow ? light.ambient : 1.0f, color);
+  return std::make_tuple(ambient, diffuse);
 }
 
 Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,
