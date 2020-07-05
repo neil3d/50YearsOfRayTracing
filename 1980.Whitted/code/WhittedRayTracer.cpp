@@ -130,7 +130,7 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
 
     // lighting
     glm::vec3 lgt =
-        light->blinnPhongShading(hitRec.p, hitRec.normal, dir, mtl->n);
+        light->lighting(hitRec.p, hitRec.normal, -dir, mtl->n);
 
     // ambient lighting
     color += lgt.x * baseColor;
