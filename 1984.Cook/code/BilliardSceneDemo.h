@@ -32,6 +32,7 @@ class BilliardSceneDemo : public MySceneWithLight {
     createObject<Plane>("table")
         .createMaterial<Material>()
         .setGloss(0.2f)
+        .setShininess(4.0f)
         .setCoefficient(0.6f)
         .setCheckerTexture(glm::vec3(0, 0, 0), glm::vec3(0.4f, 0.4f, 0.4f));
 

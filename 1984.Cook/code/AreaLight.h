@@ -31,7 +31,8 @@ struct AreaLight {
   }
 
   float lighting(const glm::vec3& shadingPt, const glm::vec3& normal,
-                 const glm::vec3& wo, const glm::vec2& xi) const {
+                 const glm::vec3& wo, const glm::vec2& xi,
+                 float shininess) const {
     glm::vec3 pos = corner + xi.x * edge1 + xi.y * edge2;
 
     glm::vec3 L = glm::normalize(pos - shadingPt);
@@ -47,7 +48,8 @@ struct AreaLight {
     }
 
     float diffuse = std::max(0.0f, NdotL) * falloff;
-    return intensity * (ambient + diffuse);
+    float spec = glm::pow(std::max(0.0f, NdotH), shininess) * falloff;
+    return intensity * (diffuse + spec);
   }
 
   AreaLight& setParallelogram(const glm::vec3& _edge1, const glm::vec3& _edge2,

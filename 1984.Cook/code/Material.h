@@ -21,7 +21,13 @@ class Material : public MyMaterial {
  public:
   float gloss = 0.0f;
   float Kr = 0.4f;  // the reflection coefficient
+  float shininess = 88;
   glm::vec2 uvTiling = {1, 1};
+
+  Material& setShininess(float value) {
+    shininess = value;
+    return *this;
+  }
 
   Material& setGloss(float g) {
     gloss = g;

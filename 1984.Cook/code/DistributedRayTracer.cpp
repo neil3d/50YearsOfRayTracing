@@ -13,7 +13,7 @@
 namespace RayTracingHistory {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
-constexpr int SPP_N = 4;
+constexpr int SPP_N = 3;
 constexpr float GAMA = 1.5f;
 
 std::string DistributedRayTracer::getInfo() const {
@@ -115,7 +115,7 @@ std::tuple<float, float> DistributedRayTracer::_shade(
     ambient = light.ambient;
     diffuse = 0;
   } else {
-    diffuse = light.lighting(shadingPoint.p, shadingPoint.normal, wo, xi);
+    diffuse = light.lighting(shadingPoint.p, shadingPoint.normal, wo, xi, mtl->shininess);
     ambient = light.ambient;
   }
   return std::make_tuple(ambient, diffuse);

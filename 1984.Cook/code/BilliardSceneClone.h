@@ -33,6 +33,7 @@ class BilliardSceneClone : public MySceneWithLight {
     createObject<Plane>("table")
         .createMaterial<Material>()
         .setGloss(2.0f)
+        .setShininess(0.0f)
         .setCoefficient(0.0f)
         .setTexture2D("content/billiard/table.jpg")
         .setTiling(0.1f, 0.1f);
