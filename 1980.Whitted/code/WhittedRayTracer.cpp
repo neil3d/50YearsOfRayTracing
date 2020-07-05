@@ -42,9 +42,9 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       if (!mRuning) break;
 
       Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);
-      glm::vec3 color = _traceRay(eyeRay, pScene, 0);
+      glm::vec3 color = _traceRay(eyeRay, pScene, 0, 1.0f);
 
-      constexpr float GAMA = 1.0f / 1.05f;
+      constexpr float GAMA = 1.0f / 1.25f;
       _writePixel(x, y, glm::vec4(color, 1), GAMA);
       mPixelCount++;
     }  // end of for(x)
@@ -60,8 +60,8 @@ glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
   return topColor * t + bottomColor * (1.0f - t);
 }
 
-glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene,
-                                      int depth) {
+glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
+                                      float weight) {
   if (depth > MAX_BOUNCES) return _backgroundColor(ray);
 
   HitRecord hitRec;
@@ -73,9 +73,11 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene,
   // error check
   if (!mtl) return glm::vec3(1, 0, 0);
 
-  glm::vec3 color = _shade(ray.direction, hitRec, pScene);
+  glm::vec3 lighting = _shade(ray.direction, hitRec, pScene);
+  glm::vec3 baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
 
   // refraction
+  glm::vec3 refractionColor(0);
   float reflectivity = 0.0f;
   if (mtl->Kt > 0) {
     float Kn = mtl->Kn;
@@ -88,20 +90,25 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene,
     Ray rRay = std::get<2>(refractTuple);
 
     if (bRefraction) {
-      glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1);
-      color += (1.0f - reflectivity) * mtl->Kt * rColor;
+      float Kt = (1.0f - reflectivity) * mtl->Kt;
+      refractionColor = _traceRay(rRay, pScene, depth + 1, weight * Kt);
     }
   }  // end of if(transparent object)
 
   // reflection
+  glm::vec3 reflectionColor(0);
   float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
   if (Ks > 0) {
     Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
-    glm::vec3 rColor = _traceRay(rRay, pScene, depth + 1);
-    color += rColor * Ks;
+    reflectionColor = _traceRay(rRay, pScene, depth + 1, weight * Ks);
   }
 
-  return color;
+  glm::vec3 ambient = lighting.x * baseColor;
+  glm::vec3 diffuse = lighting.y * mtl->Kd * baseColor;
+  glm::vec3 specular = lighting.z * Ks * baseColor;
+
+  return ambient +
+         (diffuse + specular + refractionColor + reflectionColor) * weight;
 }
 
 glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
@@ -109,9 +116,7 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
                                    TestSceneBase* pScene) {
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
-  glm::vec3 baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
-
-  glm::vec3 color(0);
+  glm::vec3 lighting(0);
 
   const auto& lights = pScene->getLights();
   for (const auto& light : lights) {
@@ -129,20 +134,19 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
     pScene->anyHit(shadowRay, 0, fMax, shadowHitCallback);
 
     // lighting
-    glm::vec3 lgt =
-        light->lighting(hitRec.p, hitRec.normal, -dir, mtl->n);
+    glm::vec3 lgt = light->lighting(hitRec.p, hitRec.normal, -dir, mtl->n);
 
     // ambient lighting
-    color += lgt.x * baseColor;
+    lighting.x += lgt.x;
 
     // diffuse lighting
-    color += mtl->Kd * lgt.y * attenuation * baseColor;
+    lighting.y += lgt.y * attenuation;
 
     // specular lighting
-    color += lgt.z * attenuation * baseColor;
+    lighting.z += lgt.z * attenuation;
   }  // end of for each light
 
-  return color;
+  return lighting;
 }
 
 Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,

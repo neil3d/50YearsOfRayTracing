@@ -35,7 +35,7 @@ class TestSceneBase : public MyScene {
     mLights.emplace_back(pointLgt);
 #else
     auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
-    dirLgt->intensity = 1.15f;
+    dirLgt->intensity = 0.85f;
     dirLgt->ambient = 0.15f;
     mLights.emplace_back(dirLgt);
 #endif

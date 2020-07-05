@@ -24,7 +24,7 @@ class WhittedRayTracer : public TiledRenderer {
   std::tuple<bool, float, Ray> _generateRefractationRay(const glm::vec3& dir, const glm::vec3& point,
                                 const glm::vec3& normal, float Kn);
 
-  glm::vec3 _traceRay(Ray ray, TestSceneBase* pScene, int depth);
+  glm::vec3 _traceRay(Ray ray, TestSceneBase* pScene, int depth, float weight);
 
   glm::vec3 _shade(const glm::vec3& dir, const HitRecord& shadingPoint,
                    TestSceneBase* pScene);

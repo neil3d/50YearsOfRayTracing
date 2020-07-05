@@ -32,7 +32,17 @@ class DemoScene : public TestSceneBase {
 
     _createSphere("MirrorSphere", 1, glm::vec3(0, 1.f, 1))
         .setColor(glm::vec3(0.4f, 0.9f, 1.0f))
-        .setParam(0.7f, 0.3f, 0.0f, 80, 1.0f);
+        .setParam(0.7f, 0.3f, 0.0f, 100, 1.0f);
+
+#if 0
+    _createSphere("MirrorSphere", 1, glm::vec3(2.1f, 1.f, 1))
+        .setColor(glm::vec3(0.4f, 0.9f, 1.0f))
+        .setParam(0.7f, 0.3f, 0.0f, 100, 1.0f);
+
+    _createSphere("MirrorSphere", 1.45f, glm::vec3(-3.f, 1.45f, 1))
+        .setColor(glm::vec3(0.4f, 0.9f, 1.0f))
+        .setParam(0.7f, 0.3f, 0.0f, 100, 1.0f);
+#endif
 
     _createSphere("GlassSphere", 1.2f, glm::vec3(-1.25f, 2, -2))
         .setColor(glm::vec3(1))

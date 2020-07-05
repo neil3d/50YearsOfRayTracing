@@ -51,7 +51,7 @@ struct PointLight : public MyLight {
     }
 
     float diffuse = std::max(0.0f, NdotL) * falloff;
-    float specular = std::powf(NdotH, n) * falloff;
+    float specular = std::powf(std::max(0.0f, NdotH), n) * falloff;
     return intensity * glm::vec3(ambient, diffuse, specular);
   }
 };
@@ -75,7 +75,7 @@ struct DirectionalLight : public MyLight {
     float NdotL = glm::dot(normal, L);
 
     float diffuse = std::max(0.0f, NdotL);
-    float specular = std::powf(NdotH, n);
+    float specular = std::powf(std::max(0.0f, NdotH), n);
 
     return intensity * glm::vec3(ambient, diffuse, specular);
   }
