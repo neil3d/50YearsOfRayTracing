@@ -27,7 +27,7 @@ class BilliardSceneClone : public MySceneWithLight {
         .setParallelogram(glm::vec3(5, 0, 0), glm::vec3(0, 0, 5),
                           glm::vec3(0, 15, 0))
         .setAmbient(0.25f)
-        .setIntensity(2.f);
+        .setIntensity(1.55f);
 
     // setup scene objects
     createObject<Plane>("table")
@@ -37,7 +37,7 @@ class BilliardSceneClone : public MySceneWithLight {
         .setTexture2D("content/billiard/table.jpg")
         .setTiling(0.1f, 0.1f);
 
-    glm::vec3 wPos(0.5f, 1, 0.5f);
+    glm::vec3 wPos(1.55f, 1, 1.55f);
     MySceneObject& whiteSphere = createObject<Sphere>("ball_white")
                                      .setCenter(wPos)
                                      .setRadius(1)
@@ -48,15 +48,15 @@ class BilliardSceneClone : public MySceneWithLight {
         .setCoefficient(BALL_KS)
         .setColor(glm::vec3(0.88f));
     whiteSphere.createAnimator(true).addKey(
-        1.0f, wPos + glm::vec3(-0.55f, 0, -0.55f), glm::vec3(0));
+        1, wPos + glm::vec3(-0.15f, 0, -0.15f), glm::vec3(0));
 
-    createTexturedBall(glm::vec3(-1.5f, 1, 1.15f), glm::vec3(0, 0, 108), 0.1f,
+    createTexturedBall(glm::vec3(-1.5f, 1, -1.15f), glm::vec3(0, 0, 108), 0.5f,
                        "ball_8", BALL_GLOSS, BALL_KS);
-    createTexturedBall(glm::vec3(-2.95f, 1, 2.95f), glm::vec3(10, -40, 55),
+    createTexturedBall(glm::vec3(-2.95f, 1, -2.95f), glm::vec3(10, 35, 55),
                        0.0f, "ball_4", BALL_GLOSS, BALL_KS);
-    createTexturedBall(glm::vec3(-1.8f, 1, -0.85f), glm::vec3(90, 0, 33), 1.0f,
+    createTexturedBall(glm::vec3(-1.8f, 1, 0.85f), glm::vec3(90, 0, 33), 0.85f,
                        "ball_9", BALL_GLOSS, BALL_KS);
-    createTexturedBall(glm::vec3(-2.8f, 1, -2.8f), glm::vec3(0, 0, 99), 0.5f,
+    createTexturedBall(glm::vec3(-2.8f, 1, 2.8f), glm::vec3(0, 0, 99), 0.1f,
                        "ball_5", BALL_GLOSS, BALL_KS);
   }
 };

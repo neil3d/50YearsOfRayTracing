@@ -45,9 +45,9 @@ class MyAnimator {
     mRotTrack.emplace_back(t, rot);
   }
 
-  void addKey(float t, const glm::vec3& pos, const glm::vec3& degAngles) {
+  void addKey(float t, const glm::vec3& pos, const glm::vec3& radAngles) {
     mPosTrack.emplace_back(t, pos);
-    mRotTrack.emplace_back(t, glm::quat(glm::radians(degAngles)));
+    mRotTrack.emplace_back(t, glm::quat(radAngles));
   }
 
   void evaluate(float t, Transform* target) {
@@ -58,15 +58,14 @@ class MyAnimator {
     int k1 = 0;
     int k2 = 1;
     float duration = 1.0f;
+    float r = t / duration;
 
     const auto& posK1 = mPosTrack[k1];
     const auto& posK2 = mPosTrack[k2];
-    float r = t / duration;
     target->setPosition((1 - r) * posK1.pos + r * posK2.pos);
 
     const auto& rotKey1 = mRotTrack[k1];
     const auto& rotKey2 = mRotTrack[k2];
-    r = t / duration;
     glm::quat rot = glm::lerp(rotKey1.rot, rotKey2.rot, r);
     target->setRotation(rot);
   }

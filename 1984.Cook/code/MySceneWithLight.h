@@ -20,27 +20,27 @@ class MySceneWithLight : public MyScene {
  public:
   const AreaLight& getMainLight() const { return mLight; }
 
-  void createTexturedBall(glm::vec3 pos, glm::vec3 degAngles, float animScale,
+  void createTexturedBall(glm::vec3 pos, glm::vec3 degAngles, float animRatio,
                           const std::string& szName, float gloss, float Ks) {
     std::string szTexture("content/billiard/");
     szTexture.append(szName);
     szTexture.append(".jpg");
 
     constexpr float PI = glm::pi<float>();
-    glm::vec3 R = glm::radians(degAngles);
-    glm::vec3 animRot(PI/100, PI/80, PI/120);
-    glm::vec3 animOffset(0.5f, 0, 0.5f);
+    glm::vec3 rot = glm::radians(degAngles);
+    glm::vec3 animRot = glm::radians(glm::vec3(8, 6, 9));
+    glm::vec3 animOffset(0.35f, 0, 0.35f);
 
     MySceneObject& newSphere =
         createObject<Sphere>(szName).setCenter(pos).setRadius(1).setRotation(
-            R.x, R.y, R.z);
+            rot.x, rot.y, rot.z);
     newSphere.createMaterial<Material>()
         .setGloss(gloss)
         .setCoefficient(Ks)
         .setTexture2D(szTexture);
-    if (animScale > 0.0f) {
-      newSphere.createAnimator(true).addKey(1.0f, pos + animOffset * animScale,
-                                            animRot * animScale);
+    if (animRatio > 0.0f) {
+      newSphere.createAnimator(true).addKey(1.0f, pos + animOffset * animRatio,
+                                            rot + animRot * animRatio);
     }
   }
 
