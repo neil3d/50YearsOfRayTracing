@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include "DemoScene.h"
 #include "Material.h"
 #include "framework/PinholeCamera.h"
 
@@ -33,7 +32,7 @@ float mySchlick(float cosine, float Kn, float exp) {
 void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
                                          MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
-  MyScene* pScene = scene.get();
+  TestSceneBase* pScene = dynamic_cast<TestSceneBase*>(scene.get());
 
   float W = static_cast<float>(mFrameWidth);
   float H = static_cast<float>(mFrameHeight);
@@ -43,7 +42,7 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       if (!mRuning) break;
 
       Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);
-      glm::vec3 color = _traceRay(eyeRay, scene.get(), 0);
+      glm::vec3 color = _traceRay(eyeRay, pScene, 0);
 
       constexpr float GAMA = 1.0f / 1.05f;
       _writePixel(x, y, glm::vec4(color, 1), GAMA);
@@ -61,7 +60,8 @@ glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
   return topColor * t + bottomColor * (1.0f - t);
 }
 
-glm::vec3 WhittedRayTracer::_traceRay(Ray ray, MyScene* pScene, int depth) {
+glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene,
+                                      int depth) {
   if (depth > MAX_BOUNCES) return _backgroundColor(ray);
 
   HitRecord hitRec;
@@ -69,11 +69,9 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, MyScene* pScene, int depth) {
   if (!bHit) return _backgroundColor(ray);
 
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
-  DemoScene* scene = dynamic_cast<DemoScene*>(pScene);
 
   // error check
   if (!mtl) return glm::vec3(1, 0, 0);
-  if (!scene) return glm::vec3(0, 1, 0);
 
   glm::vec3 color = _shade(ray.direction, hitRec, pScene);
 
@@ -107,15 +105,15 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, MyScene* pScene, int depth) {
 }
 
 glm::vec3 WhittedRayTracer::_shade(const glm::vec3& dir,
-                                   const HitRecord& hitRec, MyScene* pScene) {
-  DemoScene* scene = dynamic_cast<DemoScene*>(pScene);
+                                   const HitRecord& hitRec,
+                                   TestSceneBase* pScene) {
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
   glm::vec3 baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
 
   glm::vec3 color(0);
 
-  const auto& lights = scene->getLights();
+  const auto& lights = pScene->getLights();
   for (const auto& light : lights) {
     Ray shadowRay = light->generateShadowRay(hitRec.p);
     shadowRay.applayBiasOffset(hitRec.normal, 0.001f);

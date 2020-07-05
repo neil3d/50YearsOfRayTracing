@@ -10,6 +10,8 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 Material.h
                 WhittedRayTracer.h
                 WhittedRayTracer.cpp
-            )
+                TestSceneBase.h
+                TestScene.h
+                )
 
 target_link_libraries(${SUB_PROJECT_NAME} MyFramework)

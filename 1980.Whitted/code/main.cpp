@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "DemoScene.h"
+#include "TestScene.h"
 #include "WhittedRayTracer.h"
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
@@ -18,7 +19,11 @@ int main(int argc, char* argv[]) {
     app.createWindow(1280, 720, APP_NAME);
 
     auto renderer = app.createRenderer<WhittedRayTracer>();
+#if 0
     auto scene = std::make_shared<DemoScene>();
+#else
+    auto scene = std::make_shared<TestScene>();
+#endif
     scene->init();
 
     glm::vec3 eyePos(0, 1.25f, -8);
