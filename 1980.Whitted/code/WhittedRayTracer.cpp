@@ -29,16 +29,15 @@ float mySchlick(float cosine, float Kn, float exp) {
   return r0 + (1 - r0) * pow((1 - cosine), exp);
 }
 
-void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
-                                         MyCamera::Ptr camera) {
+void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   TestSceneBase* pScene = dynamic_cast<TestSceneBase*>(scene.get());
 
   float W = static_cast<float>(mFrameWidth);
   float H = static_cast<float>(mFrameHeight);
 
-  for (int y = tile.top; y < tile.bottom; y++)
-    for (int x = tile.left; x < tile.right; x++) {
+  for (int y = 0; y < mFrameHeight; y++)
+    for (int x = 0; x < mFrameWidth; x++) {
       if (!mRuning) break;
 
       Ray eyeRay = pCamera->generateViewingRay((x + 0.5f) / W, (y + 0.5f) / H);
@@ -49,7 +48,7 @@ void WhittedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
       mPixelCount++;
     }  // end of for(x)
 
-  _onTileFinished();
+  _onRenderFinished();
 }
 
 glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
