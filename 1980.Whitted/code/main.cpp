@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
     app.createWindow(1280, 720, APP_NAME);
 
     auto renderer = app.createRenderer<WhittedRayTracer>();
-#if 0
+#if 1
     auto scene = std::make_shared<DemoScene>();
 #else
     auto scene = std::make_shared<TestScene>();

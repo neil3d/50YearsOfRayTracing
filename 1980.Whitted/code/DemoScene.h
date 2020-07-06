@@ -46,7 +46,7 @@ class DemoScene : public TestSceneBase {
 
     _createSphere("GlassSphere", 1.2f, glm::vec3(-1.25f, 2, -2))
         .setColor(glm::vec3(1))
-        .setParam(0.f, 0.0f, 0.7f, 80, 1.033f);
+        .setParam(0.f, 0.0f, 0.8f, 80, 1.5f);
   }
 };
 

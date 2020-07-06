@@ -61,11 +61,13 @@ glm::vec3 WhittedRayTracer::_backgroundColor(const Ray& ray) {
 
 glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
                                       float weight) {
-  if (depth > MAX_BOUNCES) return _backgroundColor(ray);
+  if (depth > MAX_BOUNCES) return glm::vec3(0);
 
   HitRecord hitRec;
   bool bHit = pScene->closestHit(ray, 0.001f, fMax, hitRec);
-  if (!bHit) return _backgroundColor(ray);
+  if (!bHit) {
+    return _backgroundColor(ray) * weight;
+  }
 
   Material* mtl = dynamic_cast<Material*>(hitRec.mtl);
 
@@ -99,6 +101,7 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
   float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
   if (Ks > 0) {
     Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
+    rRay.applayBiasOffset(hitRec.normal, 0.001f);
     reflectionColor = _traceRay(rRay, pScene, depth + 1, weight * Ks);
   }
 
@@ -175,7 +178,9 @@ std::tuple<bool, float, Ray> WhittedRayTracer::_generateRefractationRay(
 
   if (myRefract(dir, outwardNormal, niOverNt, refracted)) {
     float reflectivity = mySchlick(cosine, Kn, 5.0f);
-    return std::make_tuple(true, reflectivity, Ray(point, refracted));
+    Ray ray(point, refracted);
+    ray.applayBiasOffset(-outwardNormal, 0.001f);
+    return std::make_tuple(true, reflectivity, ray);
   }
 
   // total internal reflection
