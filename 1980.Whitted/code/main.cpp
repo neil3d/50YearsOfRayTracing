@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "BoxScene.h"
 #include "DemoScene.h"
 #include "TestScene.h"
 #include "WhittedRayTracer.h"
@@ -22,15 +23,15 @@ int main(int argc, char* argv[]) {
 #if 1
     auto scene = std::make_shared<DemoScene>();
 #else
-    auto scene = std::make_shared<TestScene>();
+    auto scene = std::make_shared<BoxScene>();
 #endif
     scene->init();
 
-    glm::vec3 eyePos(0, 1.25f, -8);
+    glm::vec3 eyePos(0, 3, -8);
     glm::vec3 lookAt(0, 1, 0);
     auto camera = std::make_shared<PinholeCamera>();
     camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
-        .setView(eyePos, lookAt, glm::vec3(0, 1, 0))
+        .setView(eyePos, lookAt, glm::vec3(0, 2, 0))
         .setFOV(45);
     camera->init();
 

@@ -5,6 +5,7 @@ project(RayTracingHistory)
 set(SUB_PROJECT_NAME WhittedRayTracer)
 
 add_executable(${SUB_PROJECT_NAME} main.cpp
+                BoxScene.h
                 DemoScene.h
                 Light.h
                 Material.h

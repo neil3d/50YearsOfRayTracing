@@ -26,22 +26,23 @@ class TestSceneBase : public MyScene {
     return mLights;
   }
 
-  virtual void init() override {
-    // create lights
-#if 0
-    auto pointLgt = std::make_shared<PointLight>(glm::vec3(-10, 10, -5));
-    pointLgt->intensity = 1.85f;
-    pointLgt->ambient = 0.15f;
-    mLights.emplace_back(pointLgt);
-#else
-    auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
-    dirLgt->intensity = 0.85f;
-    dirLgt->ambient = 0.15f;
-    mLights.emplace_back(dirLgt);
-#endif
+ protected:
+  void _createLights(bool dirLight, bool pointLight) {
+    if (dirLight) {
+      auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
+      dirLgt->intensity = 0.85f;
+      dirLgt->ambient = 0.15f;
+      mLights.emplace_back(dirLgt);
+    }
+
+    if (pointLight) {
+      auto pointLgt = std::make_shared<PointLight>(glm::vec3(0, 7.5f, 0));
+      pointLgt->intensity = 0.85f;
+      pointLgt->ambient = 0.15f;
+      mLights.emplace_back(pointLgt);
+    }
   }
 
- protected:
   Material& _createSphere(const std::string& szName, float radius,
                           glm::vec3 center) {
     auto& sphere =

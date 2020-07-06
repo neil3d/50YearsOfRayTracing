@@ -17,7 +17,7 @@ namespace RayTracingHistory {
 class TestScene : public TestSceneBase {
  public:
   virtual void init() override {
-    TestSceneBase::init();
+    _createLights(true, false);
 
     // create a plane
     createObject<Plane>("floor")

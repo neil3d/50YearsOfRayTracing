@@ -18,7 +18,7 @@ namespace RayTracingHistory {
 class DemoScene : public TestSceneBase {
  public:
   virtual void init() override {
-    TestSceneBase::init();
+    _createLights(true, false);
 
     // create objects
     constexpr float W = 8;
@@ -44,9 +44,9 @@ class DemoScene : public TestSceneBase {
         .setParam(0.7f, 0.3f, 0.0f, 100, 1.0f);
 #endif
 
-    _createSphere("GlassSphere", 1.2f, glm::vec3(-1.25f, 2, -2))
+    _createSphere("GlassSphere", -1.05f, glm::vec3(-1.2f, 1.5f, -2.5f))
         .setColor(glm::vec3(1))
-        .setParam(0.f, 0.0f, 0.8f, 80, 1.5f);
+        .setParam(0.f, 0.0f, 0.5f, 80, 1.33f);
   }
 };
 

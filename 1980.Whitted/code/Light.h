@@ -8,6 +8,7 @@
 
 #pragma once
 #include <algorithm>
+#include <tuple>
 
 #include "geometry/Ray.h"
 
@@ -17,7 +18,8 @@ struct MyLight {
   float ambient = 0.1f;  // ambient
   float intensity = 2.0f;
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt) const = 0;
+  virtual std::tuple<Ray, float> generateShadowRay(
+      const glm::vec3& shadingPt) const = 0;
 
   virtual glm::vec3 lighting(const glm::vec3& shadingPt,
                              const glm::vec3& normal, const glm::vec3& wo,
@@ -30,9 +32,10 @@ struct PointLight : public MyLight {
 
   PointLight(const glm::vec3& inPos) : pos(inPos) {}
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt) const override {
+  virtual std::tuple<Ray, float> generateShadowRay(
+      const glm::vec3& shadingPt) const override {
     glm::vec3 L = glm::normalize(pos - shadingPt);
-    return Ray(shadingPt, L);
+    return std::make_tuple(Ray(shadingPt, L), glm::distance(pos,shadingPt));
   }
 
   virtual glm::vec3 lighting(const glm::vec3& shadingPt,
@@ -61,9 +64,11 @@ struct DirectionalLight : public MyLight {
 
   DirectionalLight(const glm::vec3& inDir) : dir(glm::normalize(inDir)) {}
 
-  virtual Ray generateShadowRay(const glm::vec3& shadingPt) const override {
+  virtual std::tuple<Ray, float> generateShadowRay(
+      const glm::vec3& shadingPt) const override {
     glm::vec3 L = -dir;
-    return Ray(shadingPt, L);
+    return std::make_tuple(Ray(shadingPt, L),
+                           std::numeric_limits<float>::max());
   }
 
   virtual glm::vec3 lighting(const glm::vec3& shadingPt,

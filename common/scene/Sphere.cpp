@@ -25,6 +25,7 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
 
   // analytic solution
   glm::vec3 oc = localRay.origin - center;
+
   float a = glm::dot(localRay.direction, localRay.direction);
   float b = 2 * glm::dot(oc, localRay.direction);
   float c = glm::dot(oc, oc) - mRadius * mRadius;
@@ -45,8 +46,11 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
     constexpr float PI = glm::pi<float>();
 
     glm::vec3 localN = glm::normalize(localRay.getPoint(tnear) - center);
+    if (mRadius < 0) localN = -localN;
+
     glm::vec4 HN = transform.getNormalMatrix() * glm::vec4(localN, 0);
     glm::vec3 N = glm::normalize(glm::vec3(HN));
+
     float u = (1 + atan2(localN.z, localN.x) / PI) * 0.5f;
     float v = acosf(localN.y) / PI;
 
