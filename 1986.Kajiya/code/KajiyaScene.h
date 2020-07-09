@@ -26,12 +26,15 @@ class KajiyaScene : public MySceneWithLight {
  public:
   virtual const AreaLight* getMainLight() const override { return &mMainLight; }
 
+  virtual float systemUnit() const { return 1000; }
+
+
   virtual void init() override {
     // create objects
     constexpr float W = 1500;
     constexpr float D = 1800;
     constexpr float H = 1500;
-    constexpr float LS = 200;  // light size
+    constexpr float LS = 500;  // light size
 
     glm::vec3 lightPos(-W / 2, H * 1.5f, 0);
     glm::vec3 lightDir = glm::normalize(lightPos);
@@ -40,7 +43,7 @@ class KajiyaScene : public MySceneWithLight {
     glm::vec3 lightEdge1 = lightONB.U * LS;
     glm::vec3 lightEdge2 = lightONB.V * LS;
     mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
-    mMainLight.setIntensity(100);
+    mMainLight.setIntensity(500);
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
@@ -92,10 +95,8 @@ class KajiyaScene : public MySceneWithLight {
     const glm::vec3 stackPos(RADIUS * 1.5f, 0, -RADIUS * 3.5f);
     for (int h = 0; h < 3; h++) {
       for (int m = 1; m <= 3 - h; m++) {
-        glm::vec3 bias(m * 0.001f, h * 0.001f, m * 0.001f);
         _createLineOfSpheres(m, RADIUS,
-                             stackPos + bias +
-                                 glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,
+                             stackPos + glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,
                                            RADIUS * m * 2 + h * RADIUS));
       }
     }  // end of for

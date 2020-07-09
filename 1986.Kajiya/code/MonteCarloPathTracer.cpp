@@ -108,17 +108,22 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
                                           MySceneWithLight* pScene,
                                           const glm::vec2& xi, float weight,
                                           int depth) {
-  const glm::vec3 bgColor(0.f, 0.f, 0.f);
-
   // NEE == Next Event Estimation
   if (depth > mMaxDepth) mMaxDepth = depth;
 
-  if (depth >= MAX_BOUNCES) return bgColor;
+  if (depth >= MAX_BOUNCES) return glm::vec3(0);
 
   // trace the ray
   HitRecord hitRec;
   bool bHit = pScene->closestHit(wo, 0.001f, FLOAT_MAX, hitRec);
-  if (!bHit) return bgColor;
+  if (!bHit) {
+    const glm::vec3 bgColor1(3 / 256.0f, 66 / 256.0f, 117 / 256.0f);
+    const glm::vec3 bgColor2(204 / 256.0f, 222 / 256.0f, 244 / 256.0f);
+    if (depth == 0)
+      return glm::mix(bgColor1, bgColor2, wo.direction.y);
+    else
+      return glm::vec3(0);
+  }
 
   MaterialBase* pMtl = static_cast<MaterialBase*>(hitRec.mtl);
 
@@ -134,7 +139,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   }
 
   // bounces == 0: light source
-  if (MAX_BOUNCES == 0) return bgColor;
+  if (MAX_BOUNCES == 0) return glm::vec3(0);
 
   constexpr float NEE_Pr = 0.5f;
   constexpr float NEE_PDF_LIGHT = 1.0f / NEE_Pr;
