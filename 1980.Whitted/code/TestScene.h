@@ -48,12 +48,18 @@ class TestScene : public TestSceneBase {
         .setParam(1, 0, 0, 60, 1);
 
 #if 1
-    const char* const szFileName = "content/cup/cup.obj";
-    auto& mesh = createObject<MeshInstance>("cup");
-    mesh.setMeshFile(szFileName);
-
+    /*auto& cup = createObject<MeshInstance>("cup");
+    cup.setMeshFile("content/cup/cup.obj").setPosition(glm::vec3(0, 0, -1));
     MyMtlImporter mtlImporter;
-    mesh.importMaterial(&mtlImporter);
+    cup.importMaterial(&mtlImporter);*/
+    
+    auto& dragon = createObject<MeshInstance>("dragon");
+    dragon.setMeshFile("content/dragon/dragon.obj")
+        .setScale(0.3f)
+        .setPosition(glm::vec3(0, 0, 0));
+    dragon.createMaterial<Material>()
+        .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
+        .setColor(glm::vec3(1));
 #else
     // create spheres
     constexpr float D = 4;
