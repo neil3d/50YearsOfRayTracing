@@ -32,6 +32,7 @@ bool Sphere::intersect(const Ray &ray, float tMin, float tMax,
 
   float t0, t1;
   if (!_solveQuadratic(a, b, c, t0, t1)) return false;
+  if (t0 < 0 && t1 < 0) return false;
 
   float tnear = std::min(t0, t1);
 

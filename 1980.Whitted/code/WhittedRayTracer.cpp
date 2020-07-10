@@ -10,23 +10,48 @@ namespace RayTracingHistory {
 constexpr float fMax = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
 
-bool myRefract(const glm::vec3& v, const glm::vec3& n, float niOverNt,
-               glm::vec3& outRefracted) {
-  float dt = glm::dot(v, n);
-  float discriminant = 1.0f - niOverNt * niOverNt * (1.0f - dt * dt);
-  if (discriminant > 0) {
-    outRefracted = niOverNt * (v - n * dt) - n * sqrt(discriminant);
-    return true;
+glm::vec3 _refract(const glm::vec3& I, const glm::vec3& N, const float& ior) {
+  float cosi = glm::clamp(-1.0f, 1.0f, glm::dot(I, N));
+  float etai = 1, etat = ior;
+  glm::vec3 n = N;
+  if (cosi < 0) {
+    cosi = -cosi;
+  } else {
+    std::swap(etai, etat);
+    n = -N;
   }
-  return false;
+  float eta = etai / etat;
+  float k = 1 - eta * eta * (1 - cosi * cosi);
+  return k < 0.0f ? glm::vec3(0.0f) : eta * I + (eta * cosi - sqrtf(k)) * n;
 }
 
-// 1994, Schlick, Christophe. "An Inexpensive BRDF Model for Physically‐based
-// Rendering"
-float mySchlick(float cosine, float Kn, float exp) {
-  float r0 = (1 - Kn) / (1 + Kn);
-  r0 = r0 * r0;
-  return r0 + (1 - r0) * pow((1 - cosine), exp);
+float _fresnel(const glm::vec3& I, const glm::vec3& N, const float& ior) {
+  float cosi = glm::clamp(-1.0f, 1.0f, glm::dot(I, N));
+  float etai = 1, etat = ior;
+  if (cosi > 0) {
+    std::swap(etai, etat);
+  }
+
+  float kr;
+
+  // compute sini using Snell's law
+  float sint = etai / etat * sqrtf(std::max(0.f, 1 - cosi * cosi));
+
+  // total internal reflection
+  if (sint >= 1) {
+    kr = 1;
+  } else {
+    float cost = sqrtf(std::max(0.f, 1 - sint * sint));
+    cosi = fabsf(cosi);
+    float Rs =
+        ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
+    float Rp =
+        ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
+    kr = (Rs * Rs + Rp * Rp) / 2;
+  }
+  // As a consequence of the conservation of energy, transmittance is given by:
+  // kt = 1 - kr;
+  return kr;
 }
 
 void WhittedRayTracer::_renderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
@@ -81,7 +106,7 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
   float reflectivity = 0.0f;
   if (mtl->Kt * weight > 0.001f) {
     auto refractTuple = _generateRefractationRay(ray.direction, hitRec.p,
-                                                 hitRec.normal, mtl->Kn);
+                                                 hitRec.normal, mtl->eta);
     bool bRefraction = std::get<0>(refractTuple);
     reflectivity = std::get<1>(refractTuple);
     Ray rRay = std::get<2>(refractTuple);
@@ -165,36 +190,24 @@ Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
 std::tuple<bool, float, Ray, glm::vec3>
 WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
                                            const glm::vec3& point,
-                                           const glm::vec3& normal, float Kn) {
-  glm::vec3 N = normal;
-  glm::vec3 wi = -glm::normalize(dir);
-  bool bInside = glm::dot(wi, N) < 0;
-
+                                           const glm::vec3& normal, float eta) {
+  bool bOutside = glm::dot(dir, normal) < 0;
   glm::vec3 outwardNormal;
-  float eta;
-  if (bInside) {
-    outwardNormal = -N;
-    eta = 1.0f / Kn;
+  if (bOutside)
+    outwardNormal = normal;
+  else
+    outwardNormal = -normal;
+
+  float reflectivity = _fresnel(dir, normal, eta);
+
+  if (reflectivity < 1.0f) {
+    glm::vec3 refraction = _refract(dir, normal, eta);
+    Ray rRay(point, refraction);
+    rRay.applayBiasOffset(outwardNormal, 0.0001f);
+    return std::make_tuple(true, reflectivity, rRay, outwardNormal);
   } else {
-    outwardNormal = N;
-    eta = Kn;
-  }
-
-  float cosTheta = glm::dot(wi, outwardNormal);
-  float sinTheta = glm::sqrt(1.0f - cosTheta * cosTheta);
-
-  if (eta * eta * sinTheta > 1.0f) {
-    // total internal reflection
-    float reflectivity = 1.0f;
     return std::make_tuple(false, reflectivity, Ray(), outwardNormal);
   }
-
-  float reflectivity = mySchlick(cosTheta, eta, 5.0f);
-
-  glm::vec3 refraction = glm::refract(wi, outwardNormal, eta);
-  Ray rRay(point, refraction);
-  rRay.applayBiasOffset(outwardNormal, 0.0001f);
-  return std::make_tuple(true, reflectivity, rRay, outwardNormal);
 }
 
 }  // namespace RayTracingHistory

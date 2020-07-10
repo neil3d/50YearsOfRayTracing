@@ -36,29 +36,44 @@ class Material : public MyMaterial {
     return *this;
   }
 
+  Material& setCheckerTexture(const glm::vec3& colorOdd,
+                              const glm::vec3& colorEven) {
+    auto checker = std::make_shared<CheckerTexture>();
+    checker->setColor(colorOdd, colorEven);
+    baseColor = checker;
+    return *this;
+  }
+
+  Material& setTiling(float u, float v) {
+    uvTiling = glm::vec2(u, v);
+    return *this;
+  }
+
   Material& setParam(float inKd, float inKs, float inKt, float inN,
-                     float inKn) {
+                     float inEta) {
     Kd = inKd;
     Ks = inKs;
     Kt = inKt;
     n = inN;
-    Kn = inKn;
+    eta = inEta;
     return *this;
   }
 
   glm::vec3 sampleBaseColor(const glm::vec2& uv, const glm::vec3& p) {
     if (baseColor)
-      return baseColor->sample(uv, p);
+      return baseColor->sample(uvTiling * uv, p);
     else
       return glm::vec3(1);
   }
 
  public:
+  glm::vec2 uvTiling = {1, 1};
+
   float Kd = 0.5f;  // diffuse reflection constant
   float Ks = 0.4f;  // the specular reflection coefficient
   float Kt = 0.1f;  // the transmission coefficient
   float n = 99;     // an exponent that depends on the glossiness of the surface
-  float Kn = 1.34f;  // the index of refraction
+  float eta = 1.34f;  // the index of refraction,
 };
 
 }  // namespace RayTracingHistory
