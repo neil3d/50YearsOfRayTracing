@@ -20,12 +20,12 @@ int main(int argc, char* argv[]) {
     app.createWindow(1280, 720, APP_NAME);
 
     auto renderer = app.createRenderer<WhittedRayTracer>();
-#if 1
+#if 0
     glm::vec3 eyePos(0, 2, -8);
     glm::vec3 lookAt(0, 1, 0);
     auto scene = std::make_shared<DemoScene>();
 #else
-    glm::vec3 eyePos(0, 4, -6);
+    glm::vec3 eyePos(0, 3, -6);
     glm::vec3 lookAt(0, 1, 0);
     auto scene = std::make_shared<TestScene>();
 #endif
