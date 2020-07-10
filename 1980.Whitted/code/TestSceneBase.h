@@ -28,17 +28,18 @@ class TestSceneBase : public MyScene {
 
  protected:
   void _createLights(bool dirLight, bool pointLight) {
+    float s = 1.0f / ((int)dirLight + pointLight);
     if (dirLight) {
       auto dirLgt = std::make_shared<DirectionalLight>(glm::vec3(2, -4, 2));
-      dirLgt->intensity = 0.85f;
-      dirLgt->ambient = 0.15f;
+      dirLgt->intensity = 0.85f * s;
+      dirLgt->ambient = 0.15f * s;
       mLights.emplace_back(dirLgt);
     }
 
     if (pointLight) {
-      auto pointLgt = std::make_shared<PointLight>(glm::vec3(0, 7.5f, 0));
-      pointLgt->intensity = 0.85f;
-      pointLgt->ambient = 0.15f;
+      auto pointLgt = std::make_shared<PointLight>(glm::vec3(2.5f, 5.f, 0));
+      pointLgt->intensity = 0.85f * s;
+      pointLgt->ambient = 0.15f * s;
       mLights.emplace_back(pointLgt);
     }
   }

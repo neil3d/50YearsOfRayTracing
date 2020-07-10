@@ -10,9 +10,9 @@
 #include <vector>
 
 #include "TestSceneBase.h"
+#include "scene/MeshInstance.h"
 #include "scene/Parallelogram.h"
 #include "scene/Plane.h"
-#include "scene/MeshInstance.h"
 
 namespace RayTracingHistory {
 
@@ -45,13 +45,10 @@ class DemoScene : public TestSceneBase {
         .setParam(0.7f, 0.3f, 0.0f, 100, 1.0f);
 #endif
 
-    _createSphere("GlassSphere", -1.0f, glm::vec3(-1.2f, 1.5f, -2.5f))
+    // using negative radius
+    _createSphere("GlassSphere", -1.0f, glm::vec3(-1.2f, 1.65f, -2.0f))
         .setColor(glm::vec3(1))
-        .setParam(0.f, 0.1f, 0.9f, 80, 1.09f);
-    
-   /* _createSphere("GlassSphere", 1.05f, glm::vec3(-1.2f, 1.5f, -2.5f))
-        .setColor(glm::vec3(1))
-        .setParam(0.f, 0.f, 0.95f, 80, 1.5f);*/
+        .setParam(0.0f, 0.2f, 0.8f, 80, 1.05f);
   }
 };
 

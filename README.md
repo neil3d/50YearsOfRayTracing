@@ -32,9 +32,9 @@
 
 - [x] Blinn–Phong shading
 - [x] Reflection
-- [ ] Refraction
+- [x] Refraction
 
-![Screen Shot](./1980.Whitted/images/ScreenShot-2020-05-26.png)
+![Screen Shot](./1980.Whitted/images/ScreenShot-2020-07-10b.png)
 
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 

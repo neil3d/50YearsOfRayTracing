@@ -7,7 +7,7 @@
 
 namespace RayTracingHistory {
 
-constexpr float fMax = std::numeric_limits<float>::max();
+constexpr float F_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
 
 glm::vec3 _refract(const glm::vec3& I, const glm::vec3& N, const float& ior) {
@@ -25,32 +25,30 @@ glm::vec3 _refract(const glm::vec3& I, const glm::vec3& N, const float& ior) {
   return k < 0.0f ? glm::vec3(0.0f) : eta * I + (eta * cosi - sqrtf(k)) * n;
 }
 
-float _fresnel(const glm::vec3& I, const glm::vec3& N, const float& ior) {
-  float cosi = glm::clamp(-1.0f, 1.0f, glm::dot(I, N));
-  float etai = 1, etat = ior;
+double _fresnel(const glm::vec3& I, const glm::vec3& N, float ior) {
+  double cosi = glm::clamp(-1.0, 1.0, (double)glm::dot(I, N));
+  double etai = 1, etat = ior;
   if (cosi > 0) {
     std::swap(etai, etat);
   }
 
-  float kr;
+  double kr;
 
   // compute sini using Snell's law
-  float sint = etai / etat * sqrtf(std::max(0.f, 1 - cosi * cosi));
+  double sint = etai / etat * sqrt(std::max(0., 1 - cosi * cosi));
 
   // total internal reflection
   if (sint >= 1) {
     kr = 1;
   } else {
-    float cost = sqrtf(std::max(0.f, 1 - sint * sint));
+    double cost = sqrt(std::max(0., 1 - sint * sint));
     cosi = fabsf(cosi);
-    float Rs =
+    double Rs =
         ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
-    float Rp =
+    double Rp =
         ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost));
     kr = (Rs * Rs + Rp * Rp) / 2;
   }
-  // As a consequence of the conservation of energy, transmittance is given by:
-  // kt = 1 - kr;
   return kr;
 }
 
@@ -89,7 +87,7 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
   if (depth > MAX_BOUNCES) return glm::vec3(0);
 
   HitRecord hitRec;
-  bool bHit = pScene->closestHit(ray, 0.001f, fMax, hitRec);
+  bool bHit = pScene->closestHit(ray, 0.001f, F_MAX, hitRec);
   if (!bHit) {
     return _backgroundColor(ray) * weight;
   }
@@ -162,7 +160,7 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& wo, const glm::vec3& pt,
       return attenuation > 0.0f;
     };
 
-    pScene->anyHit(shadowRay, 0, fMax, shadowHitCallback);
+    pScene->anyHit(shadowRay, 0, F_MAX, shadowHitCallback);
 
     // lighting
     glm::vec3 lgt = light->lighting(pt, normal, wo, mtl->n);
@@ -198,15 +196,15 @@ WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
   else
     outwardNormal = -normal;
 
-  float reflectivity = _fresnel(dir, normal, eta);
+  double Kr = _fresnel(dir, normal, eta);
 
-  if (reflectivity < 1.0f) {
+  if (Kr < 1.0f) {
     glm::vec3 refraction = _refract(dir, normal, eta);
     Ray rRay(point, refraction);
     rRay.applayBiasOffset(outwardNormal, 0.0001f);
-    return std::make_tuple(true, reflectivity, rRay, outwardNormal);
+    return std::make_tuple(true, Kr, rRay, outwardNormal);
   } else {
-    return std::make_tuple(false, reflectivity, Ray(), outwardNormal);
+    return std::make_tuple(false, Kr, Ray(), outwardNormal);
   }
 }
 

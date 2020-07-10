@@ -20,7 +20,7 @@ class MyMtlImporter : public MaterialImporter {
   virtual MyMaterial::Ptr importObj(const std::string& szName) override {
     if (szName == "cup_material") {
       auto mtl = std::make_shared<Material>();
-      mtl->setParam(0.0f, 0.68f, 0.32f, 60.0f, 1.33f);
+      mtl->setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f);
       mtl->setColor(glm::vec3(1));
       return mtl;
     }
@@ -35,7 +35,7 @@ class MyMtlImporter : public MaterialImporter {
 class TestScene : public TestSceneBase {
  public:
   virtual void init() override {
-    _createLights(true, false);
+    _createLights(false, true);
 
     constexpr float W = 12;
     constexpr float H = 12;
