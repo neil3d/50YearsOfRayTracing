@@ -20,15 +20,17 @@ int main(int argc, char* argv[]) {
     app.createWindow(1280, 720, APP_NAME);
 
     auto renderer = app.createRenderer<WhittedRayTracer>();
-#if 1
-    auto scene = std::make_shared<DemoScene>();
-#else
-    auto scene = std::make_shared<BoxScene>();
-#endif
-    scene->init();
-
+#if 0
     glm::vec3 eyePos(0, 3, -8);
     glm::vec3 lookAt(0, 1, 0);
+    auto scene = std::make_shared<DemoScene>();
+#else
+    glm::vec3 eyePos(0, 4, -6);
+    glm::vec3 lookAt(0, 1, 0);
+    auto scene = std::make_shared<TestScene>();
+#endif
+    scene->init();
+    
     auto camera = std::make_shared<PinholeCamera>();
     camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 2, 0))

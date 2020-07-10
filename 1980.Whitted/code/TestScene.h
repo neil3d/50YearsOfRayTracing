@@ -10,9 +10,27 @@
 #include <glm/gtc/random.hpp>
 
 #include "TestSceneBase.h"
+#include "asset/MaterialImporter.h"
+#include "scene/MeshInstance.h"
 #include "scene/Plane.h"
 
 namespace RayTracingHistory {
+
+class MyMtlImporter : public MaterialImporter {
+  virtual MyMaterial::Ptr importObj(const std::string& szName) override {
+    if (szName == "cup_material") {
+      auto mtl = std::make_shared<Material>();
+      mtl->setParam(0.2f, 0.0f, 0.8f, 10.0f, 1.33f);
+      mtl->setColor(glm::vec3(1));
+      return mtl;
+    }
+
+    auto mtl = std::make_shared<Material>();
+    mtl->setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
+    mtl->setColor(glm::vec3(0.8f, 0.6f, 0.1f));
+    return mtl;
+  }
+};
 
 class TestScene : public TestSceneBase {
  public:
@@ -25,6 +43,15 @@ class TestScene : public TestSceneBase {
         .setColor(glm::vec3(0.66f))
         .setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
 
+#if 1
+    const char* const szFileName = "content/cup/cup.obj";
+    auto& mesh = createObject<MeshInstance>("cup");
+    mesh.setMeshFile(szFileName);
+
+    MyMtlImporter mtlImporter;
+    mesh.importMaterial(&mtlImporter);
+    // mesh.setScale(80);
+#else
     // create spheres
     constexpr float D = 4;
     constexpr int COUNT = 3;
@@ -44,6 +71,7 @@ class TestScene : public TestSceneBase {
             .setColor(glm::vec3(1.0f))
             .setParam(0.7f, 0.3f, 0.0f, 80, 1.0f);
       }
+#endif
   }
 };
 }  // namespace RayTracingHistory
