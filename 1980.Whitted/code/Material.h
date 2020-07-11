@@ -61,7 +61,7 @@ class Material : public MyMaterial {
 
   glm::vec3 sampleBaseColor(const glm::vec2& uv, const glm::vec3& p) {
     if (baseColor)
-      return baseColor->sample(uvTiling * uv, p);
+      return baseColor->sample(uvTiling * uv, uvTiling.x * p);
     else
       return glm::vec3(1);
   }

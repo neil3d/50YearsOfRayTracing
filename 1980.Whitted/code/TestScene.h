@@ -49,7 +49,7 @@ class TestScene : public TestSceneBase {
         .setAnchor(glm::vec3(W / -2, 0, H / -2))
         .createMaterial<Material>()
         .setCheckerTexture(glm::vec3(0.32f), glm::vec3(0.68f))
-        .setTiling(0.01f, 0.01f)
+        .setTiling(1.5f, 1)
         .setParam(1, 0, 0, 60, 1);
 
 #if 1
@@ -59,11 +59,11 @@ class TestScene : public TestSceneBase {
     cup.setMeshFile("content/cup/cup.obj").setPosition(glm::vec3(0, 0, -1));
     cup.importMaterial(&mtlImporter);*/
 
-    auto& knob = createObject<MeshInstance>("knob");
-    knob.setMeshFile("content/mori_knob/knob.obj")
-        .setScale(2)
-        .setPosition(glm::vec3(0, 1, 0));
-    knob.importMaterial(&mtlImporter);
+    // auto& knob = createObject<MeshInstance>("knob");
+    // knob.setMeshFile("content/mori_knob/knob.obj")
+    //    .setScale(2)
+    //    .setPosition(glm::vec3(0, 1, 0));
+    // knob.importMaterial(&mtlImporter);
 
     /* auto& dragon = createObject<MeshInstance>("dragon");
      dragon.setMeshFile("content/dragon/dragon.obj")
@@ -72,6 +72,29 @@ class TestScene : public TestSceneBase {
      dragon.createMaterial<Material>()
          .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
          .setColor(glm::vec3(1));*/
+
+    constexpr float SIZE = 1.85f;
+
+    constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+
+    const char* const szTeapotFileName = "content/teapot/teapot.obj";
+    auto& teapot1 = createObject<MeshInstance>("teapot");
+    teapot1.setMeshFile(szTeapotFileName)
+        .createMaterial<Material>()
+        .setParam(0.68f, 0.32f, 0.0f, 512.0f, 1.f)
+        .setColor(GOLD);
+    teapot1.setPosition(glm::vec3(SIZE, 0, 0))
+        .setScale(SIZE)
+        .setRotation(0, -1, 0);
+
+    auto& teapot2 = createObject<MeshInstance>("teapot");
+    teapot2.setMeshFile(szTeapotFileName)
+        .createMaterial<Material>()
+        .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
+        .setColor(glm::vec3(1));
+    teapot2.setPosition(glm::vec3(-SIZE, 0, 0))
+        .setScale(SIZE)
+        .setRotation(0, -1, 0);
 #else
     // create spheres
     constexpr float D = 4;
