@@ -8,7 +8,7 @@
 namespace RayTracingHistory {
 
 constexpr float F_Max = std::numeric_limits<float>::max();
-constexpr float SIGN_SIZE = 9;
+constexpr float SIGN_SIZE = 1;
 
 void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
                                        MyCamera::Ptr camera) {
@@ -33,7 +33,7 @@ void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
     }  // end of for(x)
 
   // just for fun
-  _drawWireframe(pScene, pCamera);
+  if (SIGN_SIZE > 1) _drawWireframe(pScene, pCamera);
 
   // done
   mPixelCount = W * H;
@@ -71,14 +71,15 @@ void RayCastingRenderer::_drawDrakSign(int x, int y, float darkness) {
   constexpr int BORDER = 1;
   constexpr float GAMA = 1.0f;
 
-  glm::vec3 color(1 - glm::pow(darkness, 0.8f));
-  glm::vec4 CC(color, 1.0f);
-
   if (SIGN_SIZE == 1) {
-    _writePixel(x, y, CC, GAMA);
+    constexpr float AMBIENT = 0.25f;
+    float G = glm::clamp(1 - glm::pow(darkness, 0.25f) + 0.25f, 0.0f, 1.0f);
+    _writePixel(x, y, glm::vec4(G, G, G, 1), GAMA);
     return;
   }
 
+  glm::vec3 color(1 - glm::pow(darkness, 0.8f));
+  glm::vec4 CC(color, 1.0f);
   int lineWidth = glm::max(2.0f, glm::ceil(darkness * Hs));
 
   for (int i = BORDER; i < SIGN_SIZE - BORDER; i++) {
