@@ -38,7 +38,7 @@ class TestSceneBase : public MyScene {
 
     if (pointLight) {
       auto pointLgt = std::make_shared<PointLight>(glm::vec3(2.5f, 5.f, 0));
-      pointLgt->intensity = 0.85f * s;
+      pointLgt->intensity = 1 * s;
       pointLgt->ambient = 0.15f * s;
       mLights.emplace_back(pointLgt);
     }

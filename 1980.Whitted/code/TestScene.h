@@ -20,14 +20,19 @@ class MyMtlImporter : public MaterialImporter {
   virtual MyMaterial::Ptr importObj(const std::string& szName) override {
     if (szName == "cup_material") {
       auto mtl = std::make_shared<Material>();
-      mtl->setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f);
+      mtl->setParam(0.2f, 0.2f, 0.6f, 200.0f, 1.33f);
+      mtl->setColor(glm::vec3(1));
+      return mtl;
+    } else if (szName == "OuterMat") {
+      auto mtl = std::make_shared<Material>();
+      mtl->setParam(0.1f, 0.1f, 0.8f, 200.0f, 1.33f);
       mtl->setColor(glm::vec3(1));
       return mtl;
     }
 
     auto mtl = std::make_shared<Material>();
     mtl->setParam(1.0f, 0.0f, 0.0f, 60, 1.0f);
-    mtl->setColor(glm::vec3(0.8f, 0.6f, 0.1f));
+    if (szName == "pencil_mateiral") mtl->setColor(glm::vec3(0.8f, 0.6f, 0.1f));
     return mtl;
   }
 };
@@ -48,18 +53,25 @@ class TestScene : public TestSceneBase {
         .setParam(1, 0, 0, 60, 1);
 
 #if 1
+    MyMtlImporter mtlImporter;
+
     /*auto& cup = createObject<MeshInstance>("cup");
     cup.setMeshFile("content/cup/cup.obj").setPosition(glm::vec3(0, 0, -1));
-    MyMtlImporter mtlImporter;
     cup.importMaterial(&mtlImporter);*/
-    
-    auto& dragon = createObject<MeshInstance>("dragon");
-    dragon.setMeshFile("content/dragon/dragon.obj")
-        .setScale(0.3f)
-        .setPosition(glm::vec3(0, 0, 0));
-    dragon.createMaterial<Material>()
-        .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
-        .setColor(glm::vec3(1));
+
+    auto& knob = createObject<MeshInstance>("knob");
+    knob.setMeshFile("content/mori_knob/knob.obj")
+        .setScale(2)
+        .setPosition(glm::vec3(0, 1, 0));
+    knob.importMaterial(&mtlImporter);
+
+    /* auto& dragon = createObject<MeshInstance>("dragon");
+     dragon.setMeshFile("content/dragon/dragon.obj")
+         .setScale(0.3f)
+         .setPosition(glm::vec3(0, 0, 0));
+     dragon.createMaterial<Material>()
+         .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
+         .setColor(glm::vec3(1));*/
 #else
     // create spheres
     constexpr float D = 4;
