@@ -73,6 +73,16 @@ class TestScene : public TestSceneBase {
          .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
          .setColor(glm::vec3(1));*/
 
+    auto& statue = createObject<MeshInstance>("statue");
+    statue.setMeshFile("content/statue/statue.obj")
+        .setScale(1.25f)
+        .setRotation(0, glm::radians(180.0f), 0)
+        .setPosition(glm::vec3(0, 0, 0));
+    statue.createMaterial<Material>()
+        .setParam(0.2f, 0.1f, 0.7f, 512.0f, 1.5f)
+        .setColor(glm::vec3(1));
+
+    /*
     constexpr float SIZE = 1.85f;
 
     constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
@@ -95,6 +105,7 @@ class TestScene : public TestSceneBase {
     teapot2.setPosition(glm::vec3(-SIZE, 0, 0))
         .setScale(SIZE)
         .setRotation(0, -1, 0);
+*/
 #else
     // create spheres
     constexpr float D = 4;
