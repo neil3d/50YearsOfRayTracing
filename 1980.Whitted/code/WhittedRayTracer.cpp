@@ -189,22 +189,24 @@ std::tuple<bool, float, Ray, glm::vec3>
 WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
                                            const glm::vec3& point,
                                            const glm::vec3& normal, float eta) {
-  bool bOutside = glm::dot(dir, normal) < 0;
-  glm::vec3 outwardNormal;
-  if (bOutside)
-    outwardNormal = normal;
-  else
-    outwardNormal = -normal;
-
   double Kr = _fresnel(dir, normal, eta);
 
   if (Kr < 1.0f) {
     glm::vec3 refraction = _refract(dir, normal, eta);
     Ray rRay(point, refraction);
-    rRay.applayBiasOffset(outwardNormal, 0.0001f);
+
+    glm::vec3 outwardNormal;
+    if (glm::dot(refraction, normal) > 0) {
+      rRay.applayBiasOffset(normal, 0.001f);
+      outwardNormal = normal;
+    } else {
+      rRay.applayBiasOffset(-normal, 0.001f);
+      outwardNormal = -normal;
+    }
+
     return std::make_tuple(true, Kr, rRay, outwardNormal);
   } else {
-    return std::make_tuple(false, Kr, Ray(), outwardNormal);
+    return std::make_tuple(false, Kr, Ray(), normal);
   }
 }
 
