@@ -24,7 +24,7 @@ class WhittedRayTracer : public DirectRenderer {
   Ray _generateReflectionRay(const glm::vec3& dir, const glm::vec3& point,
                              const glm::vec3& normal);
 
-  std::tuple<bool, float, Ray, glm::vec3> _generateRefractationRay(
+  std::tuple<bool, float, Ray> _generateRefractationRay(
       const glm::vec3& dir, const glm::vec3& point, const glm::vec3& normal,
       float Kn);
 

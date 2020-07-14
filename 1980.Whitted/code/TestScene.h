@@ -53,7 +53,7 @@ class TestScene : public TestSceneBase {
         .setParam(1, 0, 0, 60, 1);
 
     enum class ETestModel { Cup, Knob, Dragon, Statue, Teapot, Spheres };
-    constexpr ETestModel testMdl = ETestModel::Statue;
+    constexpr ETestModel testMdl = ETestModel::Dragon;
     MyMtlImporter mtlImporter;
 
     switch (testMdl) {

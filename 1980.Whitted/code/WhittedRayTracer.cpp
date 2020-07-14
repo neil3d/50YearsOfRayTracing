@@ -97,8 +97,6 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
   // error check
   if (!mtl) return glm::vec3(1, 0, 0);
 
-  glm::vec3 outwardNormal = hitRec.normal;
-
   // refraction
   glm::vec3 refractionColor(0);
   float reflectivity = 0.0f;
@@ -108,7 +106,6 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
     bool bRefraction = std::get<0>(refractTuple);
     reflectivity = std::get<1>(refractTuple);
     Ray rRay = std::get<2>(refractTuple);
-    outwardNormal = std::get<3>(refractTuple);
 
     if (bRefraction) {
       float Kt = (1.0f - reflectivity) * mtl->Kt;
@@ -120,13 +117,12 @@ glm::vec3 WhittedRayTracer::_traceRay(Ray ray, TestSceneBase* pScene, int depth,
   glm::vec3 reflectionColor(0);
   float Ks = glm::clamp(reflectivity + mtl->Ks, 0.0f, 1.0f);
   if (Ks * weight > 0.001f) {
-    Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, outwardNormal);
-    rRay.applayBiasOffset(outwardNormal, 0.001f);
+    Ray rRay = _generateReflectionRay(ray.direction, hitRec.p, hitRec.normal);
     reflectionColor = _traceRay(rRay, pScene, depth + 1, weight * Ks);
   }
 
   glm::vec3 lighting =
-      _shade(-ray.direction, hitRec.p, outwardNormal, mtl, pScene);
+      _shade(-ray.direction, hitRec.p, hitRec.normal, mtl, pScene);
   glm::vec3 baseColor = mtl->sampleBaseColor(hitRec.uv, hitRec.p);
 
   glm::vec3 ambient = lighting.x * baseColor;
@@ -182,31 +178,34 @@ Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
                                              const glm::vec3& point,
                                              const glm::vec3& normal) {
   glm::vec3 outDir = glm::reflect(dir, normal);
-  return Ray(point, outDir);
+  Ray rRay(point, outDir);
+
+  if (glm::dot(outDir, normal) > 0) {
+    rRay.applayBiasOffset(normal, 0.001f);
+  } else {
+    rRay.applayBiasOffset(-normal, 0.001f);
+  }
+  return rRay;
 }
 
-std::tuple<bool, float, Ray, glm::vec3>
-WhittedRayTracer::_generateRefractationRay(const glm::vec3& dir,
-                                           const glm::vec3& point,
-                                           const glm::vec3& normal, float eta) {
+std::tuple<bool, float, Ray> WhittedRayTracer::_generateRefractationRay(
+    const glm::vec3& dir, const glm::vec3& point, const glm::vec3& normal,
+    float eta) {
   double Kr = _fresnel(dir, normal, eta);
 
   if (Kr < 1.0f) {
     glm::vec3 refraction = _refract(dir, normal, eta);
     Ray rRay(point, refraction);
 
-    glm::vec3 outwardNormal;
     if (glm::dot(refraction, normal) > 0) {
       rRay.applayBiasOffset(normal, 0.001f);
-      outwardNormal = normal;
     } else {
       rRay.applayBiasOffset(-normal, 0.001f);
-      outwardNormal = -normal;
     }
 
-    return std::make_tuple(true, Kr, rRay, outwardNormal);
+    return std::make_tuple(true, Kr, rRay);
   } else {
-    return std::make_tuple(false, Kr, Ray(), normal);
+    return std::make_tuple(false, Kr, Ray());
   }
 }
 
