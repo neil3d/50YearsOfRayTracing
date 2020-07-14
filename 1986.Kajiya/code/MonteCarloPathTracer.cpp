@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 32;
+constexpr uint32_t SPP_ROOT = 8;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
@@ -40,16 +40,7 @@ void MonteCarloPathTracer::_init(SDL_Window* pWnd) {
 
 std::string MonteCarloPathTracer::getInfo() const { return mInfo; }
 
-float MonteCarloPathTracer::getProgress() const {
-  auto SPP = SPP_ROOT * SPP_ROOT;
-  auto total = mFrameWidth * mFrameHeight * SPP;
-  if (mPixelCount == total)
-    return 1.0f;
-  else
-    return (float)mPixelCount / total;
-}
-
-void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
+void MonteCarloPathTracer::_tileRenderThread(MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
   MySceneWithLight* pScene = dynamic_cast<MySceneWithLight*>(scene.get());
@@ -62,46 +53,52 @@ void MonteCarloPathTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   float H = static_cast<float>(mFrameHeight);
   int MAX_SPP = SPP_ROOT * SPP_ROOT;
 
-  int SPP = 0;
-  std::vector<glm::vec3> tileBuffer;
+  Tile tile;
 
-  int tileW = tile.right - tile.left;
-  int tileH = tile.bottom - tile.top;
-  tileBuffer.resize(tileW * tileH, glm::vec3(0));
+  while (mRuning && _popTile(tile)) {
+    int SPP = 0;
+    std::vector<glm::vec3> tileBuffer;
+
+    int tileW = tile.right - tile.left;
+    int tileH = tile.bottom - tile.top;
+    tileBuffer.resize(tileW * tileH, glm::vec3(0));
 
 #if 1
-  auto xi1 = JitteringSampling::generateSamples(SPP_ROOT, false);
-  auto xi2 = JitteringSampling::generateSamples(SPP_ROOT, true);
+    auto xi1 = JitteringSampling::generateSamples(SPP_ROOT, false);
+    auto xi2 = JitteringSampling::generateSamples(SPP_ROOT, true);
 #else
-  auto xi1 = UniformSampling::generateSamples(SPP_ROOT);
-  auto xi2 = UniformSampling::generateSamples(SPP_ROOT);
+    auto xi1 = UniformSampling::generateSamples(SPP_ROOT);
+    auto xi2 = UniformSampling::generateSamples(SPP_ROOT);
 #endif
 
-  while (SPP < MAX_SPP) {
-    int index = 0;
-    float scale = 1.0f / (SPP + 1);
+    while (SPP < MAX_SPP) {
+      int index = 0;
+      float scale = 1.0f / (SPP + 1);
 
-    for (int y = tile.top; y < tile.bottom; y++)
-      for (int x = tile.left; x < tile.right; x++) {
-        if (!mRuning) break;
+      for (int y = tile.top; y < tile.bottom; y++)
+        for (int x = tile.left; x < tile.right; x++) {
+          if (!mRuning) break;
 
-        const glm::vec2& xi = xi1[SPP];
-        Ray primaryRay =
-            pCamera->generateViewingRay((x + xi.x) / W, (y + xi.y) / H);
+          const glm::vec2& xi = xi1[SPP];
+          Ray primaryRay =
+              pCamera->generateViewingRay((x + xi.x) / W, (y + xi.y) / H);
 
-        auto& buf = tileBuffer[index++];
-        buf += _traceRay(primaryRay, pScene, xi2[SPP], 1.0f, 0);
+          auto& buf = tileBuffer[index++];
+          buf += _traceRay(primaryRay, pScene, xi2[SPP], 1.0f, 0);
 
-        _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 1);
-        mPixelCount++;
-      }
+          _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 1);
+          mPixelCount++;
+        }
 
-    SPP++;
+      SPP++;
+    }  // end of while
+
+#if 0
+    spdlog::info("Tile[{0}] rendering finished, max depth = {1}.", tile.id,
+                 (int)mMaxDepth);
+#endif
+    _onTileFinished();
   }  // end of while
-
-  spdlog::info("Tile[{0}] rendering finished, max depth = {1}.", tile.id,
-               (int)mMaxDepth);
-  _onTileFinished();
 }
 
 glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,

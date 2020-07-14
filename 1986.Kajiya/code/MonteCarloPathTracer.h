@@ -20,11 +20,10 @@ class PinholeCamera;
 
 class MonteCarloPathTracer : public TiledRenderer {
  public:
-  virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
+  virtual void _tileRenderThread(MyScene::Ptr scene,
                                  MyCamera::Ptr camera) override;
 
   virtual std::string getInfo() const override;
-  virtual float getProgress() const override;
 
  private:
   virtual void _init(SDL_Window* pWnd) override;

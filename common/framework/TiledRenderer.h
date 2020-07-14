@@ -36,6 +36,8 @@ class TiledRenderer : public MyRenderer {
     MyRenderer::renderScene(scene, camera, clearColor);
 
     // make tiles
+    mFinishedTile = 0;
+    mPresentTile = 0;
     mTileCursor = 0;
 
     int numTileX = std::ceilf((float)mFrameWidth / TILE_SIZE);
@@ -109,6 +111,21 @@ class TiledRenderer : public MyRenderer {
     }  // end of while
   }
 
+  virtual bool nextPresentReady() const {
+    if (mFinishedTile != mPresentTile) {
+      mPresentTile = (int)mFinishedTile;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  virtual float getProgress() const override {
+    if (mTileList.size() == mFinishedTile) return 1.0f;
+    int f = mFinishedTile;
+    return float(f) / mTileList.size();
+  }
+
  protected:
   bool _popTile(Tile& outTile) {
     if (mTileCursor < mTileList.size()) {
@@ -128,6 +145,7 @@ class TiledRenderer : public MyRenderer {
  private:
   std::vector<std::thread> mRenderingThreads;
   std::atomic<int> mFinishedTile = {0};
+  mutable std::atomic<int> mPresentTile = {0};
 
   std::vector<Tile> mTileList;
   std::atomic<int> mTileCursor = 0;
