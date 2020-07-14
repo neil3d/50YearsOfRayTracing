@@ -103,6 +103,7 @@ void TriangleMesh::_postMeshCreated() {
   _buildBoundingBox();
 
   // build BVH for each sub mesh
+  spdlog::info("building BVH ...");
   for (auto& subMesh : mSubMeshes) {
     std::vector<int> faceList(subMesh.faces.size());
     int i = 0;

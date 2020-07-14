@@ -102,7 +102,7 @@ class DemoScene : public MySceneWithLight {
         .setColor(glm::vec3(1));
 #endif
 
-#if 1  // add teapot
+#if 0  // add teapot
     constexpr float SIZE = 120;
 
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
@@ -123,7 +123,7 @@ class DemoScene : public MySceneWithLight {
         .setRotation(0, -15, 0);
 #endif
 
-#if 0  // stanford dragon
+#if 1  // stanford dragon
     const char* const szFileName = "content/dragon/dragon.obj";
     auto& mesh = createObject<MeshInstance>("dragon");
     mesh.setMeshFile(szFileName);

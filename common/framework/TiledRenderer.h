@@ -7,6 +7,8 @@
  */
 
 #pragma once
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
 #include <mutex>
 
@@ -79,7 +81,9 @@ class TiledRenderer : public MyRenderer {
     mRuning = true;
     unsigned int threadsCount = std::min((unsigned int)mTileList.size(),
                                          std::thread::hardware_concurrency());
+    spdlog::info("rendering thread count = {0}", threadsCount);
 
+  spdlog::info("start rendering ...");
     for (unsigned int i = 0; i < threadsCount; i++) {
       mRenderingThreads.emplace_back(std::thread(
           [this, scene, camera] { this->_tileRenderThread(scene, camera); }));

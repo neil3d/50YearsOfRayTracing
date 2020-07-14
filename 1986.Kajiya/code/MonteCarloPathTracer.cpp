@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 8;
+constexpr uint32_t SPP_ROOT = 16;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
