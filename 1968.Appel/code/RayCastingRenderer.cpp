@@ -8,7 +8,7 @@
 namespace RayTracingHistory {
 
 constexpr float F_Max = std::numeric_limits<float>::max();
-constexpr float SIGN_SIZE = 1;
+constexpr float SIGN_SIZE = 9;
 
 void RayCastingRenderer::_renderThread(MyScene::Ptr scene,
                                        MyCamera::Ptr camera) {

@@ -39,7 +39,7 @@ void MyRenderer::_init(SDL_Window* pWnd) {
 
 bool MyRenderer::nextPresentReady() const {
   uint32_t line = mPixelCount / mFrameWidth;
-  return line * 2 > mPresentLine;
+  return line > mPresentLine;
 }
 
 void MyRenderer::screenshot(const std::string& szFileName) {

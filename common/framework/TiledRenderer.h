@@ -83,7 +83,7 @@ class TiledRenderer : public MyRenderer {
                                          std::thread::hardware_concurrency());
     spdlog::info("rendering thread count = {0}", threadsCount);
 
-  spdlog::info("start rendering ...");
+    spdlog::info("start rendering ...");
     for (unsigned int i = 0; i < threadsCount; i++) {
       mRenderingThreads.emplace_back(std::thread(
           [this, scene, camera] { this->_tileRenderThread(scene, camera); }));
@@ -115,13 +115,15 @@ class TiledRenderer : public MyRenderer {
     }  // end of while
   }
 
-  virtual bool nextPresentReady() const {
-    if (mFinishedTile != mPresentTile) {
-      mPresentTile = (int)mFinishedTile;
-      return true;
-    } else {
-      return false;
-    }
+  virtual bool nextPresentReady() const override {
+    return mFinishedTile > mPresentTile;
+  }
+
+  virtual void _present() override {
+    mPresentTile = (int)mFinishedTile;
+
+    // TODO: present finished tile pixel only
+    MyRenderer::_present();
   }
 
   virtual float getProgress() const override {
@@ -149,7 +151,7 @@ class TiledRenderer : public MyRenderer {
  private:
   std::vector<std::thread> mRenderingThreads;
   std::atomic<int> mFinishedTile = {0};
-  mutable std::atomic<int> mPresentTile = {0};
+  std::atomic<int> mPresentTile = {0};
 
   std::vector<Tile> mTileList;
   std::atomic<int> mTileCursor = 0;
