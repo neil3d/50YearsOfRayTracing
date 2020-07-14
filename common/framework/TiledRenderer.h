@@ -7,15 +7,16 @@
  */
 
 #pragma once
-#include <array>
+#include <algorithm>
+#include <mutex>
 
 #include "../scene/MyScene.h"
 #include "MyCamera.h"
 #include "MyRenderer.h"
 
 namespace RayTracingHistory {
-constexpr int NUM_TILE_X = 4;
-constexpr int NUM_TILE_Y = 4;
+
+constexpr int TILE_SIZE = 32;  // in pixel
 
 struct Tile {
   int id;
@@ -34,35 +35,53 @@ class TiledRenderer : public MyRenderer {
     _shutdown();
     MyRenderer::renderScene(scene, camera, clearColor);
 
-    // start new threads
-    mRuning = true;
-    int tileW = mFrameWidth / NUM_TILE_X;
-    int tileH = mFrameHeight / NUM_TILE_Y;
-    mRuningTile = NUM_TILE_X * NUM_TILE_Y;
+    // make tiles
+    mTileCursor = 0;
 
-    for (int y = 0; y < NUM_TILE_Y; y++) {
-      for (int x = 0; x < NUM_TILE_X; x++) {
+    int numTileX = std::ceilf((float)mFrameWidth / TILE_SIZE);
+    int numTileY = std::ceilf((float)mFrameHeight / TILE_SIZE);
+
+    for (int y = 0; y < numTileY; y++) {
+      for (int x = 0; x < numTileX; x++) {
         Tile tile;
-        tile.id = x + y * NUM_TILE_X;
-        tile.left = x * tileW;
-        tile.top = y * tileH;
+        tile.id = x + y * numTileX;
+        tile.left = x * TILE_SIZE;
+        tile.top = y * TILE_SIZE;
 
-        if (x == NUM_TILE_X - 1)
+        if (x == numTileX - 1)
           tile.right = mFrameWidth;
         else
-          tile.right = tile.left + tileW;
+          tile.right = tile.left + TILE_SIZE;
 
-        if (y == NUM_TILE_Y - 1)
+        if (y == numTileY - 1)
           tile.bottom = mFrameHeight;
         else
-          tile.bottom = tile.top + tileH;
+          tile.bottom = tile.top + TILE_SIZE;
 
-        int index = y * NUM_TILE_X + x;
-        mRenderingThreads[index] = std::thread([this, tile, scene, camera] {
-          this->_tileRenderThread(tile, scene, camera);
-        });
-      }  // end of for(y)
+        mTileList.push_back(tile);
+      }  // end of for(x)
     }    // end of for(y)
+
+    int CX = mFrameWidth / 2;
+    int CY = mFrameHeight / 2;
+    std::sort(std::begin(mTileList), std::end(mTileList),
+              [CX, CY](const Tile& t1, const Tile& t2) {
+                int dx1 = t1.left - CX;
+                int dy1 = t1.top - CY;
+                int dx2 = t2.left - CX;
+                int dy2 = t2.top - CY;
+                return dx1 * dx1 + dy1 * dy1 < dx2 * dx2 + dy2 * dy2;
+              });
+
+    // start new threads
+    mRuning = true;
+    unsigned int threadsCount = std::min((unsigned int)mTileList.size(),
+                                         std::thread::hardware_concurrency());
+
+    for (unsigned int i = 0; i < threadsCount; i++) {
+      mRenderingThreads.emplace_back(std::thread(
+          [this, scene, camera] { this->_tileRenderThread(scene, camera); }));
+    }
   }
 
   virtual void _shutdown() override {
@@ -72,29 +91,45 @@ class TiledRenderer : public MyRenderer {
     }
   }
 
-  virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
-                                 MyCamera::Ptr camera) {
+  virtual void _tileRenderThread(MyScene::Ptr scene, MyCamera::Ptr camera) {
     glm::vec4 topColor(1.0f, 1, 1, 1);
     glm::vec4 bottomColor(0.5f, 0.7f, 1.0f, 1);
 
-    for (int y = tile.top; y < tile.bottom; y++)
-      for (int x = tile.left; x < tile.right; x++) {
-        if (mRuning) {
-          float r = (float)y / mFrameHeight;
-          _writePixel(x, y, bottomColor * r + topColor * (1.0f - r), 1.0f);
-        } else
-          break;
-      }  // end of for(x)
+    Tile tile;
+    while (mRuning && _popTile(tile)) {
+      for (int y = tile.top; y < tile.bottom; y++)
+        for (int x = tile.left; x < tile.right; x++) {
+          if (mRuning) {
+            float r = (float)y / mFrameHeight;
+            _writePixel(x, y, bottomColor * r + topColor * (1.0f - r), 1.0f);
+          } else
+            break;
+        }  // end of for(x)
+      _onTileFinished();
+    }  // end of while
   }
 
  protected:
+  bool _popTile(Tile& outTile) {
+    if (mTileCursor < mTileList.size()) {
+      outTile = mTileList[mTileCursor];
+      mTileCursor++;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void _onTileFinished() {
-    mRuningTile--;
-    if (mRuningTile <= 0) _onRenderFinished();
+    mFinishedTile++;
+    if (mFinishedTile == mTileList.size()) _onRenderFinished();
   }
 
  private:
-  std::atomic<int> mRuningTile = {0};
-  std::array<std::thread, NUM_TILE_X * NUM_TILE_Y> mRenderingThreads;
+  std::vector<std::thread> mRenderingThreads;
+  std::atomic<int> mFinishedTile = {0};
+
+  std::vector<Tile> mTileList;
+  std::atomic<int> mTileCursor = 0;
 };
 }  // namespace RayTracingHistory

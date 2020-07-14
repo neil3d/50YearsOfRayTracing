@@ -17,7 +17,7 @@ class MySceneWithLight;
 
 class DistributedRayTracer : public TiledRenderer {
  public:
-  virtual void _tileRenderThread(Tile tile, MyScene::Ptr scene,
+  virtual void _tileRenderThread(MyScene::Ptr scene,
                                  MyCamera::Ptr camera) override;
 
   virtual std::string getInfo() const override;
@@ -27,9 +27,9 @@ class DistributedRayTracer : public TiledRenderer {
                       const glm::vec2 xi, float weight);
 
   std::tuple<float, float> _shade(const glm::vec3& wo,
-                                            const HitRecord& shadingPoint,
-                                            MySceneWithLight* pScene,
-                                            const glm::vec2 xi, float time);
+                                  const HitRecord& shadingPoint,
+                                  MySceneWithLight* pScene, const glm::vec2 xi,
+                                  float time);
 
   Ray _jitteredReflectionRay(const glm::vec3& dir, const glm::vec3& point,
                              const glm::vec3& normal, const glm::vec2 xi,

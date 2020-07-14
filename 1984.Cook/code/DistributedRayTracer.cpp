@@ -21,7 +21,7 @@ std::string DistributedRayTracer::getInfo() const {
   return std::string(" - SPP: ") + std::to_string(SPP_N * SPP_N);
 }
 
-void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
+void DistributedRayTracer::_tileRenderThread(MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   ThinLensCamera* pCamera = static_cast<ThinLensCamera*>(camera.get());
   MySceneWithLight* pScene = dynamic_cast<MySceneWithLight*>(scene.get());
@@ -30,32 +30,35 @@ void DistributedRayTracer::_tileRenderThread(Tile tile, MyScene::Ptr scene,
   float invSPP = 1.0f / (n * n);
 
   std::vector<glm::vec2> xiR, xiS;
+  Tile tile;
 
-  for (int y = tile.top; y < tile.bottom; y++)
-    for (int x = tile.left; x < tile.right; x++) {
-      if (!mRuning) break;
+  while (mRuning && _popTile(tile)) {
+    for (int y = tile.top; y < tile.bottom; y++)
+      for (int x = tile.left; x < tile.right; x++) {
+        if (!mRuning) break;
 
-      xiR = JitteringSampling::generateSamples(n, false);
-      xiS = JitteringSampling::generateSamples(n, true);
+        xiR = JitteringSampling::generateSamples(n, false);
+        xiS = JitteringSampling::generateSamples(n, true);
 
-      glm::vec3 color(0);
-      for (int i = 0; i < n * n; i++) {
-        const glm::vec2& pixelXi = xiR[i];
-        const glm::vec2& sampleXi = xiS[i];
+        glm::vec3 color(0);
+        for (int i = 0; i < n * n; i++) {
+          const glm::vec2& pixelXi = xiR[i];
+          const glm::vec2& sampleXi = xiS[i];
 
-        Ray viewingRay = pCamera->jitteredViewingRay(
-            (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight,
-            sampleXi);
+          Ray viewingRay = pCamera->jitteredViewingRay(
+              (x + pixelXi.x) / mFrameWidth, (y + pixelXi.y) / mFrameHeight,
+              sampleXi);
 
-        viewingRay.time = glm::linearRand(0.0f, 1.0f);
-        color += _traceRay(viewingRay, pScene, 0, sampleXi, 1.0f);
-      }
+          viewingRay.time = glm::linearRand(0.0f, 1.0f);
+          color += _traceRay(viewingRay, pScene, 0, sampleXi, 1.0f);
+        }
 
-      _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), GAMA);
-      mPixelCount++;
-    }  // end of for(x)
+        _writePixel(x, y, glm::vec4(invSPP * color, 1.0f), GAMA);
+        mPixelCount++;
+      }  // end of for(x)
 
-  _onTileFinished();
+    _onTileFinished();
+  }  // end of while
 }
 
 glm::vec3 DistributedRayTracer::_traceRay(const Ray& ray,

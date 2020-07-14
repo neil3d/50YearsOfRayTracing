@@ -35,7 +35,7 @@ class MyRenderer {
   virtual float getProgress() const;
   virtual std::string getInfo() const { return ""; }
 
-  bool nextPresentReady() const;
+  virtual bool nextPresentReady() const;
 
   void screenshot(const std::string& szFileName);
 
