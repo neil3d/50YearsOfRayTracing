@@ -177,14 +177,17 @@ glm::vec3 WhittedRayTracer::_shade(const glm::vec3& wo, const glm::vec3& pt,
 Ray WhittedRayTracer::_generateReflectionRay(const glm::vec3& dir,
                                              const glm::vec3& point,
                                              const glm::vec3& normal) {
-  glm::vec3 outDir = glm::reflect(dir, normal);
-  Ray rRay(point, outDir);
-
-  if (glm::dot(outDir, normal) > 0) {
-    rRay.applayBiasOffset(normal, 0.001f);
+  glm::vec3 N;
+  if (glm::dot(dir, normal) > 0) {
+    N = normal;
   } else {
-    rRay.applayBiasOffset(-normal, 0.001f);
+    // internal reflection
+    N = -normal;
   }
+
+  glm::vec3 outDir = glm::reflect(dir, N);
+  Ray rRay(point, outDir);
+  rRay.applayBiasOffset(N, 0.001f);
   return rRay;
 }
 
