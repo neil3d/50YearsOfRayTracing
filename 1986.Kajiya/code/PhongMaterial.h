@@ -20,7 +20,7 @@ namespace RayTracingHistory {
  */
 class PhongMaterial : public MaterialBase {
  public:
-  float Kd = 0.25f;
+  float Kd = 1;
   float Ks = 4;
   float Shininess = 66;
 

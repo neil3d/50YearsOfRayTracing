@@ -11,7 +11,7 @@
 
 #include "DiffuseMaterial.h"
 #include "LambertianMaterial.h"
-#include "MySceneWithLight.h"
+#include "MySceneWithLights.h"
 #include "ParallelogramLight.h"
 #include "PhongMaterial.h"
 #include "scene/MeshInstance.h"
@@ -29,12 +29,8 @@ class TankMtlImporter : public MaterialImporter {
   }
 };
 
-class DemoScene : public MySceneWithLight {
-  ParallelogramLight mMainLight;
-
+class DemoScene : public MySceneWithLights {
  public:
-  virtual const AreaLight* getMainLight() const override { return &mMainLight; }
-
   virtual void init() override {
     // create objects
     constexpr float W = 500;
@@ -42,17 +38,33 @@ class DemoScene : public MySceneWithLight {
     constexpr float H = 500;
     constexpr float LS = 120;  // ligt size
 
-    glm::vec3 lightEdge1(0, 0, LS);
-    glm::vec3 lightEdge2(LS, 0, 0);
-    glm::vec3 lightPos(LS / -2, H - 0.1f, LS / -2);
-    mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
+    // key light
+    {
+      glm::vec3 lightEdge1(0, 0, LS);
+      glm::vec3 lightEdge2(LS, 0, 0);
+      glm::vec3 lightPos(LS / -2, H - 0.1f, LS / -2);
 
-    createObject<Parallelogram>("light_shape")
-        .setEdges(lightEdge1, lightEdge2)
-        .setAnchor(lightPos)
-        .createMaterial<DiffuseMaterial>()
-        .setColor(glm::vec3(1))
-        .enableLight();
+      auto keyLight = std::make_shared<ParallelogramLight>();
+      keyLight->setShape(lightEdge1, lightEdge2, lightPos).setIntensity(120);
+      mLights.push_back(keyLight);
+
+      createObject<Parallelogram>("light_shape")
+          .setEdges(lightEdge1, lightEdge2)
+          .setAnchor(lightPos)
+          .createMaterial<DiffuseMaterial>()
+          .setColor(glm::vec3(1))
+          .enableLight();
+    }
+    // fill light
+    {
+      glm::vec3 lightEdge1(LS, 0, 0);
+      glm::vec3 lightEdge2(0, LS, 0);
+      glm::vec3 lightPos(0, H / 100, -D);
+
+      auto fillLight = std::make_shared<ParallelogramLight>();
+      fillLight->setShape(lightEdge2, lightEdge1, lightPos).setIntensity(5);
+      mLights.push_back(fillLight);
+    }
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
@@ -128,8 +140,8 @@ class DemoScene : public MySceneWithLight {
     auto& mesh = createObject<MeshInstance>("dragon");
     mesh.setMeshFile(szFileName);
     mesh.createMaterial<PhongMaterial>().setColor(GOLD);
-    mesh.setScale(28)
-        .setPosition(glm::vec3(0, 100, 0))
+    mesh.setScale(20)
+        .setPosition(glm::vec3(0, 40, 0))
         .setRotation(0, glm::radians(180.0f), 0);
 #endif
 

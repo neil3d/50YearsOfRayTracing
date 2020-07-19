@@ -11,7 +11,7 @@
 
 #include "DiffuseMaterial.h"
 #include "LambertianMaterial.h"
-#include "MySceneWithLight.h"
+#include "MySceneWithLights.h"
 #include "ParallelogramLight.h"
 #include "PhongMaterial.h"
 #include "asset/MaterialImporter.h"
@@ -58,9 +58,7 @@ class CornellBoxMtlImporter : public MaterialImporter {
   }
 };
 
-class CornellBoxScene : public MySceneWithLight {
-  ParallelogramLight mMainLight;
-
+class CornellBoxScene : public MySceneWithLights {
   void _initLight() {
     float h = 0.1f;
     glm::vec3 v1(343.0f, 548.0f - h, 227.0f);
@@ -70,7 +68,10 @@ class CornellBoxScene : public MySceneWithLight {
 
     glm::vec3 edge1 = v2 - v1;
     glm::vec3 edge2 = v4 - v1;
-    mMainLight.setShape(edge2, edge1, v1);
+
+    auto mainLight = std::make_shared<ParallelogramLight>();
+    mainLight->setShape(edge2, edge1, v1);
+    mLights.push_back(mainLight);
 
     createObject<Parallelogram>("light_shape")
         .setEdges(edge1, edge2)
@@ -81,8 +82,6 @@ class CornellBoxScene : public MySceneWithLight {
   }
 
  public:
-  virtual const AreaLight* getMainLight() const override { return &mMainLight; }
-
   virtual void init() override {
     const char* const szFileName = "content/cornell_box/cornell_box.obj";
 
@@ -95,7 +94,7 @@ class CornellBoxScene : public MySceneWithLight {
     _initLight();
 
     constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
-    
+
 #if 1  // add teapot
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot = createObject<MeshInstance>("teapot");

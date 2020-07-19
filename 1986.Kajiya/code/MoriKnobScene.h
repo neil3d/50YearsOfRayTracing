@@ -11,7 +11,7 @@
 
 #include "DiffuseMaterial.h"
 #include "LambertianMaterial.h"
-#include "MySceneWithLight.h"
+#include "MySceneWithLights.h"
 #include "ParallelogramLight.h"
 #include "PhongMaterial.h"
 #include "asset/MaterialImporter.h"
@@ -54,8 +54,7 @@ class MoriKnobMtlImporter : public MaterialImporter {
   }
 };
 
-class MoriKnobScene : public MySceneWithLight {
-  ParallelogramLight mMainLight;
+class MoriKnobScene : public MySceneWithLights {
 
   void _initLight() {
     glm::vec3 v1(3.75, 12, -3.75);
@@ -65,7 +64,9 @@ class MoriKnobScene : public MySceneWithLight {
 
     glm::vec3 edge1 = v3 - v1;
     glm::vec3 edge2 = v4 - v1;
-    mMainLight.setShape(edge1, edge2, v1);
+    auto mainLight = std::make_shared<ParallelogramLight>();
+    mainLight->setShape(edge1, edge2, v1);
+    mLights.push_back(mainLight);
 
 #if 0
     createObject<Parallelogram>("light_shape")
@@ -78,7 +79,6 @@ class MoriKnobScene : public MySceneWithLight {
   }
 
  public:
-  virtual const AreaLight* getMainLight() const override { return &mMainLight; }
 
   virtual float systemUnit() const { return 1; }
 

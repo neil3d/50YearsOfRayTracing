@@ -10,7 +10,7 @@
 #include <memory>
 
 #include "DiffuseMaterial.h"
-#include "MySceneWithLight.h"
+#include "MySceneWithLights.h"
 #include "ParallelogramLight.h"
 #include "geometry/ONB.h"
 #include "scene/Box.h"
@@ -20,14 +20,9 @@
 
 namespace RayTracingHistory {
 
-class KajiyaScene : public MySceneWithLight {
-  ParallelogramLight mMainLight;
-
+class KajiyaScene : public MySceneWithLights {
  public:
-  virtual const AreaLight* getMainLight() const override { return &mMainLight; }
-
   virtual float systemUnit() const { return 1000; }
-
 
   virtual void init() override {
     // create objects
@@ -42,8 +37,10 @@ class KajiyaScene : public MySceneWithLight {
 
     glm::vec3 lightEdge1 = lightONB.U * LS;
     glm::vec3 lightEdge2 = lightONB.V * LS;
-    mMainLight.setShape(lightEdge1, lightEdge2, lightPos);
-    mMainLight.setIntensity(500);
+    auto mainLight = std::make_shared<ParallelogramLight>();
+    mainLight->setShape(lightEdge1, lightEdge2, lightPos);
+    mainLight->setIntensity(500);
+    mLights.push_back(mainLight);
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
@@ -95,9 +92,10 @@ class KajiyaScene : public MySceneWithLight {
     const glm::vec3 stackPos(RADIUS * 1.5f, 0, -RADIUS * 3.5f);
     for (int h = 0; h < 3; h++) {
       for (int m = 1; m <= 3 - h; m++) {
-        _createLineOfSpheres(m, RADIUS,
-                             stackPos + glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,
-                                           RADIUS * m * 2 + h * RADIUS));
+        _createLineOfSpheres(
+            m, RADIUS,
+            stackPos + glm::vec3(-RADIUS * m, h * RADIUS * 2 + RADIUS,
+                                 RADIUS * m * 2 + h * RADIUS));
       }
     }  // end of for
   }

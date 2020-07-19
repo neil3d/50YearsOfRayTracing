@@ -13,9 +13,14 @@
 
 namespace RayTracingHistory {
 
-class MySceneWithLight : public MyScene {
+class MySceneWithLights : public MyScene {
+ protected:
+  std::vector<std::shared_ptr<AreaLight>> mLights;
+
  public:
-  virtual const AreaLight* getMainLight() const = 0;
+  const std::vector<std::shared_ptr<AreaLight>>& getLights() const {
+    return mLights;
+  }
 
   virtual float systemUnit() const { return 100; }
 };

@@ -43,7 +43,7 @@ std::string MonteCarloPathTracer::getInfo() const { return mInfo; }
 void MonteCarloPathTracer::_tileRenderThread(MyScene::Ptr scene,
                                              MyCamera::Ptr camera) {
   PinholeCamera* pCamera = static_cast<PinholeCamera*>(camera.get());
-  MySceneWithLight* pScene = dynamic_cast<MySceneWithLight*>(scene.get());
+  MySceneWithLights* pScene = dynamic_cast<MySceneWithLights*>(scene.get());
 
   std::random_device randDevice;
   std::mt19937 stdRand(randDevice());
@@ -102,7 +102,7 @@ void MonteCarloPathTracer::_tileRenderThread(MyScene::Ptr scene,
 }
 
 glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
-                                          MySceneWithLight* pScene,
+                                          MySceneWithLights* pScene,
                                           const glm::vec2& xi, float weight,
                                           int depth) {
   // NEE == Next Event Estimation
@@ -127,12 +127,11 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   // error check
   if (!pMtl) return glm::abs(hitRec.normal);
 
-  const AreaLight* pLight = pScene->getMainLight();
-
   // avoid double counting the light source
   if (depth == 0) {
+    constexpr float EMISSION = 1;  // TODO
     // hit light
-    if (pMtl->isLight()) return glm::vec3(pLight->getIntensity());
+    if (pMtl->isLight()) return glm::vec3(EMISSION);
   }
 
   // bounces == 0: light source
@@ -148,35 +147,39 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   //----- begin of direct lighting -----------------------------------------
   glm::vec3 directLighting(0);
   {
-    // visibility between the shading point and the light
-    float visibilityTerm = 1.0f;
+    const auto& lights = pScene->getLights();
+    for (auto pLight : lights) {
+      // visibility between the shading point and the light
+      float visibilityTerm = 1.0f;
 
-    auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
-    Ray shadowRay = std::get<0>(shadowRet);
-    shadowRay.applayBiasOffset(hitRec.normal, 0.0001f, 0.00001f);
+      auto shadowRet = pLight->generateShadowRay(hitRec.p, hitRec.normal, xi);
+      Ray shadowRay = std::get<0>(shadowRet);
+      shadowRay.applayBiasOffset(hitRec.normal, 0.0001f, 0.00001f);
 
-    float lightDistance = std::get<1>(shadowRet);
-    glm::vec3 lightNormal = std::get<2>(shadowRet);
+      float lightDistance = std::get<1>(shadowRet);
+      glm::vec3 lightNormal = std::get<2>(shadowRet);
 
-    auto stopWithAnyHit = [](const HitRecord&) { return true; };
-    bool bShadow = pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
-    if (bShadow) visibilityTerm = 0.f;
+      auto stopWithAnyHit = [](const HitRecord&) { return true; };
+      bool bShadow =
+          pScene->anyHit(shadowRay, 0, lightDistance, stopWithAnyHit);
+      if (bShadow) visibilityTerm = 0.f;
 
-    // geometry term
-    const glm::vec3 lightDir = shadowRay.direction;
-    const float R = lightDistance / sysUnit;
-    const float attenuation = glm::min(1.0f, 1.0f / (R * R));
-    const float geometryTerm =
-        glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
-        glm::max(0.0f, glm::dot(lightDir, lightNormal)) * attenuation;
+      // geometry term
+      const glm::vec3 lightDir = shadowRay.direction;
+      const float R = lightDistance / sysUnit;
+      const float attenuation = glm::min(1.0f, 1.0f / (R * R));
+      const float geometryTerm =
+          glm::max(0.0f, glm::dot(lightDir, hitRec.normal)) *
+          glm::max(0.0f, glm::dot(lightDir, lightNormal)) * attenuation;
 
-    glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
-    const float brdf = pMtl->evaluate(lightDir, -wo.direction, hitRec.normal);
-    const float A = pLight->getArea() / sysUnit / sysUnit;
-    const float Li = pLight->getIntensity();
+      glm::vec3 color = pMtl->getBaseColor(hitRec.uv, hitRec.p);
+      const float brdf = pMtl->evaluate(lightDir, -wo.direction, hitRec.normal);
+      const float A = pLight->getArea() / sysUnit / sysUnit;
+      const float Li = pLight->getIntensity();
 
-    // uniform sampling the light source, PDF = 1/A
-    directLighting = Li * A * brdf * visibilityTerm * geometryTerm * color;
+      // uniform sampling the light source, PDF = 1/A
+      directLighting += Li * A * brdf * visibilityTerm * geometryTerm * color;
+    }  // end of for
   }
   if (sampleLight) return directLighting / NEE_PDF_LIGHT;
   //----- end of direct lighting -----------------------------------------

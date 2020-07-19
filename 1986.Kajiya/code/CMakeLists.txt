@@ -16,7 +16,7 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 MonteCarloPathTracer.h
                 MonteCarloPathTracer.cpp
                 MoriKnobScene.h
-                MySceneWithLight.h
+                MySceneWithLights.h
                 ParallelogramLight.h
                 PhongMaterial.h
                 SkyLight.h
