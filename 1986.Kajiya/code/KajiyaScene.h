@@ -37,10 +37,10 @@ class KajiyaScene : public MySceneWithLights {
 
     glm::vec3 lightEdge1 = lightONB.U * LS;
     glm::vec3 lightEdge2 = lightONB.V * LS;
-    auto mainLight = std::make_shared<ParallelogramLight>();
-    mainLight->setShape(lightEdge1, lightEdge2, lightPos);
-    mainLight->setIntensity(500);
-    mLights.push_back(mainLight);
+    auto keyLight = std::make_shared<ParallelogramLight>();
+    keyLight->setShape(lightEdge1, lightEdge2, lightPos);
+    keyLight->setIntensity(500);
+    mLights.push_back(keyLight);
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))

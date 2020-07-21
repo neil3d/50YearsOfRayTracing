@@ -69,9 +69,9 @@ class CornellBoxScene : public MySceneWithLights {
     glm::vec3 edge1 = v2 - v1;
     glm::vec3 edge2 = v4 - v1;
 
-    auto mainLight = std::make_shared<ParallelogramLight>();
-    mainLight->setShape(edge2, edge1, v1);
-    mLights.push_back(mainLight);
+    auto keyLight = std::make_shared<ParallelogramLight>();
+    keyLight->setShape(edge2, edge1, v1);
+    mLights.push_back(keyLight);
 
     createObject<Parallelogram>("light_shape")
         .setEdges(edge1, edge2)

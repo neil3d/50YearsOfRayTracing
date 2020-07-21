@@ -51,6 +51,7 @@
 - [x] Indirect lighting with Russian Roulette termination
 - [x] Next Event Estimation
 - [ ] Phong Importance Sampling
+- [ ] Distant Environment Lighting
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-07-19.png)
 
