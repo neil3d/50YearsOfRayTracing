@@ -43,7 +43,7 @@ class GlossyMaterial : public MaterialBase {
   virtual SampleResult sample(const glm::vec3& wo,
                               const glm::vec3& normal) const override {
     glm::vec2 diskRand = glm::diskRand(1.0f);
-    auto GGX = Shading::ImportanceSampleVisibleGGX(diskRand,
+    auto GGX = Shading::importanceSampleVisibleGGX(diskRand,
                                                    roughness, wo);
 
     SampleResult ret;
