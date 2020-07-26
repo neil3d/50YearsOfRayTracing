@@ -14,6 +14,7 @@
 #include "MySceneWithLights.h"
 #include "ParallelogramLight.h"
 #include "PhongMaterial.h"
+#include "GlossyMaterial.h"
 #include "scene/MeshInstance.h"
 #include "scene/Parallelogram.h"
 #include "scene/Plane.h"
@@ -114,13 +115,13 @@ class DemoScene : public MySceneWithLights {
         .setColor(glm::vec3(1));
 #endif
 
-#if 0  // add teapot
+#if 1  // add teapot
     constexpr float SIZE = 120;
 
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot1 = createObject<MeshInstance>("teapot");
     teapot1.setMeshFile(szTeapotFileName)
-        .createMaterial<PhongMaterial>()
+        .createMaterial<GlossyMaterial>()
         .setColor(GOLD);
     teapot1.setPosition(glm::vec3(SIZE, 0, 0))
         .setScale(SIZE)
@@ -135,7 +136,7 @@ class DemoScene : public MySceneWithLights {
         .setRotation(0, -15, 0);
 #endif
 
-#if 1  // stanford dragon
+#if 0  // stanford dragon
     const char* const szFileName = "content/dragon/dragon.obj";
     auto& mesh = createObject<MeshInstance>("dragon");
     mesh.setMeshFile(szFileName);

@@ -9,7 +9,7 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 CornellBoxScene.h
                 DemoScene.h
                 DiffuseMaterial.h
-                GGXMaterial.h
+                GlossyMaterial.h
                 KajiyaScene.h
                 LambertianMaterial.h
                 MaterialBase.h
@@ -19,6 +19,7 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 MySceneWithLights.h
                 ParallelogramLight.h
                 PhongMaterial.h
+                Shading.h
                 SkyLight.h
                 )
 
