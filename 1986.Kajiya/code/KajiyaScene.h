@@ -22,7 +22,7 @@ namespace RayTracingHistory {
 
 class KajiyaScene : public MySceneWithLights {
  public:
-  virtual float systemUnit() const { return 1000; }
+  virtual float systemUnit() const override { return 1000; }
 
   virtual void init() override {
     // create objects

@@ -21,8 +21,8 @@
 
 namespace RayTracingHistory {
 
-constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
-constexpr glm::vec3 YELLOW(1, 1, 0);
+const glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+const glm::vec3 YELLOW(1, 1, 0);
 
 class MoriKnobMtlImporter : public MaterialImporter {
   virtual MyMaterial::Ptr importObj(const std::string& szName) override {
@@ -80,7 +80,7 @@ class MoriKnobScene : public MySceneWithLights {
 
  public:
 
-  virtual float systemUnit() const { return 1; }
+  virtual float systemUnit() const override { return 1; }
 
   virtual void init() override {
     MoriKnobMtlImporter mtlImporter;

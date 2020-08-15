@@ -154,6 +154,6 @@ class TiledRenderer : public MyRenderer {
   std::atomic<int> mPresentTile = {0};
 
   std::vector<Tile> mTileList;
-  std::atomic<int> mTileCursor = 0;
+  std::atomic<int> mTileCursor = {0};
 };
 }  // namespace RayTracingHistory

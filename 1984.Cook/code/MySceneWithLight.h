@@ -26,7 +26,7 @@ class MySceneWithLight : public MyScene {
     szTexture.append(szName);
     szTexture.append(".jpg");
 
-    constexpr float PI = glm::pi<float>();
+    const float PI = glm::pi<float>();
     glm::vec3 rot = glm::radians(degAngles);
     glm::vec3 animRot = glm::radians(glm::vec3(8, 6, 9));
     glm::vec3 animOffset(0.35f, 0, 0.35f);

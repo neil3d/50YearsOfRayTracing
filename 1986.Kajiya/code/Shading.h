@@ -18,7 +18,7 @@ namespace Shading {
 // [Beckmann 1963, "The scattering of electromagnetic waves from rough
 // surfaces"]
 float D_Beckmann(float roughness, float NdotH) {
-  constexpr float PI = glm::pi<float>();
+  const float PI = glm::pi<float>();
   float a2 = powf(roughness, 4);
   float NoH2 = NdotH * NdotH;
   return exp((NoH2 - 1) / (a2 * NoH2)) / (PI * a2 * NoH2 * NoH2);
@@ -28,7 +28,7 @@ float D_Beckmann(float roughness, float NdotH) {
 // [Walter et al. 2007, "Microfacet models for refraction through rough
 // surfaces"]
 float D_GGX(float roughness, float NdotH) {
-  constexpr float PI = glm::pi<float>();
+  const float PI = glm::pi<float>();
   float a2 = powf(roughness, 4);
   float d = (NdotH * a2 - NdotH) * NdotH + 1;
   return a2 / (PI * d * d);
@@ -63,7 +63,7 @@ float F_Fresnel() {
 std::tuple<glm::vec3, float> importanceSampleVisibleGGX(glm::vec2 DiskE,
                                                         float roughness,
                                                         glm::vec3 V) {
-  constexpr float PI = glm::pi<float>();
+  const float PI = glm::pi<float>();
   float a = roughness;
   float a2 = powf(roughness, 4);
 

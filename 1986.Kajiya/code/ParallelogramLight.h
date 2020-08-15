@@ -45,6 +45,6 @@ class ParallelogramLight : public AreaLight {
     return *this;
   }
 
-  float getArea() const { return mArea; }
+  float getArea() const override { return mArea; }
 };
 }  // namespace RayTracingHistory

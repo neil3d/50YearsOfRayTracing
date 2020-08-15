@@ -97,7 +97,7 @@ class DemoScene : public MySceneWithLights {
         .createMaterial<DiffuseMaterial>()
         .setColor(glm::vec3(1));
 
-    constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+    const glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
 
 #if 0  // ball
     float ball = W / 6;

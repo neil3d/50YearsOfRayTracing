@@ -91,7 +91,7 @@ class TestScene : public TestSceneBase {
       case ETestModel::Teapot: {
         constexpr float SIZE = 1.85f;
 
-        constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
+        const glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
 
         const char* const szTeapotFileName = "content/teapot/teapot.obj";
         auto& teapot1 = createObject<MeshInstance>("teapot");
