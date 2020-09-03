@@ -95,7 +95,7 @@ class CornellBoxScene : public MySceneWithLights {
 
     constexpr glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
 
-#if 1  // add teapot
+#if 0  // add teapot
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot = createObject<MeshInstance>("teapot");
     teapot.setMeshFile(szTeapotFileName)

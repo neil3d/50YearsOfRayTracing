@@ -121,7 +121,7 @@ class DemoScene : public MySceneWithLights {
     const char* const szTeapotFileName = "content/teapot/teapot.obj";
     auto& teapot1 = createObject<MeshInstance>("teapot");
     teapot1.setMeshFile(szTeapotFileName)
-        .createMaterial<GlossyMaterial>()
+        .createMaterial<PhongMaterial>()
         .setColor(GOLD);
     teapot1.setPosition(glm::vec3(SIZE, 0, 0))
         .setScale(SIZE)
@@ -140,7 +140,7 @@ class DemoScene : public MySceneWithLights {
     const char* const szFileName = "content/dragon/dragon.obj";
     auto& mesh = createObject<MeshInstance>("dragon");
     mesh.setMeshFile(szFileName);
-    mesh.createMaterial<PhongMaterial>().setColor(GOLD);
+    mesh.createMaterial<DiffuseMaterial>().setColor(GOLD);
     mesh.setScale(20)
         .setPosition(glm::vec3(0, 40, 0))
         .setRotation(0, glm::radians(180.0f), 0);

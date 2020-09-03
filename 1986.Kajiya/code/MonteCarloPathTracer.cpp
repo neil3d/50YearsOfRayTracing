@@ -16,7 +16,7 @@ namespace RayTracingHistory {
 #define RUSSIAN_ROULETTE true
 
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
-constexpr uint32_t SPP_ROOT = 16;
+constexpr uint32_t SPP_ROOT = 10;
 constexpr uint32_t RUSSIAN_ROULETTE_MIN_BOUNCES = 5;
 constexpr uint32_t MAX_BOUNCES = 1024;
 
@@ -86,7 +86,7 @@ void MonteCarloPathTracer::_tileRenderThread(MyScene::Ptr scene,
           auto& buf = tileBuffer[index++];
           buf += _traceRay(primaryRay, pScene, xi2[SPP], 1.0f, 0);
 
-          _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 1);
+          _writePixel(x, y, glm::vec4(buf / float(SPP + 1), 1), 0.8f);
           mPixelCount++;
         }
 
@@ -114,6 +114,7 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   HitRecord hitRec;
   bool bHit = pScene->closestHit(wo, 0.001f, FLOAT_MAX, hitRec);
   if (!bHit) {
+
     const glm::vec3 bgColor1(3 / 256.0f, 66 / 256.0f, 117 / 256.0f);
     const glm::vec3 bgColor2(204 / 256.0f, 222 / 256.0f, 244 / 256.0f);
     if (depth == 0)

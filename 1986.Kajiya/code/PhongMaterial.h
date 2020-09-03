@@ -20,9 +20,9 @@ namespace RayTracingHistory {
  */
 class PhongMaterial : public MaterialBase {
  public:
-  float Kd = 1;
-  float Ks = 4;
-  float Shininess = 66;
+  float Kd = 0.5f;
+  float Ks = 1.25f;
+  float Shininess = 200;
 
  public:
   virtual float evaluate(const glm::vec3& wi, const glm::vec3& wo,
