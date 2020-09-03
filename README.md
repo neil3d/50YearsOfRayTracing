@@ -14,6 +14,7 @@
 | Recursive Ray Tracing |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
 | Distributed Ray Tracing |  1984.Cook    | Robert Cook et al. | Distributed ray tracing  |
 | Path Tracing |  1986.Kajiya  | James Kajiya | The rendering equation  |
+| Multiple Importance Sampling | 1995.Veach | Eric Veach et al. | Optimally Combining Sampling Techniques for Monte Carlo Rendering |
 
 ## 工程配置
 
@@ -55,10 +56,13 @@
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-07-19.png)
 
+## Multiple Importance Sampling - Eric Veach, Leonidas Guibas, 1995
+
+- [] TODO
+
 ## State of the Art
 
 - [ ] Importance Sampling GGX
-- [ ] Multiple Importance Sampling
 
 ## MyFramework
 
