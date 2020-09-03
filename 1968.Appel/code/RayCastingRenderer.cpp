@@ -98,7 +98,7 @@ void RayCastingRenderer::_drawWireframe(MyScene* pScene,
   int W = mFrameWidth;
   int H = mFrameHeight;
 
-  constexpr glm::vec4 CC(0, 0, 0, 1);
+  const glm::vec4 CC(0, 0, 0, 1);
   const float ANGLE_THRESHOLD = glm::cos(glm::radians(15.0f));
 
   bool bHit = false, bLastHit = false;

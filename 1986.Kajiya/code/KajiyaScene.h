@@ -12,7 +12,6 @@
 #include "DiffuseMaterial.h"
 #include "MySceneWithLights.h"
 #include "ParallelogramLight.h"
-#include "PhongMaterial.h"
 #include "geometry/ONB.h"
 #include "scene/Box.h"
 #include "scene/MeshInstance.h"
@@ -23,7 +22,7 @@ namespace RayTracingHistory {
 
 class KajiyaScene : public MySceneWithLights {
  public:
-  virtual float systemUnit() const { return 1000; }
+  virtual float systemUnit() const override { return 1000; }
 
   virtual void init() override {
     // create objects
@@ -32,32 +31,16 @@ class KajiyaScene : public MySceneWithLights {
     constexpr float H = 1500;
     constexpr float LS = 500;  // light size
 
-    {
-        glm::vec3 lightPos(-W / 2, H * 1.5f, 0);
-        glm::vec3 lightDir = glm::normalize(lightPos);
-        ONB lightONB(lightDir);
+    glm::vec3 lightPos(-W / 2, H * 1.5f, 0);
+    glm::vec3 lightDir = glm::normalize(lightPos);
+    ONB lightONB(lightDir);
 
-        glm::vec3 lightEdge1 = lightONB.U * LS;
-        glm::vec3 lightEdge2 = lightONB.V * LS;
-        auto keyLight = std::make_shared<ParallelogramLight>();
-        keyLight->setShape(lightEdge1, lightEdge2, lightPos);
-        keyLight->setIntensity(500);
-        mLights.push_back(keyLight);
-    }
-
-    // fill light
-    {
-        glm::vec3 lightPos(W / 2, H * 1.5f, 0);
-        glm::vec3 lightDir = glm::normalize(lightPos);
-        ONB lightONB(lightDir);
-
-        glm::vec3 lightEdge1 = lightONB.U * LS;
-        glm::vec3 lightEdge2 = lightONB.V * LS;
-
-        auto fillLight = std::make_shared<ParallelogramLight>();
-        fillLight->setShape(lightEdge2, lightEdge1, lightPos).setIntensity(100);
-        mLights.push_back(fillLight);
-    }
+    glm::vec3 lightEdge1 = lightONB.U * LS;
+    glm::vec3 lightEdge2 = lightONB.V * LS;
+    auto keyLight = std::make_shared<ParallelogramLight>();
+    keyLight->setShape(lightEdge1, lightEdge2, lightPos);
+    keyLight->setIntensity(500);
+    mLights.push_back(keyLight);
 
     createObject<Parallelogram>("floor")
         .setEdges(glm::vec3(0, 0, D), glm::vec3(W, 0, 0))
@@ -127,8 +110,8 @@ class KajiyaScene : public MySceneWithLights {
     createObject<Sphere>("sphere")
         .setCenter(pos)
         .setRadius(radius)
-        .createMaterial<PhongMaterial>()
-        .setColor(glm::vec3(0.2f, 0.8f, 0.2f));
+        .createMaterial<DiffuseMaterial>()
+        .setColor(glm::vec3(1));
   }
 
   void _createBox(glm::vec3 extends, glm::vec3 pos) {
