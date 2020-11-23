@@ -7,7 +7,7 @@
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
-using namespace RayTracingHistory;
+using namespace RTKit1;
 
 const char* const APP_NAME = "Recursive Ray Tracing - Turner Whitted 1980";
 const uint32_t WINDOW_WIDTH = 640;

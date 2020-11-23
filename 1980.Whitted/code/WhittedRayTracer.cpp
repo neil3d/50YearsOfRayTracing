@@ -5,7 +5,7 @@
 #include "Material.h"
 #include "framework/PinholeCamera.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 constexpr float F_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
@@ -42,7 +42,7 @@ double _fresnel(const glm::vec3& I, const glm::vec3& N, float ior) {
     kr = 1;
   } else {
     double cost = sqrt(std::max(0., 1 - sint * sint));
-    cosi = fabsf(cosi);
+    cosi = std::abs(cosi);
     double Rs =
         ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost));
     double Rp =
@@ -212,4 +212,4 @@ std::tuple<bool, float, Ray> WhittedRayTracer::_generateRefractationRay(
   }
 }
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

@@ -1,8 +1,8 @@
 
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -13,7 +13,7 @@
 #include "material/CheckerTexture.h"
 #include "material/MyMaterial.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 /**
  * Material for "Improved Model" (Whitted 1980)
@@ -76,4 +76,4 @@ class Material : public MyMaterial {
   float eta = 1.34f;  // the index of refraction,
 };
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

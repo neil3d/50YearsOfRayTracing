@@ -1,0 +1,23 @@
+/**
+ * 50 Years of Ray tracing
+ *
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
+ *
+ * Created by yanliang.fyl, 2020
+ */
+
+#pragma once
+#include <memory>
+
+#include "MyTexture.h"
+
+namespace RTKit1 {
+
+class MyMaterial {
+ public:
+  typedef std::shared_ptr<MyMaterial> Ptr;
+
+  MyMaterial() = default;
+  virtual ~MyMaterial() = default;
+};
+}  // namespace RTKit1

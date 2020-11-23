@@ -5,7 +5,7 @@
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
-using namespace RayTracingHistory;
+using namespace RTKit1;
 
 const char* const APP_NAME = "Ray Casting - Arthur Appel 1968";
 const uint32_t WINDOW_WIDTH = 1280;

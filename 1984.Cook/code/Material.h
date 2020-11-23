@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -13,7 +13,7 @@
 #include "material/MyMaterial.h"
 #include "material/Texture2D.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class Material : public MyMaterial {
   std::shared_ptr<MyTexture> baseColor;
@@ -74,4 +74,4 @@ class Material : public MyMaterial {
   }
 };
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

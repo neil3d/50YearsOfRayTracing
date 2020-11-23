@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -14,7 +14,7 @@
 #include "MySceneWithLights.h"
 #include "framework/TiledRenderer.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class PinholeCamera;
 
@@ -35,4 +35,4 @@ class MonteCarloPathTracer : public TiledRenderer {
   std::string mInfo;
   std::atomic<int> mMaxDepth = {-1};
 };
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

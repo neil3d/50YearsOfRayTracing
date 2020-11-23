@@ -11,7 +11,7 @@
 #include "geometry/ONB.h"
 #include "sampling/JitteringSampling.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 constexpr int MAX_BOUNCES = 32;
 constexpr int SPP_N = 16;
@@ -145,4 +145,4 @@ Ray DistributedRayTracer::_jitteredReflectionRay(const glm::vec3& dir,
   return Ray(point + normal * 0.001f, Rp);
 }
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

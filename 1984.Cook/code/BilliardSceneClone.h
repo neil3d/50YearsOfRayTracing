@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -12,7 +12,7 @@
 
 #include "MySceneWithLight.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class BilliardSceneClone : public MySceneWithLight {
  public:
@@ -61,4 +61,4 @@ class BilliardSceneClone : public MySceneWithLight {
                        "ball_5", BALL_GLOSS, BALL_KS);
   }
 };
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

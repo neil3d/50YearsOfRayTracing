@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -12,7 +12,7 @@
 
 #include "geometry/Ray.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 struct MyLight {
   float ambient = 0.1f;  // ambient
@@ -86,4 +86,4 @@ struct DirectionalLight : public MyLight {
   }
 };
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

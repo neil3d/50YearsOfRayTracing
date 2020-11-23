@@ -1,8 +1,8 @@
 #pragma once
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -12,7 +12,7 @@
 #include <glm/gtc/constants.hpp>
 #include <tuple>
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 namespace Shading {
 
 // [Beckmann 1963, "The scattering of electromagnetic waves from rough
@@ -104,4 +104,4 @@ std::tuple<glm::vec3, float> importanceSampleVisibleGGX(glm::vec2 DiskE,
 }
 
 }  // namespace Shading
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

@@ -11,7 +11,7 @@
 #include "sampling//UniformSampling.h"
 #include "sampling/JitteringSampling.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 #define RUSSIAN_ROULETTE true
 
@@ -218,4 +218,4 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   return indirectLighting;
 }
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

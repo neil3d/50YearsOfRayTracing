@@ -67,7 +67,7 @@
 
 - [ ] Importance Sampling GGX
 
-## MyFramework
+## RTKit1
 
 - [x] Cross platform
     * [x] MacOS

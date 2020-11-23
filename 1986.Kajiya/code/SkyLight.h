@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -9,7 +9,7 @@
 #pragma once
 #include "AreaLight.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class SkyLight : public AreaLight {};
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

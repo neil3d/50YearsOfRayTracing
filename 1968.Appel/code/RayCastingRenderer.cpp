@@ -5,7 +5,7 @@
 
 #include "framework/PinholeCamera.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 constexpr float F_Max = std::numeric_limits<float>::max();
 constexpr float SIGN_SIZE = 9;
@@ -140,4 +140,4 @@ void RayCastingRenderer::_drawWireframe(MyScene* pScene,
   }  // end of for
 }
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

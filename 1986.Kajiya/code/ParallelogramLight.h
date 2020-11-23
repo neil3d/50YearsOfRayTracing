@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -10,7 +10,7 @@
 
 #include "AreaLight.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class ParallelogramLight : public AreaLight {
   glm::vec3 mEdge1, mEdge2;
@@ -47,4 +47,4 @@ class ParallelogramLight : public AreaLight {
 
   float getArea() const override { return mArea; }
 };
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

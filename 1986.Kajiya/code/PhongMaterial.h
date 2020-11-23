@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -13,7 +13,7 @@
 #include "MaterialBase.h"
 #include "geometry/ONB.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 /**
  * diffuse : uniform sampling
@@ -77,4 +77,4 @@ class PhongMaterial : public MaterialBase {
   }
 };
 
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

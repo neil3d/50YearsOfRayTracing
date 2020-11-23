@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -19,7 +19,7 @@
 #include "scene/Parallelogram.h"
 #include "scene/Sphere.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 const glm::vec3 GOLD(205 / 255.0f, 127 / 255.0f, 50 / 255.0f);
 const glm::vec3 YELLOW(1, 1, 0);
@@ -109,4 +109,4 @@ class MoriKnobScene : public MySceneWithLights {
     _initLight();
   }
 };
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

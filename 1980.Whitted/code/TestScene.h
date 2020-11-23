@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -14,7 +14,7 @@
 #include "scene/MeshInstance.h"
 #include "scene/Plane.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class MyMtlImporter : public MaterialImporter {
   virtual MyMaterial::Ptr importObj(const std::string& szName) override {
@@ -137,4 +137,4 @@ class TestScene : public TestSceneBase {
     }  // end of switch
   }
 };
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

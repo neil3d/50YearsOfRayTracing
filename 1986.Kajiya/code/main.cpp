@@ -9,7 +9,7 @@
 #include "framework/MyApp.h"
 #include "framework/PinholeCamera.h"
 
-using namespace RayTracingHistory;
+using namespace RTKit1;
 
 // const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
 const char* const APP_NAME = "Monte Carlo Path Tracing";

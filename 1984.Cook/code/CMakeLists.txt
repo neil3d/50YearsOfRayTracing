@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-
-project(RayTracingHistory)
+project(RayTracing50 VERSION 0.1.0)
 
 set(SUB_PROJECT_NAME DistributedRayTracer)
 
@@ -14,4 +13,4 @@ add_executable(${SUB_PROJECT_NAME} main.cpp
                 MySceneWithLight.h
                 )
 
-target_link_libraries(${SUB_PROJECT_NAME} MyFramework)
+target_link_libraries(${SUB_PROJECT_NAME} RTKit1)

@@ -1,7 +1,7 @@
 /**
- * A Brief History of Ray tracing
+ * 50 Years of Ray tracing
  *
- * GitHub: https://github.com/neil3d/RayTracingHistory
+ * GitHub: https://github.com/neil3d/50YearsOfRayTracing
  *
  * Created by yanliang.fyl, 2020
  */
@@ -11,7 +11,7 @@
 #include "AreaLight.h"
 #include "scene/MyScene.h"
 
-namespace RayTracingHistory {
+namespace RTKit1 {
 
 class MySceneWithLights : public MyScene {
  protected:
@@ -24,4 +24,4 @@ class MySceneWithLights : public MyScene {
 
   virtual float systemUnit() const { return 100; }
 };
-}  // namespace RayTracingHistory
+}  // namespace RTKit1

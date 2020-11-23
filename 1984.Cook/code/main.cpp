@@ -6,7 +6,7 @@
 #include "framework/MyApp.h"
 #include "framework/ThinLensCamera.h"
 
-using namespace RayTracingHistory;
+using namespace RTKit1;
 
 const char* const APP_NAME =
     "Distributed Ray tracing -  Robert Cook et al. 1984";
