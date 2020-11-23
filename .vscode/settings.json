@@ -1,5 +1,9 @@
 {
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+    "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "/Users/neil3d/github/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    },
     "files.associations": {
         "iterator": "cpp",
         "vector": "cpp",
