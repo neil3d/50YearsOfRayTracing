@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     auto scene = std::make_shared<TestScene>();
 #endif
     scene->init();
-    
+
     auto camera = std::make_shared<PinholeCamera>();
     camera->setAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
         .setView(eyePos, lookAt, glm::vec3(0, 2, 0))
@@ -42,7 +42,8 @@ int main(int argc, char* argv[]) {
     app.mainLoop();
 
   } catch (const std::exception& e) {
-    std::cerr << e.what() << '\n';
+    std::cerr << e.what() << std::endl;
+    return -1;
   }
 
   app.shutdown();

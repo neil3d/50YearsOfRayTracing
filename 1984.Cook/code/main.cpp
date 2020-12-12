@@ -47,7 +47,8 @@ int main(int argc, char* argv[]) {
     app.mainLoop();
 
   } catch (const std::exception& e) {
-    std::cerr << e.what() << '\n';
+    std::cerr << e.what() << std::endl;
+    return -1;
   }
 
   app.shutdown();
