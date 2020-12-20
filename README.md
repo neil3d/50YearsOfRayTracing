@@ -6,7 +6,7 @@
 - 提供尽量简单，直观的 CPU 算法实现；代码的简单/易理解为首位，不太考虑性能优化
 - 使用现代 C++ 编程
 - 一个基础库 RTKit
-   - 1.0 版是完全自己在这个库了一点点写起来的
+   - 1.0 版是完全自己在这个 repo 了一点点写起来的
    - 2.0 版将底层改用 [Intel Embree](https://www.embree.org/) 用来进行光线与场景求交
 
 ## 文章列表
@@ -17,7 +17,11 @@
 | Recursive Ray Tracing |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
 | Distributed Ray Tracing |  1984.Cook    | Robert Cook et al. | Distributed ray tracing  |
 | Path Tracing |  1986.Kajiya  | James Kajiya | The rendering equation  |
-| Multiple Importance Sampling | 1995.Veach | Eric Veach et al. | Optimally Combining Sampling Techniques for Monte Carlo Rendering |
+| Bidirectional Light Transport | 1994.Veach.Bidirectional | Eric Veach | Bidirectional Estimators for Light Transport |
+| Multiple Importance Sampling | 1995.Veach.MIS | Eric Veach et al. | Optimally Combining Sampling Techniques for Monte Carlo Rendering |
+| Photon Mapping|  1996.Henrik  | Henrik Wann Jensen | Global Illumination using Photon Maps  |
+| Metropolis Light Transport|  1997.Vaech.Metropolis  |Eric Veach & Leonidas Guibas | Metropolis Light Transport |
+
 
 ## 工程配置
 
@@ -61,18 +65,12 @@
 
 ## Multiple Importance Sampling - Eric Veach, Leonidas Guibas, 1995
 
-- [] TODO
-
-## State of the Art
-
+- [ ] TODO
 - [ ] Importance Sampling GGX
 
 ## RTKit1
 
-- [x] Cross platform
-    * [x] MacOS
-    * [x] Windows 10
+- [x] Cross platform: MacOS, Windows 10
 - [x] Multi-threaded rendering
 - [x] Scene object instancing
 - [x] Triangle mesh with BVH
-- [ ] Bilinear texture filter
