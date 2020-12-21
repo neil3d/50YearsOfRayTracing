@@ -6,7 +6,6 @@ set(SUB_PROJECT_NAME RTKit1)
 # find packages
 find_package(stb)
 find_package(SDL2 CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 
@@ -35,7 +34,6 @@ target_include_directories(${SUB_PROJECT_NAME}
 target_link_libraries(${SUB_PROJECT_NAME} PUBLIC 
                         glm
                         SDL2::SDL2main SDL2::SDL2-static
-                        spdlog::spdlog spdlog::spdlog_header_only
                         tinyobjloader::tinyobjloader
                     )
 
