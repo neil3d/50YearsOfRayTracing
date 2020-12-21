@@ -1,10 +1,10 @@
 #include "MyRenderer.h"
 
-#include <spdlog/spdlog.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
 #include <algorithm>
+#include <iostream>
 
 #include "MyException.h"
 
@@ -26,15 +26,15 @@ void MyRenderer::_init(SDL_Window* pWnd) {
 
   uint8_t bytesPerPixel = mSurface->format->BytesPerPixel;
   if (bytesPerPixel != 4) {
-    spdlog::warn("BytesPerPixel != 4");
+    std::cerr << "BytesPerPixel != 4" << std::endl;
   }
 
   mFrameBuffer.resize(mSurface->h * mSurface->pitch / bytesPerPixel);
   SDL_UnlockSurface(mSurface);
 
   // log info
-  spdlog::info("SDL surface format = {0}.",
-               SDL_GetPixelFormatName(mSurface->format->format));
+  std::cout << "SDL surface format = "
+            << SDL_GetPixelFormatName(mSurface->format->format) << std::endl;
 }
 
 bool MyRenderer::nextPresentReady() const {
@@ -61,9 +61,9 @@ void MyRenderer::screenshot(const std::string& szFileName) {
   int ret = stbi_write_png(szFileName.c_str(), mFrameWidth, mFrameHeight, 3,
                            buf.data(), mFrameWidth * sizeof(RGB));
   if (ret) {
-    spdlog::info("screenshot {0}{1}.", SDL_GetBasePath(), szFileName);
+    std::cout << "screenshot: " << SDL_GetBasePath() << szFileName << std::endl;
   } else {
-    spdlog::error("screenshot FAILED!");
+    std::cerr << "screenshot FAILED!" << std::endl;
   }
 }
 
@@ -77,7 +77,7 @@ void MyRenderer::renderScene(MyScene::Ptr scene, MyCamera::Ptr camera,
 void MyRenderer::_present() {
   int ret = SDL_LockSurface(mSurface);
   if (ret < 0) {
-    spdlog::error("SDL_LockSurface FAILED.");
+    std::cerr << "SDL_LockSurface FAILED." << std::endl;
     return;
   }
 
@@ -99,12 +99,12 @@ void MyRenderer::_onRenderFinished() {
   auto finishTime = std::chrono::steady_clock::now();
   auto time = std::chrono::duration_cast<std::chrono::duration<float>>(
       finishTime - mStartupTime);
-  spdlog::info("render finished in {0} seconds.", time.count());
+  std::cout << "render finished in " << time.count() << "seconds." << std::endl;
 }
 
 void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {
   if (x >= mFrameWidth || y >= mFrameHeight) {
-    spdlog::error("bad pixel coordinates");
+    std::cerr << "bad pixel coordinates" << std::endl;
     return;
   }
 
@@ -129,7 +129,7 @@ void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {
 
 void MyRenderer::_clearFrameBuffer(const glm::vec4& colorf) {
   if (!mSurface) {
-    spdlog::error("MyRenderer._clearFrameBuffer: INVALID surface.");
+    std::cerr << "MyRenderer._clearFrameBuffer: INVALID surface." << std::endl;
   }
 
   uint8_t r = uint8_t(255.5f * colorf.r);
@@ -151,4 +151,5 @@ void MyRenderer::_clearFrameBuffer(const glm::vec4& colorf) {
     SDL_UnlockSurface(mSurface);
   }
 }
+
 }  // namespace RTKit1

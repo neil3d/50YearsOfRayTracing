@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include <spdlog/spdlog.h>
+#include <iostream>
 
 #include "../scene/MyScene.h"
 #include "MyCamera.h"
@@ -28,7 +28,7 @@ class DirectRenderer : public MyRenderer {
     mPresentLine = 0;
     _clearFrameBuffer(clearColor);
 
-    spdlog::info("start rendering ...");
+    std::cout << "start rendering ..." << std::endl;
     mRenderingThread = std::thread(
         [this, scene, camera] { this->_renderThread(scene, camera); });
   }

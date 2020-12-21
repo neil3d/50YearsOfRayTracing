@@ -1,7 +1,5 @@
 #include "MonteCarloPathTracer.h"
 
-#include <spdlog/spdlog.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 #include <random>
@@ -93,10 +91,6 @@ void MonteCarloPathTracer::_tileRenderThread(MyScene::Ptr scene,
       SPP++;
     }  // end of while
 
-#if 0
-    spdlog::info("Tile[{0}] rendering finished, max depth = {1}.", tile.id,
-                 (int)mMaxDepth);
-#endif
     _onTileFinished();
   }  // end of while
 }
@@ -114,7 +108,6 @@ glm::vec3 MonteCarloPathTracer::_traceRay(const Ray& wo,
   HitRecord hitRec;
   bool bHit = pScene->closestHit(wo, 0.001f, FLOAT_MAX, hitRec);
   if (!bHit) {
-
     const glm::vec3 bgColor1(3 / 256.0f, 66 / 256.0f, 117 / 256.0f);
     const glm::vec3 bgColor2(204 / 256.0f, 222 / 256.0f, 244 / 256.0f);
     if (depth == 0)

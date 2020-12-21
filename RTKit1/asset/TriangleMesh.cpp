@@ -1,9 +1,9 @@
 #include "TriangleMesh.h"
 
-#include <spdlog/spdlog.h>
 #include <tiny_obj_loader.h>
 
 #include <filesystem>
+#include <iostream>
 #include <limits>
 
 #include "../framework/MyException.h"
@@ -31,8 +31,8 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
   bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err,
                               szFileName.c_str(), szBasePath.c_str(), true);
 
-  if (!warn.empty()) spdlog::warn(warn);
-  if (!err.empty()) spdlog::error(err);
+  if (!warn.empty()) std::cerr << warn << std::endl;
+  if (!err.empty()) std::cerr << err << std::endl;
 
   if (!ret)
     throw MyException(std::string("Failed to load/parse: ") + szFileName);
@@ -88,10 +88,9 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
     }  // end of for each index
   }    // end of for each shape
 
-  spdlog::info(
-      "triangle mesh loaded: {0}, num vertices = {1}, num faces = {2}, num sub "
-      "meshes = {3}",
-      szMainFileName, mVertices.size(), totalFaceCount, mSubMeshes.size());
+  std::cout << "triangle mesh loaded: " << szMainFileName << " , num vertices"
+            << mVertices.size() << " , num faces = " << totalFaceCount
+            << "num sub meshes = {3}" << mSubMeshes.size() << std::endl;
 
   // build internal states
   _postMeshCreated();
@@ -103,7 +102,7 @@ void TriangleMesh::_postMeshCreated() {
   _buildBoundingBox();
 
   // build BVH for each sub mesh
-  spdlog::info("building BVH ...");
+  std::cout << "building BVH ..." << std::endl;
   for (auto& subMesh : mSubMeshes) {
     std::vector<int> faceList(subMesh.faces.size());
     int i = 0;
@@ -382,7 +381,7 @@ void TriangleMesh::_buildBVH(SubMesh* subMesh, BVHNode* pNode,
                 });
       break;
     default:
-      spdlog::error("max extent error");
+      std::cerr << "max extent error" << std::endl;
       break;
   }
 

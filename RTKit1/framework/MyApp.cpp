@@ -1,6 +1,6 @@
 #include "MyApp.h"
 
-#include <spdlog/spdlog.h>
+#include <iostream>
 
 namespace RTKit1 {
 
@@ -8,8 +8,9 @@ void MyApp::init() {
   int ret = SDL_Init(SDL_INIT_VIDEO);
   if (ret < 0) throw MyException("SDL_Init FAILED", SDL_GetError());
 
-  spdlog::info("Base path = {0} .", SDL_GetBasePath());
+  std::cout << "Base path: " << SDL_GetBasePath();
 }
+
 void MyApp::createWindow(int width, int height, const char* szTitle) {
   mWindowTitle = szTitle;
   mMainWindow =
