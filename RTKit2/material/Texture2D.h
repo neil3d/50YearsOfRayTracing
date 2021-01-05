@@ -17,7 +17,7 @@ class Texture2D : public MyTexture {
   ImageRGBA::Ptr mImage;
 
  public:
-  void loadImage(const std::string& szFilePath);
+  void setImage(const std::string& szAssetKey);
 
   virtual glm::vec3 sample(const glm::vec2& uv, const glm::vec3& p) override;
 };

@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # sub projects
 add_subdirectory(RTKit1)
+add_subdirectory(RTKit2)
+
 add_subdirectory(1968.Appel)
 add_subdirectory(1980.Whitted)
 add_subdirectory(1984.Cook)

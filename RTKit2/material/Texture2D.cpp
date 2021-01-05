@@ -4,8 +4,8 @@
 
 namespace RTKit2 {
 
-void Texture2D::loadImage(const std::string& szFilePath) {
-  mImage = MyAssetManager::instance().loadAssetObject<ImageRGBA>(szFilePath);
+void Texture2D::setImage(const std::string& szAssetKey) {
+  mImage = MyAssetManager::instance().get<ImageRGBA>(szAssetKey);
 }
 
 glm::vec3 Texture2D::sample(const glm::vec2& uv, const glm::vec3& p) {

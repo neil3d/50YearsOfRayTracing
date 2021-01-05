@@ -4,7 +4,7 @@ project(RayTracing50 VERSION 0.1.0)
 set(SUB_PROJECT_NAME RTKit1)
 
 # find packages
-find_package(stb)
+find_path(STB_INCLUDE_DIRS "stb.h")
 find_package(SDL2 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
@@ -26,6 +26,7 @@ add_library(${SUB_PROJECT_NAME} STATIC
                 ${SCENE_SRC}
                 )
 
+target_include_directories(${SUB_PROJECT_NAME} PRIVATE ${STB_INCLUDE_DIRS})
 target_include_directories(${SUB_PROJECT_NAME}
                 PUBLIC ${PROJECT_SOURCE_DIR}
             )

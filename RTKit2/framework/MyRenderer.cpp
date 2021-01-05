@@ -100,6 +100,7 @@ void MyRenderer::_onRenderFinished() {
   auto time = std::chrono::duration_cast<std::chrono::duration<float>>(
       finishTime - mStartupTime);
   std::cout << "render finished in " << time.count() << "seconds." << std::endl;
+  mFinished = true;
 }
 
 void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {
@@ -110,15 +111,22 @@ void MyRenderer::_writePixel(int x, int y, glm::vec4 color, float gama) {
 
   // gama
   if (gama != 1.0f) {
-    color.r = std::powf(color.r, gama);
-    color.g = std::powf(color.g, gama);
-    color.b = std::powf(color.b, gama);
+    color.r = std::pow(color.r, gama);
+    color.g = std::pow(color.g, gama);
+    color.b = std::pow(color.b, gama);
   }
 
+#if 1
   uint8_t r = uint8_t(255.5f * std::clamp(color.r, 0.0f, 1.0f));
   uint8_t g = uint8_t(255.5f * std::clamp(color.g, 0.0f, 1.0f));
   uint8_t b = uint8_t(255.5f * std::clamp(color.b, 0.0f, 1.0f));
   uint8_t a = uint8_t(255.5f * std::clamp(color.a, 0.0f, 1.0f));
+#else
+  uint8_t r = uint8_t(255.5f * color.r);
+  uint8_t g = uint8_t(255.5f * color.g);
+  uint8_t b = uint8_t(255.5f * color.b);
+  uint8_t a = uint8_t(255.5f * color.a);
+#endif
 
   uint32_t index = y * mFrameWidth + x;
   uint32_t colorValue = SDL_MapRGBA(mSurface->format, r, g, b, a);

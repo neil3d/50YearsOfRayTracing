@@ -7,8 +7,6 @@
  */
 
 #pragma once
-#include <filesystem>
-#include <iostream>
 #include <map>
 #include <memory>
 #include <vector>
@@ -20,10 +18,10 @@ namespace RTKit2 {
 class MyAssetManager {
  public:
   MyAssetManager() {
-    mSearchPath.emplace_back("./");               // vs code start path
-    mSearchPath.emplace_back("../../");           // vs code start path
-    mSearchPath.emplace_back("../../../");        // visual studio start path
-    mSearchPath.emplace_back("../../../../../");  // visual studio start path
+    mSearchPath.emplace_back("./");            // vs code start path
+    mSearchPath.emplace_back("../../");        // vs code start path
+    mSearchPath.emplace_back("../../../");     // visual studio start path
+    mSearchPath.emplace_back("../../../../");  // visual studio start path
   }
 
   static MyAssetManager& instance() {
@@ -31,23 +29,22 @@ class MyAssetManager {
     return gInstance;
   }
 
-  std::string makeFullPath(const std::string& szPath) const {
-    for (const auto& szBasePath : mSearchPath) {
-      std::filesystem::path fullPath(szBasePath);
-      fullPath.append(szPath);
+  std::string makeFullPath(const std::string& szPath) const;
 
-      if (std::filesystem::exists(fullPath)) {
-        return fullPath.string();
-      }
-    }  // end of for
-
-    std::cerr << "File not found: " << std::filesystem::current_path() << ", "
-              << szPath << std::endl;
-    return std::string();
-  }
+  MyAssetObject::Ptr add(const std::string& szKey, const std::string& szPath);
 
   template <typename T>
-  std::shared_ptr<T> loadAssetObject(const std::string& szPath) {
+  std::shared_ptr<T> get(const std::string& szKey) {
+    auto iter = mAssetDict.find(szKey);
+    if (iter == mAssetDict.end())
+      return std::shared_ptr<T>();
+    else
+      return std::dynamic_pointer_cast<T>(iter->second);
+  }
+
+ private:
+  template <typename T>
+  std::shared_ptr<T> load(const std::string& szKey, const std::string& szPath) {
     // find existing
     auto iter = mAssetDict.find(szPath);
     if (iter != mAssetDict.end())
@@ -63,9 +60,9 @@ class MyAssetManager {
     }
 
     // load new one
-    auto assetObj = std::make_shared<T>(szPath);
+    auto assetObj = std::make_shared<T>(szKey);
     assetObj->loadFromFile(szFullPath);
-    mAssetDict.emplace(szPath, assetObj);
+    mAssetDict.emplace(szKey, assetObj);
     return assetObj;
   }
 

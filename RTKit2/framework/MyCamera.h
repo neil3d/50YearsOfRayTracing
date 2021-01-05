@@ -8,7 +8,9 @@
 
 #pragma once
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 #include <memory>
+
 #include "MyRay.h"
 
 namespace RTKit2 {

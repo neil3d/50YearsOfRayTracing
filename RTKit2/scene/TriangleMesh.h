@@ -5,16 +5,13 @@
 
 namespace RTKit2 {
 
-class MyGeometry : public MySceneObject {
+class TriangleMesh : public MySceneObject {
  public:
-  typedef std::shared_ptr<MyGeometry> Ptr;
+  typedef std::shared_ptr<TriangleMesh> Ptr;
 
   using MySceneObject::MySceneObject;
 
-  virtual ~MyGeometry();
-
-  void createFromBuffers(const std::vector<glm::vec3>& vertices,
-                         const std::vector<unsigned>& indices);
+  virtual ~TriangleMesh();
 
   void createFromObj(const std::string& assetKey, const glm::mat4& transform);
 

@@ -30,10 +30,13 @@ void MyGeometry::createFromBuffers(const std::vector<glm::vec3>& vertices,
   for (size_t i = 0; i < indices.size(); i++) ib[i] = indices[i];
 
   // embree commit
-  rtcSetGeometryTransform(mGeometry, 0, RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR,
-                          mTransform.getLocal2WorldData());
   rtcCommitGeometry(mGeometry);
   mRTCID = rtcAttachGeometry(rtcScene, mGeometry);
 }
+
+void MyGeometry::createFromObj(const std::string& assetKey,
+                               const glm::mat4& transform) {
+                                 
+                               }
 
 }  // namespace RTKit2

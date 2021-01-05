@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include <algorithm>
 #include <glm/glm.hpp>
 #include <random>
 #include <vector>
@@ -15,9 +16,9 @@ namespace RTKit2 {
 
 namespace JitteringSampling {
 
-std::vector<glm::vec2> generateSamples(int count, bool shuffle) {
+inline std::vector<glm::vec2> generateSamples(int count, bool shuffle) {
   int n = (int)sqrt(count);
-  std::vector<glm::vec2> ret(n*n);
+  std::vector<glm::vec2> ret(n * n);
   float invN = 1.0f / n;
 
   std::random_device randDevice;
@@ -39,5 +40,20 @@ std::vector<glm::vec2> generateSamples(int count, bool shuffle) {
   return ret;
 }
 
+inline std::vector<glm::vec2> stratifyUniformSamples(
+    const std::vector<glm::vec2>& samples) {
+  int M = (int)sqrt(samples.size());
+  std::vector<glm::vec2> ret(M * M);
+
+  for (int j = 0; j < M; j++) {
+    for (int i = 0; i < M; i++) {
+      int index = j * M + i;
+      const auto& u = samples[index];
+      ret[index] = glm::vec2((j + u.x) / (float)M, (i + u.y) / (float)M);
+    }
+  }
+  return ret;
+}
+
 }  // namespace JitteringSampling
-}  // namespace RTKit1
+}  // namespace RTKit2

@@ -7,9 +7,9 @@
  */
 
 #pragma once
-#include <iostream>
-
 #include <algorithm>
+#include <glm/glm.hpp>
+#include <iostream>
 #include <mutex>
 
 #include "MyCamera.h"
@@ -41,8 +41,8 @@ class TiledRenderer : public MyRenderer {
     mPresentTile = 0;
     mTileCursor = 0;
 
-    int numTileX = std::ceilf((float)mFrameWidth / TILE_SIZE);
-    int numTileY = std::ceilf((float)mFrameHeight / TILE_SIZE);
+    int numTileX = std::ceil((float)mFrameWidth / TILE_SIZE);
+    int numTileY = std::ceil((float)mFrameHeight / TILE_SIZE);
 
     for (int y = 0; y < numTileY; y++) {
       for (int x = 0; x < numTileX; x++) {
@@ -80,7 +80,7 @@ class TiledRenderer : public MyRenderer {
     mRuning = true;
     unsigned int threadsCount = std::min((unsigned int)mTileList.size(),
                                          std::thread::hardware_concurrency());
-    std::cout<< "rendering thread count = " << threadsCount << std::endl;
+    std::cout << "rendering thread count = " << threadsCount << std::endl;
 
     std::cout << "start rendering ..." << std::endl;
     for (unsigned int i = 0; i < threadsCount; i++) {
@@ -107,6 +107,7 @@ class TiledRenderer : public MyRenderer {
           if (mRuning) {
             float r = (float)y / mFrameHeight;
             _writePixel(x, y, bottomColor * r + topColor * (1.0f - r), 1.0f);
+            mPixelCount++;
           } else
             break;
         }  // end of for(x)

@@ -12,12 +12,13 @@ MyScene::~MyScene() {
 
 void MyScene::attachGeometry(MySceneObject::Ptr obj) {
   unsigned int ID = obj->getRTCID();
-  mGeometryDict.insert(std::make_pair(ID, obj));
+  mObjectDict.insert(std::make_pair(ID, obj));
 }
 
 void MyScene::attachLight(QuadLight::Ptr lgt) {
   unsigned int ID = lgt->getRTCID();
-  mLightDict.insert(std::make_pair(ID, lgt));
+  mObjectDict.insert(std::make_pair(ID, lgt));
+  mLights.push_back(lgt);
 }
 
 void MyScene::rtcCommit() { rtcCommitScene(mScene); }
@@ -67,51 +68,18 @@ bool MyScene::intersect(const MyRay& ray, float tNear, float tFar,
 
   if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID) return false;
 
-  auto hitGeom = mGeometryDict.find(rayhit.hit.geomID);
-  if (hitGeom != mGeometryDict.end()) {
-    outRec.isLight = false;
-    outRec.t = rayhit.ray.tfar;
-    outRec.pt = ray.getPoint(outRec.t);
-    outRec.uv.x = rayhit.hit.u;
-    outRec.uv.y = rayhit.hit.v;
-    outRec.obj = hitGeom->second.get();
-    outRec.mtl = outRec.obj->getMaterial();
+  auto hitObj = mObjectDict.find(rayhit.hit.geomID);
+  if (hitObj == mObjectDict.end()) {
+    std::cerr << "Hit Object ID not found." << std::endl;
+    return false;
+  }
 
-    // unnormalized geometry normal in object space
-    glm::vec3 localN(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z);
+  outRec = hitObj->second->makeHitRecord(
+      ray, rayhit.hit.primID, rayhit.ray.tfar,
+      glm::vec2(rayhit.hit.u, rayhit.hit.v),
+      glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z));
 
-    glm::vec4 HN = outRec.obj->getTransform().getNormalMatrix() *
-                   glm::vec4(glm::normalize(localN), 0);
-    outRec.normal = glm::normalize(glm::vec3(HN));
-
-    return true;
-  }  // end of if
-
-  auto hitLgt = mLightDict.find(rayhit.hit.geomID);
-  if (hitLgt != mLightDict.end()) {
-    outRec.isLight = true;
-    outRec.t = rayhit.ray.tfar;
-    outRec.pt = ray.getPoint(outRec.t);
-    outRec.obj = hitLgt->second.get();
-    outRec.mtl = outRec.obj->getMaterial();
-    return true;
-  }  // end of if
-
-  std::cerr << "Geometry ID not found." << std::endl;
-  return false;
-}
-
-QuadLight::Ptr MyScene::getFirstLight() const {
-  if (mLightDict.empty()) return QuadLight::Ptr();
-
-  auto first = mLightDict.begin();
-  return first->second;
-}
-
-std::vector<QuadLight::Ptr> MyScene::getLights() const {
-  std::vector<QuadLight::Ptr> lights;
-  for (auto pair : mLightDict) lights.push_back(pair.second);
-  return lights;
+  return true;
 }
 
 }  // namespace RTKit2

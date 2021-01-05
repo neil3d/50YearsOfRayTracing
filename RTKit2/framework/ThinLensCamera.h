@@ -23,22 +23,22 @@ class ThinLensCamera : public MyCamera {
     return *this;
   }
 
-  MyRay jitteredViewingRay(float u, float v, const glm::vec2& xi) const {
-    glm::vec3 offset = mAperture * xi.x * mRight + mAperture * xi.y * mUp;
-    glm::vec3 origin = mEyePos + offset;
-    glm::vec3 focus = mFocalPlaneLeftTop + u * mFocalPlaneH - v * mFocalPlaneV;
-    return MyRay(origin, focus - origin);
-  }
+//   MyRay jitteredViewingRay(float u, float v, const glm::vec2& xi) const {
+//     glm::vec3 offset = mAperture * xi.x * mRight + mAperture * xi.y * mUp;
+//     glm::vec3 origin = mEyePos + offset;
+//     glm::vec3 focus = mFocalPlaneLeftTop + u * mFocalPlaneH - v * mFocalPlaneV;
+//     return MyRay(origin, focus - origin);
+//   }
 
-  void init() {
-    float halfHeight = tanf(mFov * 0.5f) * mFocusDist;
-    float halfWidth = mAspect * halfHeight;
+//   void init() {
+//     float halfHeight = tanf(mFov * 0.5f) * mFocusDist;
+//     float halfWidth = mAspect * halfHeight;
 
-    glm::vec3 center = mEyePos - mForward * mFocusDist;
-    mFocalPlaneLeftTop = center - halfWidth * mRight + halfHeight * mUp;
-    mFocalPlaneH = 2 * halfWidth * mRight;
-    mFocalPlaneV = 2 * halfHeight * mUp;
-  }
+//     glm::vec3 center = mEyePos - mForward * mFocusDist;
+//     mFocalPlaneLeftTop = center - halfWidth * mRight + halfHeight * mUp;
+//     mFocalPlaneH = 2 * halfWidth * mRight;
+//     mFocalPlaneV = 2 * halfHeight * mUp;
+//   }
 
  private:
   float mAperture = 0.001f;

@@ -68,4 +68,11 @@ glm::vec3 QuadLight::getQuadVertex(int i) const {
   return ret;
 }
 
+HitRecord QuadLight::makeHitRecord(const MyRay& ray, unsigned int primID,
+                                   float t, glm::vec2 uv, glm::vec3 N) {
+  HitRecord hit = MySceneObject::makeHitRecord(ray, primID, t, uv, N);
+  hit.isLight = true;
+  return hit;
+}
+
 }  // namespace RTKit2

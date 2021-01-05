@@ -23,7 +23,7 @@ class MyScene {
 
   bool intersect(const MyRay& ray, float tNear, float tFar,
                  HitRecord& outRec) const;
-                 
+
   bool occluded(const MyRay& ray, float tNear, float tFar) const;
 
   RTCScene getRTCScene() { return mScene; }
@@ -34,14 +34,12 @@ class MyScene {
 
   void rtcCommit();
 
-  QuadLight::Ptr getFirstLight() const;
-
-  std::vector<QuadLight::Ptr> getLights() const;
+  const std::vector<QuadLight::Ptr>& getLights() const { return mLights; }
 
  protected:
   RTCScene mScene = nullptr;
-  std::map<unsigned int, MySceneObject::Ptr> mGeometryDict;
-  std::map<unsigned int, QuadLight::Ptr> mLightDict;
+  std::map<unsigned int, MySceneObject::Ptr> mObjectDict;
+  std::vector<QuadLight::Ptr> mLights;
 
  public:
   MyScene(const MyScene&) = delete;

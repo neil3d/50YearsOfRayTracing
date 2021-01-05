@@ -18,7 +18,7 @@ class PinholeCamera : public MyCamera {
   MyRay generateViewingRay(float u, float v) {
     glm::vec3 origin = mEyePos;
     return MyRay(origin, mImagePlaneLeftTop + u * mImagePlaneH -
-                           v * mImagePlaneV - origin);
+                             v * mImagePlaneV - origin);
   }
 
   void init() {

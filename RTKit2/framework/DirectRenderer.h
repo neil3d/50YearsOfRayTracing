@@ -53,7 +53,8 @@ class DirectRenderer : public MyRenderer {
         } else
           break;
       }  // end of for(x)
-    mFinished = true;
+
+    _onRenderFinished();
   }
 
  private:

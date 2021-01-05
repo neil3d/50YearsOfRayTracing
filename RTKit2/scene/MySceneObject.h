@@ -44,34 +44,6 @@ class MySceneObject {
 
   MyMaterial* getMaterial() const { return mMaterial.get(); }
 
-  MySceneObject& setPosition(const glm::vec3& pos) {
-    mTransform.setPosition(pos);
-    return *this;
-  }
-
-  MySceneObject& setRotation(float pitch, float yaw, float roll) {
-    mTransform.setRotation(pitch, yaw, roll);
-    return *this;
-  }
-
-  MySceneObject& setRotation(const glm::quat& rot) {
-    mTransform.setRotation(rot);
-    return *this;
-  }
-  MySceneObject& setScale(float s) {
-    mTransform.setScale(glm::vec3(s, s, s));
-    return *this;
-  }
-
-  MySceneObject& setScale(glm::vec3 s) {
-    mTransform.setScale(s);
-    return *this;
-  }
-
-  void setTransformation(const Transform& trans) { mTransform = trans; }
-
-  const Transform& getTransform() const { return mTransform; }
-
   const std::string& getName() const { return mName; }
 
   unsigned int getRTCID() const { return mRTCID; }
@@ -80,12 +52,13 @@ class MySceneObject {
 
   std::shared_ptr<UserData> getUserData() const { return mUserData; }
 
+  virtual HitRecord makeHitRecord(const MyRay& ray, unsigned int primID, float t, glm::vec2 uv, glm::vec3 N);
+
  protected:
   MyScene* mOwner = nullptr;
   std::string mName;
   unsigned int mRTCID = RTC_INVALID_GEOMETRY_ID;
   MyMaterial::Ptr mMaterial;
-  Transform mTransform;
   std::shared_ptr<UserData> mUserData;
 
  public:
