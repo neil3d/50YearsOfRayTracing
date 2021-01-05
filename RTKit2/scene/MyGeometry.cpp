@@ -34,9 +34,30 @@ void MyGeometry::createFromBuffers(const std::vector<glm::vec3>& vertices,
   mRTCID = rtcAttachGeometry(rtcScene, mGeometry);
 }
 
-void MyGeometry::createFromObj(const std::string& assetKey,
-                               const glm::mat4& transform) {
-                                 
-                               }
+static unsigned int PLANE_INDICES[4] = {0, 1, 2, 3};
+
+void MyGeometry::createPlane(glm::vec3 a, glm::vec3 ab, glm::vec3 ac) {
+  // make geometry
+  RTCScene rtcScene = mOwner->getRTCScene();
+  RTCDevice rtcDevice = rtcGetSceneDevice(rtcScene);
+
+  mGeometry = rtcNewGeometry(rtcDevice, RTC_GEOMETRY_TYPE_QUAD);
+  rtcSetSharedGeometryBuffer(mGeometry, RTC_BUFFER_TYPE_INDEX, 0,
+                             RTC_FORMAT_UINT4, PLANE_INDICES, 0,
+                             4 * sizeof(unsigned int), 1);
+
+  // quad vertices
+  glm::vec3* vb = (glm::vec3*)rtcSetNewGeometryBuffer(
+      mGeometry, RTC_BUFFER_TYPE_VERTEX, 0, RTC_FORMAT_FLOAT3,
+      3 * sizeof(float), 4);
+  vb[0] = a;
+  vb[1] = a + ab;
+  vb[2] = a + ab + ac;
+  vb[3] = a + ac;
+
+  // embree commit
+  rtcCommitGeometry(mGeometry);
+  mRTCID = rtcAttachGeometry(rtcScene, mGeometry);
+}
 
 }  // namespace RTKit2

@@ -16,7 +16,7 @@ class MyGeometry : public MySceneObject {
   void createFromBuffers(const std::vector<glm::vec3>& vertices,
                          const std::vector<unsigned>& indices);
 
-  void createFromObj(const std::string& assetKey, const glm::mat4& transform);
+  void createPlane(glm::vec3 a, glm::vec3 ab, glm::vec3 ac);
 
  protected:
   RTCGeometry mGeometry = nullptr;

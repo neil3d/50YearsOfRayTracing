@@ -9,6 +9,7 @@
 #include "../external/nlohmann/json.hpp"
 #include "../material/PhongMaterial.h"
 #include "../scene/AnalyticalSphere.h"
+#include "../scene/MyGeometry.h"
 #include "../scene/TriangleMesh.h"
 #include "MyApp.h"
 #include "MyTransform.h"
@@ -22,12 +23,13 @@ enum ECameraType { EPinholeCamera, EThinLensCamera };
 NLOHMANN_JSON_SERIALIZE_ENUM(ECameraType, {{EPinholeCamera, "pinhole"},
                                            {EThinLensCamera, "thinlens"}})
 
-enum EObjectClass { EMesh, EGeometry, ESphere, EQuadLight };
+enum EObjectClass { EMesh, EGeometry, ESphere, EPlane, EQuadLight };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(EObjectClass, {
                                                {EMesh, "mesh"},
                                                {EGeometry, "geometry"},
                                                {ESphere, "sphere"},
+                                               {EPlane, "plane"},
                                                {EQuadLight, "quad_light"},
                                            })
 
@@ -60,8 +62,7 @@ struct TransformSettings {
   glm::vec3 getScale() const { return glm::vec3(scale[0], scale[1], scale[2]); }
 };
 
-struct QuadLightSettings {
-  float intensity[3] = {1, 1, 1};
+struct QuadData {
   float corner[3] = {0, 0, 0};
   float edge1[3] = {1, 0, 0};
   float edge2[3] = {0, 0, 1};
@@ -81,7 +82,7 @@ struct PhongData {
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CameraSettings, type, eye, lookAt, up, fov)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TransformSettings, position, rotation, scale)
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(QuadLightSettings, corner, edge1, edge2)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(QuadData, corner, edge1, edge2)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SphereSettings, center, radius)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PhongData, emission, diffuse, specular,
                                    shininess)
@@ -129,12 +130,25 @@ static void _loadTriangleMesh(MyScene::Ptr scene, std::string name,
 
 static void _loadQuadLight(MyScene::Ptr scene, std::string name,
                            const nlohmann::json& jsonObj) {
-  QuadLightSettings settings = jsonObj.get<QuadLightSettings>();
+  QuadData settings = jsonObj.get<QuadData>();
+
+  float intensity[3] = {1, 1, 1};
 
   QuadLight::Ptr lgt = std::make_shared<QuadLight>(name, scene.get());
   lgt->create(_getVec(settings.corner), _getVec(settings.edge1),
-              _getVec(settings.edge2), _getVec(settings.intensity));
+              _getVec(settings.edge2), _getVec(intensity));
   scene->attachLight(lgt);
+}
+
+static void _loadPlane(MyScene::Ptr scene, std::string name,
+                       const nlohmann::json& jsonObj) {
+  QuadData settings = jsonObj.get<QuadData>();
+
+  MyGeometry::Ptr plane = std::make_shared<MyGeometry>(name, scene.get());
+  plane->createPlane(_getVec(settings.corner), _getVec(settings.edge1),
+                     _getVec(settings.edge2));
+  plane->setMaterial(_createMaterial(jsonObj));
+  scene->attachGeometry(plane);
 }
 
 static void _loadSphere(MyScene::Ptr scene, std::string name,
@@ -216,6 +230,9 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
         break;
       case ESphere:
         _loadSphere(scene, objName, jsonObj);
+        break;
+      case EPlane:
+        _loadPlane(scene, objName, jsonObj);
         break;
       case EQuadLight:
         _loadQuadLight(scene, objName, jsonObj);

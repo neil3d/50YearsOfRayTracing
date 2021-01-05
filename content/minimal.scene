@@ -22,6 +22,19 @@
                 "shininess":32
             }
         },
+        "ground_plane":{
+            "class":"plane",
+            "corner":[-25, -1, -25],
+            "edge1":[0,0,50],
+            "edge2":[50,0,0],
+            "material":{
+                "class":"phong",
+                "emission":[0,0,0],
+                "diffuse":[0.8,0.8,0.8],
+                "specular":[0,0,0],
+                "shininess":32
+            }
+        },
         "key_light":{
             "class":"quad_light",
             "intensity":[2,2,2],
