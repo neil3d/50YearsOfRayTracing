@@ -133,6 +133,7 @@ static void _loadQuadLight(MyScene::Ptr scene, std::string name,
   QuadData settings = jsonObj.get<QuadData>();
 
   float intensity[3] = {1, 1, 1};
+  jsonObj.at("intensity").get_to(intensity);
 
   QuadLight::Ptr lgt = std::make_shared<QuadLight>(name, scene.get());
   lgt->create(_getVec(settings.corner), _getVec(settings.edge1),

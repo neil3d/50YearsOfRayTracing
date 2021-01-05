@@ -37,7 +37,7 @@
         },
         "key_light":{
             "class":"quad_light",
-            "intensity":[2,2,2],
+            "intensity":[5,5,5],
             "corner":[-1, 2, 0],
             "edge1":[0,0,2],
             "edge2":[2,0,0]
