@@ -7,6 +7,8 @@
 
 #include "../asset/MyAssetManager.h"
 #include "../external/nlohmann/json.hpp"
+#include "../material/PhongMaterial.h"
+#include "../scene/AnalyticalSphere.h"
 #include "../scene/TriangleMesh.h"
 #include "MyTransform.h"
 #include "PinholeCamera.h"
@@ -18,6 +20,15 @@ enum ECameraType { EPinholeCamera, EThinLensCamera };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(ECameraType, {{EPinholeCamera, "pinhole"},
                                            {EThinLensCamera, "thinlens"}})
+
+enum EObjectClass { EMesh, EGeometry, ESphere, EQuadLight };
+
+NLOHMANN_JSON_SERIALIZE_ENUM(EObjectClass, {
+                                               {EMesh, "mesh"},
+                                               {EGeometry, "geometry"},
+                                               {ESphere, "sphere"},
+                                               {EQuadLight, "quad_light"},
+                                           })
 
 struct CameraSettings {
   ECameraType type = EPinholeCamera;
@@ -50,9 +61,15 @@ struct QuadLightSettings {
   float edge2[3] = {0, 0, 1};
 };
 
+struct SphereSettings {
+  float center[3] = {0, 0, 0};
+  float radius = 1;
+};
+
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CameraSettings, type, eye, lookAt, up, fov)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TransformSettings, position, rotation, scale)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(QuadLightSettings, corner, edge1, edge2)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SphereSettings, center, radius)
 
 static glm::vec3 _getVec(const float c[3]) {
   return glm::vec3(c[0], c[1], c[2]);
@@ -60,6 +77,14 @@ static glm::vec3 _getVec(const float c[3]) {
 
 static bool _jsonExists(const nlohmann::json& js, const std::string& key) {
   return js.find(key) != js.end();
+}
+
+static MyMaterial::Ptr _createMaterial(const nlohmann::json& jsonObj) {
+  if (_jsonExists(jsonObj, "material")) {
+  }
+
+  PhongMaterial::Ptr defaultMtl = std::make_shared<PhongMaterial>();
+  return defaultMtl;
 }
 
 static void _loadTriangleMesh(MyScene::Ptr scene, std::string name,
@@ -80,6 +105,16 @@ static void _loadQuadLight(MyScene::Ptr scene, std::string name,
   lgt->create(_getVec(settings.corner), _getVec(settings.edge1),
               _getVec(settings.edge2), _getVec(settings.intensity));
   scene->attachLight(lgt);
+}
+
+static void _loadSphere(MyScene::Ptr scene, std::string name,
+                        const nlohmann::json& jsonObj) {
+  SphereSettings settings = jsonObj.get<SphereSettings>();
+  AnalyticalSphere::Ptr sphere =
+      std::make_shared<AnalyticalSphere>(name, scene.get());
+  sphere->create(_getVec(settings.center), settings.radius);
+  sphere->setMaterial(_createMaterial(jsonObj));
+  scene->attachGeometry(sphere);
 }
 
 static MyCamera::Ptr _loadCamera(const CameraSettings& settings) {
@@ -127,7 +162,8 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
   for (auto iter = jsonScene.begin(); iter != jsonScene.end(); ++iter) {
     auto jsonObj = iter.value();
     std::string objName = iter.key();
-    std::string objClass = jsonObj.at("class").get<std::string>();
+    EObjectClass objClass = jsonObj.at("class").get<EObjectClass>();
+    std::string szObjClass = jsonObj.at("class").get<std::string>();
 
     Transform trans;
     if (_jsonExists(jsonObj, "transform")) {
@@ -137,14 +173,23 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
       trans.setScale(settings.getScale());
     }
 
-    if (objClass == "TriangleMesh") {
-      _loadTriangleMesh(scene, objName, trans, jsonObj);
-    } else if (objClass == "QuadLight") {
-      _loadQuadLight(scene, objName, jsonObj);
-    } else {
-      std::cerr << "UNKNOWN object class: " << objClass << std::endl;
-    }
-  }  // end of for
+    switch (objClass) {
+      case EMesh:
+        _loadTriangleMesh(scene, objName, trans, jsonObj);
+        break;
+      case EGeometry:
+        break;
+      case ESphere:
+        _loadSphere(scene, objName, jsonObj);
+        break;
+      case EQuadLight:
+        _loadQuadLight(scene, objName, jsonObj);
+        break;
+      default:
+        throw MyException("UNKNOWN object class: " + szObjClass);
+        break;
+    }  // end of switch
+  }    // end of for
 }
 
 }  // namespace RTKit2
