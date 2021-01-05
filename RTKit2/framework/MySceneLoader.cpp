@@ -10,6 +10,7 @@
 #include "../material/PhongMaterial.h"
 #include "../scene/AnalyticalSphere.h"
 #include "../scene/TriangleMesh.h"
+#include "MyApp.h"
 #include "MyTransform.h"
 #include "PinholeCamera.h"
 #include "ThinLensCamera.h"
@@ -117,7 +118,8 @@ static void _loadSphere(MyScene::Ptr scene, std::string name,
   scene->attachGeometry(sphere);
 }
 
-static MyCamera::Ptr _loadCamera(const CameraSettings& settings) {
+static MyCamera::Ptr _loadCamera(const CameraSettings& settings,
+                                 const MyAppSettings& appSettings) {
   MyCamera::Ptr camera;
   switch (settings.type) {
     case EPinholeCamera: {
@@ -125,6 +127,9 @@ static MyCamera::Ptr _loadCamera(const CameraSettings& settings) {
       cam->setView(_getVec(settings.eye), _getVec(settings.lookAt),
                    _getVec(settings.up));
       cam->setFOV(settings.fov);
+      cam->setAspect((float)appSettings.width / appSettings.height);
+      cam->init();
+
       camera = cam;
     } break;
     case EThinLensCamera:
@@ -138,6 +143,7 @@ static MyCamera::Ptr _loadCamera(const CameraSettings& settings) {
 }
 
 void MySceneLoader::loadScene(MyScene::Ptr scene,
+                              const MyAppSettings& appSettings,
                               const std::string& szFileName) {
   auto& assetManager = MyAssetManager::instance();
 
@@ -155,7 +161,7 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
 
   // 3. get camera settings
   auto cameraSettings = doc.at("camera").get<CameraSettings>();
-  mCamera = _loadCamera(cameraSettings);
+  mCamera = _loadCamera(cameraSettings, appSettings);
 
   // 4. create scene objects
   auto jsonScene = doc.at("scene");

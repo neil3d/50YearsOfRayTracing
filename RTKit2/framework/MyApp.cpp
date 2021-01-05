@@ -4,10 +4,13 @@
 
 namespace RTKit2 {
 
-void MyApp::init() {
+void MyApp::init(const MyAppSettings& settings) {
+  mSettings = settings;
+  // init SDL
   int ret = SDL_Init(SDL_INIT_VIDEO);
   if (ret < 0) throw MyException("SDL_Init FAILED", SDL_GetError());
 
+  // init Embree
   mDevice = rtcNewDevice(nullptr);
   if (!mDevice) throw MyException("Embree device create FAILED");
 
@@ -16,10 +19,14 @@ void MyApp::init() {
                                     RTC_DEVICE_PROPERTY_RAY_MASK_SUPPORTED)
             << std::endl;
 
+  // create window
+  _createWindow(settings.width, settings.height, settings.name.c_str());
+
+  // log
   std::cout << "Base path: " << SDL_GetBasePath() << std::endl;
 }
 
-void MyApp::createWindow(int width, int height, const char* szTitle) {
+void MyApp::_createWindow(int width, int height, const char* szTitle) {
   mWindowTitle = szTitle;
   mMainWindow =
       SDL_CreateWindow(szTitle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -94,7 +101,7 @@ void MyApp::_showProgress() {
 MyScene::Ptr MyApp::createScene(MySceneLoaderBase* loader,
                                 const std::string& szFileName) {
   MyScene::Ptr newScene = std::make_shared<MyScene>(rtcNewScene(mDevice));
-  loader->loadScene(newScene, szFileName);
+  loader->loadScene(newScene, mSettings, szFileName);
   return newScene;
 }
 

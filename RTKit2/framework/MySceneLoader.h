@@ -8,7 +8,7 @@ namespace RTKit2 {
  */
 class MySceneLoader : public MySceneLoaderBase {
  public:
-  virtual void loadScene(MyScene::Ptr scene,
+  virtual void loadScene(MyScene::Ptr scene, const MyAppSettings& appSettings,
                          const std::string& szFileName) override;
 };
 }  // namespace RTKit2

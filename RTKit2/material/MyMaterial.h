@@ -19,11 +19,6 @@ class MyMaterial {
 
   MyMaterial() = default;
   virtual ~MyMaterial() = default;
-
- public:
-  glm::vec3 diffuse = {1, 1, 1};
-  glm::vec3 specular = {0, 0, 0};
-  float shininess = 1;
 };
 
 }  // namespace RTKit2

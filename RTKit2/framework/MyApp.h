@@ -18,13 +18,19 @@
 #include "MySceneLoaderBase.h"
 
 namespace RTKit2 {
+
+struct MyAppSettings {
+  std::string name = "MyApp";
+  int width = 300;
+  int height = 200;
+};
+
 class MyApp {
  public:
   MyApp() = default;
   ~MyApp() = default;
 
-  void init();
-  void createWindow(int width, int height, const char* szTitle);
+  void init(const MyAppSettings& settings);
   void mainLoop();
   void shutdown();
 
@@ -45,12 +51,14 @@ class MyApp {
                            const std::string& szFileName);
 
  private:
+  void _createWindow(int width, int height, const char* szTitle);
   virtual void _onSDLEvent(const SDL_Event& evt) {}
 
   void _tick();
   void _showProgress();
 
  protected:
+  MyAppSettings mSettings;
   std::string mWindowTitle;
   std::string mOutputImagePath;
 
