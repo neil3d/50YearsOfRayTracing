@@ -1,6 +1,7 @@
 #include <iostream>
 #include <tuple>
 
+#include "MyPathTracer.h"
 #include "framework/MyApp.h"
 #include "framework/MySceneLoader.h"
 #include "framework/PinholeCamera.h"
@@ -8,7 +9,6 @@
 using namespace RTKit2;
 
 const char* const APP_NAME = "Path Tracing -  Kajiya 1986";
-
 const uint32_t WINDOW_WIDTH = 1280;
 const uint32_t WINDOW_HEIGHT = 720;
 
@@ -18,18 +18,21 @@ int main(int argc, char* argv[]) {
   MyCamera::Ptr camera;
   MyScene::Ptr scene;
 
+  MyAppSettings settings = {APP_NAME, WINDOW_WIDTH, WINDOW_HEIGHT};
+
   try {
     // create app & window
-    app.init();
-    app.createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, APP_NAME);
+    app.init(settings);
 
     // create my renderer
-    // auto renderer = app.createRenderer<MyPathTracer>();
+    auto pathTracer = app.createRenderer<MyPathTracer>();
+    pathTracer->setOptions(16, 10, true);
+    renderer = pathTracer;
 
     // load scene
     {
       MySceneLoader loader;
-      app.createScene(&loader, "content/minimal.scene");
+      scene = app.createScene(&loader, "content/minimal.scene");
       camera = loader.getCamera();
     }
 

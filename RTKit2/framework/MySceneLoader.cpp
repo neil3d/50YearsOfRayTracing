@@ -127,7 +127,7 @@ static MyCamera::Ptr _loadCamera(const CameraSettings& settings,
       cam->setView(_getVec(settings.eye), _getVec(settings.lookAt),
                    _getVec(settings.up));
       cam->setFOV(settings.fov);
-      cam->setAspect((float)appSettings.width / appSettings.height);
+      cam->setAspect((float)appSettings.width / (float)appSettings.height);
       cam->init();
 
       camera = cam;
@@ -196,6 +196,9 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
         break;
     }  // end of switch
   }    // end of for
+
+  // commit at the end
+  scene->rtcCommit();
 }
 
 }  // namespace RTKit2

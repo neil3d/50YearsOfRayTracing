@@ -68,13 +68,14 @@ bool MyScene::intersect(const MyRay& ray, float tNear, float tFar,
 
   if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID) return false;
 
-  auto hitObj = mObjectDict.find(rayhit.hit.geomID);
-  if (hitObj == mObjectDict.end()) {
+  auto iter = mObjectDict.find(rayhit.hit.geomID);
+  if (iter == mObjectDict.end()) {
     std::cerr << "Hit Object ID not found." << std::endl;
     return false;
   }
 
-  outRec = hitObj->second->makeHitRecord(
+  auto hitObj = iter->second;
+  outRec = hitObj->makeHitRecord(
       ray, rayhit.hit.primID, rayhit.ray.tfar,
       glm::vec2(rayhit.hit.u, rayhit.hit.v),
       glm::vec3(rayhit.hit.Ng_x, rayhit.hit.Ng_y, rayhit.hit.Ng_z));

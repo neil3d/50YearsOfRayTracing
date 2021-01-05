@@ -4,8 +4,8 @@
     },
     "camera":{
         "type":"pinhole",
-        "eye":[0,1,3],
-        "lookAt":[0,1,0],
+        "eye":[0,0,8],
+        "lookAt":[0,0,0],
         "up":[0,1,0],
         "fov":45.0
     },
@@ -13,7 +13,7 @@
         "sphere_obj":{
             "class":"sphere",
             "center":[0,0,0],
-            "radius":10,
+            "radius":1,
             "material":{
                 "class":"phong",
                 "emission":[0,0,0],
@@ -25,9 +25,9 @@
         "key_light":{
             "class":"quad_light",
             "intensity":[2,2,2],
-            "corner":[0, 3, 0],
-            "edge1":[2,0,0],
-            "edge2":[0,0,2]
+            "corner":[-1, 2, 0],
+            "edge1":[0,0,2],
+            "edge2":[2,0,0]
         }
     }
 }
