@@ -58,19 +58,26 @@
 - [x] Monte Carlo Direct lighting
 - [x] Indirect lighting with Russian Roulette termination
 - [x] Next Event Estimation
-- [ ] Phong Importance Sampling
-- [ ] Distant Environment Lighting
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-07-19.png)
 
-## Multiple Importance Sampling - Eric Veach, Leonidas Guibas, 1995
+## Multiple Importance Sampling - Eric Veach et al., 1995
 
 - [ ] TODO
+- [ ] Phong Importance Sampling
+- [ ] Distant Environment Lighting
 - [ ] Importance Sampling GGX
 
-## RTKit1
+## My Ray Tracing Kit
 
 - [x] Cross platform: MacOS, Windows 10
+
+### RTKit1
+
 - [x] Multi-threaded rendering
 - [x] Scene object instancing
 - [x] Triangle mesh with BVH
+
+### RTKit2
+
+- [ ] Embree for intersection
