@@ -8,7 +8,7 @@
 
 #pragma once
 #include <memory>
-
+#include <glm/gtc/constants.hpp>
 #include "MyTexture.h"
 
 namespace RTKit2 {
