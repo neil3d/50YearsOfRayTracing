@@ -6,4 +6,4 @@ set(SUB_PROJECT_NAME MonteCarloPathTracing)
 aux_source_directory(./code CODE_FILES)
 add_executable(${SUB_PROJECT_NAME} ${CODE_FILES})
 
-target_link_libraries(${SUB_PROJECT_NAME} RTKit1)
+target_link_libraries(${SUB_PROJECT_NAME} RTKit2)

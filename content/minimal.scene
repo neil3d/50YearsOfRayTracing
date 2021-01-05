@@ -1,0 +1,30 @@
+{
+    "assets": {
+        "sphere": "content/sphere/sphere.obj"
+    },
+    "camera":{
+        "type":"pinhole",
+        "eye":[0,0,-5],
+        "lookAt":[0,0,0],
+        "up":[0,1,0],
+        "fov":45.0
+    },
+    "scene":{
+        "sphere_obj":{
+            "class":"TriangleMesh",
+            "asset":"shpere",
+            "transform":{
+                "position":[0,0,0],
+                "rotation":[0,0,0],
+                "scale":[1,1,1]
+            }
+        },
+        "key_light":{
+            "class":"QuadLight",
+            "intensity":[2,2,2],
+            "corner":[0, 10, 0],
+            "edge1":[10,0,0],
+            "edge2":[0,0,10]
+        }
+    }
+}

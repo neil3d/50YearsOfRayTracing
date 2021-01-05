@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../scene/MyScene.h"
+#include "MyCamera.h"
 
 namespace RTKit2 {
 
@@ -13,6 +14,11 @@ class MySceneLoaderBase {
   virtual ~MySceneLoaderBase() = default;
 
   virtual void loadScene(MyScene::Ptr scene, const std::string& szFileName) = 0;
+
+  MyCamera::Ptr getCamera() const { return mCamera; }
+
+ protected:
+  MyCamera::Ptr mCamera;
 
  public:
   MySceneLoaderBase(const MySceneLoaderBase&) = delete;

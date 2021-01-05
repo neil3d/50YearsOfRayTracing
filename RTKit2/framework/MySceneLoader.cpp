@@ -78,6 +78,12 @@ static void _loadQuadLight(MyScene::Ptr scene, std::string name,
   scene->attachLight(lgt);
 }
 
+static MyCamera::Ptr _loadCamera(const CameraSettings& settings) {
+  MyCamera::Ptr camera;
+
+  return camera;
+}
+
 void MySceneLoader::loadScene(MyScene::Ptr scene,
                               const std::string& szFileName) {
   auto& assetManager = MyAssetManager::instance();
@@ -96,6 +102,7 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
 
   // 3. get camera settings
   auto cameraSettings = doc.at("camera").get<CameraSettings>();
+  mCamera = _loadCamera(cameraSettings);
 
   // 4. create scene objects
   auto jsonScene = doc.at("scene");
