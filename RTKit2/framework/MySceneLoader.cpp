@@ -31,6 +31,11 @@ NLOHMANN_JSON_SERIALIZE_ENUM(EObjectClass, {
                                                {EQuadLight, "quad_light"},
                                            })
 
+enum EMaterialClass { EPhongMaterial };
+NLOHMANN_JSON_SERIALIZE_ENUM(EMaterialClass, {
+                                                 {EPhongMaterial, "phong"},
+                                             })
+
 struct CameraSettings {
   ECameraType type = EPinholeCamera;
   float eye[3] = {0, 0, -5};
@@ -67,10 +72,19 @@ struct SphereSettings {
   float radius = 1;
 };
 
+struct PhongData {
+  float emission[3] = {0};
+  float diffuse[3] = {1};
+  float specular[3] = {1};
+  float shininess = 1;
+};
+
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CameraSettings, type, eye, lookAt, up, fov)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TransformSettings, position, rotation, scale)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(QuadLightSettings, corner, edge1, edge2)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SphereSettings, center, radius)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PhongData, emission, diffuse, specular,
+                                   shininess)
 
 static glm::vec3 _getVec(const float c[3]) {
   return glm::vec3(c[0], c[1], c[2]);
@@ -82,7 +96,22 @@ static bool _jsonExists(const nlohmann::json& js, const std::string& key) {
 
 static MyMaterial::Ptr _createMaterial(const nlohmann::json& jsonObj) {
   if (_jsonExists(jsonObj, "material")) {
-  }
+    auto jsonMtl = jsonObj.at("material");
+    EMaterialClass mtlClass = jsonMtl.at("class").get<EMaterialClass>();
+    switch (mtlClass) {
+      case EPhongMaterial: {
+        PhongData data = jsonMtl.get<PhongData>();
+        PhongMaterial::Ptr mtl = std::make_shared<PhongMaterial>();
+        mtl->emission = _getVec(data.emission);
+        mtl->diffuse = _getVec(data.diffuse);
+        mtl->specular = _getVec(data.specular);
+        mtl->shininess = data.shininess;
+        return mtl;
+      } break;
+      default:
+        break;
+    }  // end of switch
+  }    // end of if
 
   PhongMaterial::Ptr defaultMtl = std::make_shared<PhongMaterial>();
   return defaultMtl;
