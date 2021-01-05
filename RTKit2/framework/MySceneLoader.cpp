@@ -9,16 +9,18 @@
 #include "../external/nlohmann/json.hpp"
 #include "../scene/TriangleMesh.h"
 #include "MyTransform.h"
+#include "PinholeCamera.h"
+#include "ThinLensCamera.h"
 
 namespace RTKit2 {
 
-enum ECameraType { PinholeCamera, ThinLensCamera };
+enum ECameraType { EPinholeCamera, EThinLensCamera };
 
-NLOHMANN_JSON_SERIALIZE_ENUM(ECameraType, {{PinholeCamera, "pinhole"},
-                                           {ThinLensCamera, "thinlens"}})
+NLOHMANN_JSON_SERIALIZE_ENUM(ECameraType, {{EPinholeCamera, "pinhole"},
+                                           {EThinLensCamera, "thinlens"}})
 
 struct CameraSettings {
-  ECameraType type = PinholeCamera;
+  ECameraType type = EPinholeCamera;
   float eye[3] = {0, 0, -5};
   float lookAt[3] = {0, 0, 0};
   float up[3] = {0, 1, 0};
@@ -52,7 +54,9 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CameraSettings, type, eye, lookAt, up, fov)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TransformSettings, position, rotation, scale)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(QuadLightSettings, corner, edge1, edge2)
 
-static glm::vec3 _getVec(float c[3]) { return glm::vec3(c[0], c[1], c[2]); }
+static glm::vec3 _getVec(const float c[3]) {
+  return glm::vec3(c[0], c[1], c[2]);
+}
 
 static bool _jsonExists(const nlohmann::json& js, const std::string& key) {
   return js.find(key) != js.end();
@@ -80,6 +84,20 @@ static void _loadQuadLight(MyScene::Ptr scene, std::string name,
 
 static MyCamera::Ptr _loadCamera(const CameraSettings& settings) {
   MyCamera::Ptr camera;
+  switch (settings.type) {
+    case EPinholeCamera: {
+      PinholeCamera::Ptr cam = std::make_shared<PinholeCamera>();
+      cam->setView(_getVec(settings.eye), _getVec(settings.lookAt),
+                   _getVec(settings.up));
+      cam->setFOV(settings.fov);
+      camera = cam;
+    } break;
+    case EThinLensCamera:
+      break;
+    default:
+      throw MyException("UNKNOWN camera type.");
+      break;
+  }
 
   return camera;
 }
