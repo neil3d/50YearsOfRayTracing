@@ -1,0 +1,35 @@
+{
+    "assets": {
+        "background": "content/mori_knob/background.obj",
+        "equation": "content/mori_knob/equation.obj",
+        "knob": "content/mori_knob/knob.obj"
+    },
+    "camera":{
+        "type":"pinhole",
+        "eye":[0,1.5,-3],
+        "lookAt":[0,0,0],
+        "up":[0,1,0],
+        "fov":45.0
+    },
+    "scene":{
+        "background":{
+            "class":"OBJ",
+            "asset":"background"
+        },
+        "equation":{
+            "class":"OBJ",
+            "asset":"equation"
+        },
+        "knob":{
+            "class":"OBJ",
+            "asset":"knob"
+        },
+        "key_light":{
+            "class":"quad_light",
+            "intensity":[10,10,10],
+            "corner":[-1, 2, -1],
+            "edge1":[0,0,2],
+            "edge2":[2,0,0]
+        }
+    }
+}

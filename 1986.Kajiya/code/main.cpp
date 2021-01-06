@@ -26,13 +26,13 @@ int main(int argc, char* argv[]) {
 
     // create my renderer
     auto pathTracer = app.createRenderer<MyPathTracer>();
-    pathTracer->setOptions(16, 10, true);
+    pathTracer->setOptions(64, 10, true);
     renderer = pathTracer;
 
     // load scene
     {
       MySceneLoader loader;
-      scene = app.createScene(&loader, "content/minimal.scene");
+      scene = app.createScene(&loader, "content/mori_knob.scene");
       camera = loader.getCamera();
     }
 

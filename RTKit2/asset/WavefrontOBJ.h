@@ -49,6 +49,8 @@ class WavefrontOBJ : public MyAssetObject {
 
   const std::vector<MtlDesc>& getMaterials() const { return mMaterials; }
 
+  glm::vec3 getNormal(const Face& face, const glm::vec2& uv);
+
  private:
   void _generateFaceNormal();
 

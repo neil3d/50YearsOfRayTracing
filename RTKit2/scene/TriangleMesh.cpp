@@ -59,6 +59,9 @@ HitRecord TriangleMesh::makeHitRecord(const MyRay& ray, unsigned int primID,
   const auto& subMesh = mModel->getSubMeshes()[mSubMeshIndex];
   const auto& face = subMesh.faces[primID];
   hit.mtl = mMaterialBundle[face.materialID].get();
+
+  // TODO: local to world
+  hit.normal = mModel->getNormal(face, uv);
   return hit;
 }
 

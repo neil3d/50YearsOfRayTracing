@@ -141,5 +141,15 @@ void WavefrontOBJ::_buildBoundingBox() {
   mBoundingBox.max = max + e;
   mBoundingBox.min = min - e;
 }
+template <typename T>
+T _barycentricInterpolation(const glm::vec2& uv, const T& v0, const T& v1,
+                            const T& v2) {
+  return (1.0f - uv.x - uv.y) * v0 + uv.x * v1 + uv.y * v2;
+}
 
+glm::vec3 WavefrontOBJ::getNormal(const Face& face, const glm::vec2& uv) {
+  return _barycentricInterpolation(uv, mNormals[face.normalIndex[0]],
+                                   mNormals[face.normalIndex[1]],
+                                   mNormals[face.normalIndex[2]]);
+}
 }  // namespace RTKit2
