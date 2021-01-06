@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     // load scene
     {
       MySceneLoader loader;
-      scene = app.createScene(&loader, "content/cornell_box.scene");
+      scene = app.createScene(&loader, "content/dragon.scene");
       camera = loader.getCamera();
     }
 

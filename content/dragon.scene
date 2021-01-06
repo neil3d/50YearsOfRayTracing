@@ -1,0 +1,30 @@
+{
+    "assets": {
+        "background": "content/mori_knob/background.obj",
+        "dragon": "content/dragon/dragon.obj"
+    },
+    "camera":{
+        "type":"pinhole",
+        "eye":[0,1,-2],
+        "lookAt":[0,0,0],
+        "up":[0,1,0],
+        "fov":45.0
+    },
+    "scene":{
+        "background":{
+            "class":"OBJ",
+            "asset":"background"
+        },
+        "dragon":{
+            "class":"OBJ",
+            "asset":"dragon"
+        },
+        "key_light":{
+            "class":"quad_light",
+            "intensity":[5,5,5],
+            "corner":[-1, 3, -1],
+            "edge1":[0,0,2],
+            "edge2":[2,0,0]
+        }
+    }
+}
