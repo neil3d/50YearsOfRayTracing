@@ -59,7 +59,7 @@
 - [x] Indirect lighting with Russian Roulette termination
 - [x] Next Event Estimation
 
-![Screen Shot](./1986.Kajiya/images/ScreenShot-2020-07-19.png)
+![Screen Shot](./1986.Kajiya/images/ScreenShot-2021-01-06c.png)
 
 ## Multiple Importance Sampling - Eric Veach et al., 1995
 
