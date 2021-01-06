@@ -10,7 +10,13 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "variables": []
+      "variables": [
+        {
+          "name": "embree_DIR",
+          "value": "C:\\Program Files\\Intel\\Embree3",
+          "type": "PATH"
+        }
+      ]
     },
     {
       "name": "x64-Release",
@@ -22,7 +28,13 @@
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "variables": []
+      "variables": [
+        {
+          "name": "embree_DIR",
+          "value": "C:\\Program Files\\Intel\\Embree3",
+          "type": "PATH"
+        }
+      ]
     }
   ]
 }
