@@ -1,0 +1,25 @@
+{
+    "assets": {
+        "cornell_box": "content/cornell_box/cornell_box.obj"
+    },
+    "camera":{
+        "type":"pinhole",
+        "eye":[0,2.75,-6.5],
+        "lookAt":[0,2.75,0],
+        "up":[0,1,0],
+        "fov":45.0
+    },
+    "scene":{
+        "cornell_box":{
+            "class":"OBJ",
+            "asset":"cornell_box"
+        },
+        "celling_light":{
+            "class":"quad_light",
+            "intensity":[10,10,10],
+            "corner":[-0.75, 5.48, 0.75],
+            "edge1":[0,0,1.5],
+            "edge2":[1.5,0,0]
+        }
+    }
+}
