@@ -1,6 +1,6 @@
 {
     "assets": {
-        "sphere": "content/sphere/sphere.obj"
+        "dragon": "content/dragon/dragon.obj"
     },
     "camera":{
         "type":"pinhole",
@@ -10,9 +10,18 @@
         "fov":45.0
     },
     "scene":{
-        "sphere_obj":{
+        "dragon":{
+            "class":"OBJ",
+            "asset":"dragon",
+            "transform":{
+                "position":[-1,-1,0],
+                "rotation":[0,0,0],
+                "scale":[0.25,0.25,0.25]
+            }
+        },
+        "analytical_sphere":{
             "class":"sphere",
-            "center":[0,0,0],
+            "center":[2,0,0],
             "radius":1,
             "material":{
                 "class":"phong",
@@ -37,7 +46,7 @@
         },
         "key_light":{
             "class":"quad_light",
-            "intensity":[5,5,5],
+            "intensity":[3,3,3],
             "corner":[-1, 2, 0],
             "edge1":[0,0,2],
             "edge2":[2,0,0]

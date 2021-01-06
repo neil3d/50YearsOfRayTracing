@@ -12,6 +12,10 @@ static_assert(sizeof(tinyobj::real_t) == sizeof(float));
 
 namespace RTKit2 {
 
+static glm::vec3 _getVec(const float c[3]) {
+  return glm::vec3(c[0], c[1], c[2]);
+}
+
 void WavefrontOBJ::loadFromFile(const std::string& szPath) {
   tinyobj::attrib_t attrib;
   std::vector<tinyobj::shape_t> shapes;
@@ -39,6 +43,10 @@ void WavefrontOBJ::loadFromFile(const std::string& szPath) {
   for (const auto& mtl : materials) {
     MtlDesc desc;
     desc.name = mtl.name;
+    desc.emission = _getVec(mtl.emission);
+    desc.diffuse = _getVec(mtl.diffuse);
+    desc.specular = _getVec(mtl.specular);
+    desc.shininess = mtl.shininess;
     mMaterials.push_back(desc);
   }
 

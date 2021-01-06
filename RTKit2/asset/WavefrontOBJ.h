@@ -43,6 +43,8 @@ class WavefrontOBJ : public MyAssetObject {
 
   virtual void loadFromFile(const std::string& szPath) override;
 
+  const std::vector<glm::vec3>& getVertexBuffer() const { return mVertices; }
+
   const std::vector<SubMesh>& getSubMeshes() const { return mSubMeshes; }
 
   const std::vector<MtlDesc>& getMaterials() const { return mMaterials; }

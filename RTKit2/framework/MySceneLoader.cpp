@@ -122,15 +122,40 @@ static MyMaterial::Ptr _createMaterial(const nlohmann::json& jsonObj) {
   return defaultMtl;
 }
 
-static void _loadOBJMesh(MyScene::Ptr scene, std::string name,
-                         const Transform& trans,
-                         const nlohmann::json& jsonObj) {
-  std::string asset = jsonObj.at("asset").get<std::string>();
+static MyMaterial::Ptr _convertOBJMaterial(
+    const WavefrontOBJ::MtlDesc& mtlDesc) {
+  PhongMaterial::Ptr mtl = std::make_shared<PhongMaterial>();
+  mtl->emission = mtlDesc.emission;
+  mtl->diffuse = mtlDesc.diffuse;
+  mtl->specular = mtlDesc.specular;
+  mtl->shininess = mtlDesc.shininess;
+  return mtl;
+}
+
+static void _loadOBJModel(MyScene::Ptr scene, std::string name,
+                          const Transform& trans,
+                          const nlohmann::json& jsonObj) {
+  std::string assetKey = jsonObj.at("asset").get<std::string>();
+  WavefrontOBJ::Ptr model =
+      MyAssetManager::instance().get<WavefrontOBJ>(assetKey);
+  if (!model) {
+    throw MyException("Wavefront OBJ NOT loaded: " + assetKey);
+  }
+
+  // convert material, just Phong for now
+  std::vector<MyMaterial::Ptr> materialBundle;
+  for (const auto& mtlDesc : model->getMaterials()) {
+    materialBundle.push_back(_convertOBJMaterial(mtlDesc));
+  }
 
   // create a scene object for each OBJ sub mesh
-  TriangleMesh::Ptr mesh = std::make_shared<TriangleMesh>(name, scene.get());
-  mesh->createFromObj(asset, trans);
-  scene->attachGeometry(mesh);
+  int subMeshCount = model->getSubMeshes().size();
+  for (int i = 0; i < subMeshCount; i++) {
+    TriangleMesh::Ptr mesh = std::make_shared<TriangleMesh>(name, scene.get());
+    mesh->createFromObj(model, i, trans);
+    mesh->setMaterialBundle(materialBundle);
+    scene->attachGeometry(mesh);
+  }
 }
 
 static void _loadQuadLight(MyScene::Ptr scene, std::string name,
@@ -230,7 +255,7 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
 
     switch (objClass) {
       case EOBJ:
-        _loadOBJMesh(scene, objName, trans, jsonObj);
+        _loadOBJModel(scene, objName, trans, jsonObj);
         break;
       case ESphere:
         _loadSphere(scene, objName, jsonObj);
