@@ -23,20 +23,21 @@ enum ECameraType { EPinholeCamera, EThinLensCamera };
 NLOHMANN_JSON_SERIALIZE_ENUM(ECameraType, {{EPinholeCamera, "pinhole"},
                                            {EThinLensCamera, "thinlens"}})
 
-enum EObjectClass { EMesh, EGeometry, ESphere, EPlane, EQuadLight };
+enum EObjectClass { EOBJ, ESphere, EPlane, EQuadLight };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(EObjectClass, {
-                                               {EMesh, "mesh"},
-                                               {EGeometry, "geometry"},
+                                               {EOBJ, "OBJ"},
                                                {ESphere, "sphere"},
                                                {EPlane, "plane"},
                                                {EQuadLight, "quad_light"},
                                            })
 
-enum EMaterialClass { EPhongMaterial };
-NLOHMANN_JSON_SERIALIZE_ENUM(EMaterialClass, {
-                                                 {EPhongMaterial, "phong"},
-                                             })
+enum EMaterialClass { EPhongMaterial, ELambertianMaterial };
+NLOHMANN_JSON_SERIALIZE_ENUM(EMaterialClass,
+                             {
+                                 {EPhongMaterial, "phong"},
+                                 {ELambertianMaterial, "lambert"},
+                             })
 
 struct CameraSettings {
   ECameraType type = EPinholeCamera;
@@ -109,6 +110,9 @@ static MyMaterial::Ptr _createMaterial(const nlohmann::json& jsonObj) {
         mtl->shininess = data.shininess;
         return mtl;
       } break;
+      case ELambertianMaterial:
+        throw MyException("NOT implement...");
+        break;
       default:
         break;
     }  // end of switch
@@ -118,13 +122,14 @@ static MyMaterial::Ptr _createMaterial(const nlohmann::json& jsonObj) {
   return defaultMtl;
 }
 
-static void _loadTriangleMesh(MyScene::Ptr scene, std::string name,
-                              const Transform& trans,
-                              const nlohmann::json& jsonObj) {
+static void _loadOBJMesh(MyScene::Ptr scene, std::string name,
+                         const Transform& trans,
+                         const nlohmann::json& jsonObj) {
   std::string asset = jsonObj.at("asset").get<std::string>();
 
+  // create a scene object for each OBJ sub mesh
   TriangleMesh::Ptr mesh = std::make_shared<TriangleMesh>(name, scene.get());
-  mesh->createFromObj(asset, trans.getLocal2World());
+  mesh->createFromObj(asset, trans);
   scene->attachGeometry(mesh);
 }
 
@@ -224,10 +229,8 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
     }
 
     switch (objClass) {
-      case EMesh:
-        _loadTriangleMesh(scene, objName, trans, jsonObj);
-        break;
-      case EGeometry:
+      case EOBJ:
+        _loadOBJMesh(scene, objName, trans, jsonObj);
         break;
       case ESphere:
         _loadSphere(scene, objName, jsonObj);

@@ -13,7 +13,7 @@ class TriangleMesh : public MySceneObject {
 
   virtual ~TriangleMesh();
 
-  void createFromObj(const std::string& assetKey, const glm::mat4& transform);
+  void createFromObj(const std::string& assetKey, const Transform& trans);
 
  protected:
   RTCGeometry mGeometry = nullptr;

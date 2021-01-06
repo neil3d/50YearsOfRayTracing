@@ -88,9 +88,10 @@ void TriangleMesh::loadFromFile(const std::string& szFileName) {
     }  // end of for each index
   }    // end of for each shape
 
-  std::cout << "triangle mesh loaded: " << szMainFileName << " , num vertices"
-            << mVertices.size() << " , num faces = " << totalFaceCount
-            << "num sub meshes = {3}" << mSubMeshes.size() << std::endl;
+  std::cout << "triangle mesh loaded: " << szMainFileName
+            << "\n\tnum vertices = " << mVertices.size()
+            << "\n\tnum faces = " << totalFaceCount
+            << "\n\tnum sub meshes = " << mSubMeshes.size() << std::endl;
 
   // build internal states
   _postMeshCreated();

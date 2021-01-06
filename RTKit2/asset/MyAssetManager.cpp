@@ -26,13 +26,19 @@ std::string MyAssetManager::makeFullPath(const std::string& szPath) const {
 
 MyAssetObject::Ptr MyAssetManager::add(const std::string& szKey,
                                        const std::string& szPath) {
+  // get lower case extension
   std::filesystem::path path(szPath);
   auto ext = path.extension().string();
   std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-  if (ext == ".png") return load<ImageRGBA>(szKey, szPath);
+  // image files
+  if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".tga")
+    return load<ImageRGBA>(szKey, szPath);
+
+  // Wavefront OBJ models
   if (ext == ".obj") return load<WavefrontOBJ>(szKey, szPath);
 
+  // not implement
   throw MyException(std::string("File extension not supported: ") + szPath);
 
   return MyAssetObject::Ptr();

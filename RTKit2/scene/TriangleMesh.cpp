@@ -12,6 +12,6 @@ TriangleMesh::~TriangleMesh() {
 }
 
 void TriangleMesh::createFromObj(const std::string& assetKey,
-                                 const glm::mat4& transform) {}
+                                const Transform& trans) {}
 
 }  // namespace RTKit2

@@ -13,7 +13,7 @@ class LambertianMaterial : public MyMaterial {
     return diffuse / glm::pi<float>();
   }
 
-  // for MIS, evaluate sampling PDF arbitrary direction
+  // evaluate arbitrary direction for MIS
   float PDF(const glm::vec3& wi) const {
     return = 1.0f / (2 * glm::pi<float>());
   }

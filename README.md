@@ -80,4 +80,5 @@
 
 ### RTKit2
 
-- [ ] Embree for intersection
+- Towards Physically-based Rendering
+- Embree for intersection
