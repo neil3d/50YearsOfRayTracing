@@ -18,6 +18,7 @@
 | Distributed Ray Tracing |  1984.Cook    | Robert Cook et al. | Distributed ray tracing  |
 | Path Tracing |  1986.Kajiya  | James Kajiya | The rendering equation  |
 | Bidirectional Light Transport | 1994.Veach.Bidirectional | Eric Veach | Bidirectional Estimators for Light Transport |
+| Analytic Direct Lighting |  1995.Arvo  | James Richard Arvo | Analytic Methods for Simulated Light Transport |
 | Multiple Importance Sampling | 1995.Veach.MIS | Eric Veach et al. | Optimally Combining Sampling Techniques for Monte Carlo Rendering |
 | Photon Mapping|  1996.Henrik  | Henrik Wann Jensen | Global Illumination using Photon Maps  |
 | Metropolis Light Transport|  1997.Vaech.Metropolis  |Eric Veach & Leonidas Guibas | Metropolis Light Transport |
@@ -60,6 +61,10 @@
 - [x] Next Event Estimation
 
 ![Screen Shot](./1986.Kajiya/images/ScreenShot-2021-01-06c.png)
+
+## Analytic Direct Lighting - Arvo 1995
+
+![Screen Shot](./1995.Arvo/images/ScreenShot-2021-01-06.png)
 
 ## Multiple Importance Sampling - Eric Veach et al., 1995
 
