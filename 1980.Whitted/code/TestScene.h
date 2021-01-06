@@ -72,8 +72,8 @@ class TestScene : public TestSceneBase {
       case ETestModel::Dragon: {
         auto& dragon = createObject<MeshInstance>("dragon");
         dragon.setMeshFile("content/dragon/dragon.obj")
-            .setScale(0.3f)
-            .setPosition(glm::vec3(0, 0, 0));
+            .setScale(3)
+            .setPosition(glm::vec3(0, 1.5, 0));
         dragon.createMaterial<Material>()
             .setParam(0.2f, 0.2f, 0.6f, 160.0f, 1.33f)
             .setColor(glm::vec3(1));

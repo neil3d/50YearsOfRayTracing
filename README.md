@@ -34,7 +34,7 @@
 - [x] Lambertian shading
 - [x] Sharp shadow
 
-![Screen Shot](./1968.Appel/images/Screen-Shot-2020-06-30b.png)
+![Screen Shot](./1968.Appel/images/ScreenShot-final.png)
 
 ## Recursive Ray Tracing - Turner Whitted, 1980
 
@@ -42,7 +42,7 @@
 - [x] Reflection
 - [x] Refraction
 
-![Screen Shot](./1980.Whitted/images/ScreenShot-2020-07-10b.png)
+![Screen Shot](./1980.Whitted/images/ScreenShot-final.png)
 
 ## Distributed Ray Tracing - Robert Cook et al., 1984
 
@@ -51,7 +51,7 @@
 - [x] Glossy reflection
 - [x] Motion blur
 
-![Screen Shot](./1984.Cook/images/ScreenShot-2020-07-05b.png)
+![Screen Shot](./1984.Cook/images/ScreenShot-final.png)
 
 ## Path Tracing - James Kajiya, 1986
 
