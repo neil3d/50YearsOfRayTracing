@@ -5,7 +5,7 @@
     },
     "camera":{
         "type":"pinhole",
-        "eye":[0,0.5,2],
+        "eye":[0,0.75,2.25],
         "lookAt":[0,0,0],
         "up":[0,1,0],
         "fov":45.0
@@ -22,7 +22,12 @@
         },
         "dragon":{
             "class":"OBJ",
-            "asset":"dragon"
+            "asset":"dragon",
+            "transform":{
+                "position":[0,0,0],
+                "rotation":[0,30,0],
+                "scale":[1,1,1]
+            }
         },
         "key_light":{
             "class":"quad_light",
