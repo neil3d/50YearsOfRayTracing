@@ -14,9 +14,9 @@
             "class":"OBJ",
             "asset":"dragon",
             "transform":{
-                "position":[-1,-1,0],
-                "rotation":[0,0,0],
-                "scale":[0.25,0.25,0.25]
+                "position":[-1,0,0],
+                "rotation":[0,180,0],
+                "scale":[2,2,2]
             }
         },
         "analytical_sphere":{
@@ -46,8 +46,8 @@
         },
         "key_light":{
             "class":"quad_light",
-            "intensity":[3,3,3],
-            "corner":[-1, 2, 0],
+            "intensity":[10,10,10],
+            "corner":[-1, 2, 1],
             "edge1":[0,0,2],
             "edge2":[2,0,0]
         }

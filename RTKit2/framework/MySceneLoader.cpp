@@ -16,6 +16,21 @@
 #include "PinholeCamera.h"
 #include "ThinLensCamera.h"
 
+namespace glm {
+
+void to_json(nlohmann::json& js, const vec3& v) {
+  js[0] = v.x;
+  js[1] = v.y;
+  js[2] = v.z;
+}
+
+void from_json(const nlohmann::json& js, vec3& v) {
+  js[0].get_to(v.x);
+  js[1].get_to(v.y);
+  js[2].get_to(v.z);
+}
+}  // namespace glm
+
 namespace RTKit2 {
 
 enum ECameraType { EPinholeCamera, EThinLensCamera };
@@ -41,43 +56,39 @@ NLOHMANN_JSON_SERIALIZE_ENUM(EMaterialClass,
 
 struct CameraSettings {
   ECameraType type = EPinholeCamera;
-  float eye[3] = {0, 0, -5};
-  float lookAt[3] = {0, 0, 0};
-  float up[3] = {0, 1, 0};
+  glm::vec3 eye = {0, 0, -5};
+  glm::vec3 lookAt = {0, 0, 0};
+  glm::vec3 up = {0, 1, 0};
   float fov = 45;
 };
 
 struct TransformSettings {
-  float position[3] = {0, 0, 0};
-  float rotation[3] = {0, 0, 0};
-  float scale[3] = {0, 0, 0};
+  glm::vec3 position = {0, 0, 0};
+  glm::vec3 rotation = {0, 0, 0};
+  glm::vec3 scale = {0, 0, 0};
 
-  glm::vec3 getPosition() const {
-    return glm::vec3(position[0], position[1], position[2]);
-  }
   glm::quat getRotation() const {
     return glm::quat(glm::vec3(glm::radians(rotation[0]),
                                glm::radians(rotation[1]),
                                glm::radians(rotation[2])));
   }
-  glm::vec3 getScale() const { return glm::vec3(scale[0], scale[1], scale[2]); }
 };
 
 struct QuadData {
-  float corner[3] = {0, 0, 0};
-  float edge1[3] = {1, 0, 0};
-  float edge2[3] = {0, 0, 1};
+  glm::vec3 corner = {0, 0, 0};
+  glm::vec3 edge1 = {1, 0, 0};
+  glm::vec3 edge2 = {0, 0, 1};
 };
 
 struct SphereSettings {
-  float center[3] = {0, 0, 0};
+  glm::vec3 center = {0, 0, 0};
   float radius = 1;
 };
 
 struct PhongData {
-  float emission[3] = {0};
-  float diffuse[3] = {1};
-  float specular[3] = {1};
+  glm::vec3 emission = {0, 0, 0};
+  glm::vec3 diffuse = {1, 1, 1};
+  glm::vec3 specular = {0, 0, 0};
   float shininess = 1;
 };
 
@@ -87,10 +98,6 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(QuadData, corner, edge1, edge2)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SphereSettings, center, radius)
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PhongData, emission, diffuse, specular,
                                    shininess)
-
-static glm::vec3 _getVec(const float c[3]) {
-  return glm::vec3(c[0], c[1], c[2]);
-}
 
 static bool _jsonExists(const nlohmann::json& js, const std::string& key) {
   return js.find(key) != js.end();
@@ -104,9 +111,9 @@ static MyMaterial::Ptr _createMaterial(const nlohmann::json& jsonObj) {
       case EPhongMaterial: {
         PhongData data = jsonMtl.get<PhongData>();
         PhongMaterial::Ptr mtl = std::make_shared<PhongMaterial>();
-        mtl->emission = _getVec(data.emission);
-        mtl->diffuse = _getVec(data.diffuse);
-        mtl->specular = _getVec(data.specular);
+        mtl->emission = data.emission;
+        mtl->diffuse = data.diffuse;
+        mtl->specular = data.specular;
         mtl->shininess = data.shininess;
         return mtl;
       } break;
@@ -162,12 +169,11 @@ static void _loadQuadLight(MyScene::Ptr scene, std::string name,
                            const nlohmann::json& jsonObj) {
   QuadData settings = jsonObj.get<QuadData>();
 
-  float intensity[3] = {1, 1, 1};
+  glm::vec3 intensity = {1, 1, 1};
   jsonObj.at("intensity").get_to(intensity);
 
   QuadLight::Ptr lgt = std::make_shared<QuadLight>(name, scene.get());
-  lgt->create(_getVec(settings.corner), _getVec(settings.edge1),
-              _getVec(settings.edge2), _getVec(intensity));
+  lgt->create(settings.corner, settings.edge1, settings.edge2, intensity);
   scene->attachLight(lgt);
 }
 
@@ -176,8 +182,7 @@ static void _loadPlane(MyScene::Ptr scene, std::string name,
   QuadData settings = jsonObj.get<QuadData>();
 
   MyGeometry::Ptr plane = std::make_shared<MyGeometry>(name, scene.get());
-  plane->createPlane(_getVec(settings.corner), _getVec(settings.edge1),
-                     _getVec(settings.edge2));
+  plane->createPlane(settings.corner, settings.edge1, settings.edge2);
   plane->setMaterial(_createMaterial(jsonObj));
   scene->attachGeometry(plane);
 }
@@ -187,7 +192,7 @@ static void _loadSphere(MyScene::Ptr scene, std::string name,
   SphereSettings settings = jsonObj.get<SphereSettings>();
   AnalyticalSphere::Ptr sphere =
       std::make_shared<AnalyticalSphere>(name, scene.get());
-  sphere->create(_getVec(settings.center), settings.radius);
+  sphere->create(settings.center, settings.radius);
   sphere->setMaterial(_createMaterial(jsonObj));
   scene->attachGeometry(sphere);
 }
@@ -198,8 +203,7 @@ static MyCamera::Ptr _loadCamera(const CameraSettings& settings,
   switch (settings.type) {
     case EPinholeCamera: {
       PinholeCamera::Ptr cam = std::make_shared<PinholeCamera>();
-      cam->setView(_getVec(settings.eye), _getVec(settings.lookAt),
-                   _getVec(settings.up));
+      cam->setView(settings.eye, settings.lookAt, settings.up);
       cam->setFOV(settings.fov);
       cam->setAspect((float)appSettings.width / (float)appSettings.height);
       cam->init();
@@ -248,9 +252,9 @@ void MySceneLoader::loadScene(MyScene::Ptr scene,
     Transform trans;
     if (_jsonExists(jsonObj, "transform")) {
       auto settings = jsonObj.at("transform").get<TransformSettings>();
-      trans.setPosition(settings.getPosition());
+      trans.setPosition(settings.position);
       trans.setRotation(settings.getRotation());
-      trans.setScale(settings.getScale());
+      trans.setScale(settings.scale);
     }
 
     switch (objClass) {
