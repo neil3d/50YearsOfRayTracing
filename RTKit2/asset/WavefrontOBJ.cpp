@@ -148,8 +148,11 @@ T _barycentricInterpolation(const glm::vec2& uv, const T& v0, const T& v1,
 }
 
 glm::vec3 WavefrontOBJ::getNormal(const Face& face, const glm::vec2& uv) {
-  return _barycentricInterpolation(uv, mNormals[face.normalIndex[0]],
-                                   mNormals[face.normalIndex[1]],
-                                   mNormals[face.normalIndex[2]]);
+  if (face.normalIndex[0] == -1)
+    return face.normal;
+  else
+    return _barycentricInterpolation(uv, mNormals[face.normalIndex[0]],
+                                     mNormals[face.normalIndex[1]],
+                                     mNormals[face.normalIndex[2]]);
 }
 }  // namespace RTKit2

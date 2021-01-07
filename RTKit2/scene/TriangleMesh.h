@@ -27,6 +27,7 @@ class TriangleMesh : public MySceneObject {
   WavefrontOBJ::Ptr mModel;
   std::vector<MyMaterial::Ptr> mMaterialBundle;
   int mSubMeshIndex = 0;
+  glm::mat4 mNormalMatrix;
 
   RTCGeometry mGeometry = nullptr;
 };

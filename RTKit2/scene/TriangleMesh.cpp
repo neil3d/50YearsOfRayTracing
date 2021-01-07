@@ -15,6 +15,7 @@ void TriangleMesh::createFromObj(WavefrontOBJ::Ptr model, int subMeshIndex,
                                  const Transform& trans) {
   mModel = model;
   mSubMeshIndex = subMeshIndex;
+  mNormalMatrix = trans.getNormalMatrix();
 
   const auto& subMesh = model->getSubMeshes()[subMeshIndex];
   const auto& vertexBuffer = model->getVertexBuffer();
@@ -60,8 +61,10 @@ HitRecord TriangleMesh::makeHitRecord(const MyRay& ray, unsigned int primID,
   const auto& face = subMesh.faces[primID];
   hit.mtl = mMaterialBundle[face.materialID].get();
 
-  // TODO: local to world
-  hit.normal = mModel->getNormal(face, uv);
+  // local to world
+  glm::vec4 localNormal(mModel->getNormal(face, uv), 1.0f);
+  glm::vec4 worldNormal = mNormalMatrix * localNormal;
+  hit.normal = glm::vec3(worldNormal.x, worldNormal.y, worldNormal.z);
   return hit;
 }
 
