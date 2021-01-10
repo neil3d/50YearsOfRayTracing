@@ -21,6 +21,7 @@
 | Analytic Direct Lighting |  1995.Arvo  | James Richard Arvo | Analytic Methods for Simulated Light Transport |
 | Multiple Importance Sampling | 1995.Veach.MIS | Eric Veach et al. | Optimally Combining Sampling Techniques for Monte Carlo Rendering |
 | Photon Mapping|  1996.Henrik  | Henrik Wann Jensen | Global Illumination using Photon Maps  |
+| Monte Carlo Direct Lighting|  1996.Shirley  | Peter Shirley et al. | Monte Carlo Techniques for Direct Lighting Calculations  |
 | Metropolis Light Transport|  1997.Vaech.Metropolis  |Eric Veach & Leonidas Guibas | Metropolis Light Transport |
 
 
