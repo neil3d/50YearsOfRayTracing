@@ -17,12 +17,12 @@
 | Recursive Ray Tracing |  1979.Whitted | Turner Whitted  |  An improved illumination model for shaded display   |
 | Distributed Ray Tracing |  1984.Cook    | Robert Cook et al. | Distributed ray tracing  |
 | Path Tracing |  1986.Kajiya  | James Kajiya | The rendering equation  |
-| Bidirectional Light Transport | 1994.Veach.Bidirectional | Eric Veach | Bidirectional Estimators for Light Transport |
+| Bidirectional Light Transport | 1994.Veach.BDPT | Eric Veach | Bidirectional Estimators for Light Transport |
 | Analytic Direct Lighting |  1995.Arvo  | James Richard Arvo | Analytic Methods for Simulated Light Transport |
 | Multiple Importance Sampling | 1995.Veach.MIS | Eric Veach et al. | Optimally Combining Sampling Techniques for Monte Carlo Rendering |
 | Photon Mapping|  1996.Henrik  | Henrik Wann Jensen | Global Illumination using Photon Maps  |
 | Monte Carlo Direct Lighting|  1996.Shirley  | Peter Shirley et al. | Monte Carlo Techniques for Direct Lighting Calculations  |
-| Metropolis Light Transport|  1997.Vaech.Metropolis  |Eric Veach & Leonidas Guibas | Metropolis Light Transport |
+| Metropolis Light Transport|  1997.Vaech.MLT  |Eric Veach & Leonidas Guibas | Metropolis Light Transport |
 
 
 ## 工程配置
@@ -77,10 +77,10 @@
 ## My Ray Tracing Kit
 
 - [x] Cross platform: MacOS, Windows 10
+- [x] Multi-threaded rendering
 
 ### RTKit1
 
-- [x] Multi-threaded rendering
 - [x] Scene object instancing
 - [x] Triangle mesh with BVH
 
