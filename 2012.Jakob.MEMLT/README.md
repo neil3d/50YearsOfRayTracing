@@ -2,3 +2,4 @@
 
 - Authors: Wenzel Jakob, Steve Marschner
 - https://dl.acm.org/doi/10.1145/2185520.2185554
+- MEMLT: Manifold Exploration Metropolis Light Transport
