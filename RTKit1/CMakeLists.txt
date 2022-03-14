@@ -33,8 +33,8 @@ target_include_directories(${SUB_PROJECT_NAME}
 
 # libs
 target_link_libraries(${SUB_PROJECT_NAME} PUBLIC 
-                        glm
-                        SDL2::SDL2main SDL2::SDL2-static
+                        glm::glm
+                        SDL2::SDL2main SDL2::SDL2
                         tinyobjloader::tinyobjloader
                     )
 

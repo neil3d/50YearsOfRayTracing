@@ -13,8 +13,8 @@
 
 ## RTKit2: Embree & Dependencies
 
-- 尝试了使用 vcpkg 安装 embree3，结果运行总是报错：没有支持SSE2
-- 还是听从官方的指引吧：[Embree GitHub readme](https://github.com/embree/embree)
+- For Windows 10:
+  - 使用 vcpkg 安装 embree3
 - For MacOS
     1. Use package installer: [embree-3.12.1.x86_64.pkg](https://github.com/embree/embree/releases/download/v3.12.1/embree-3.12.1.x86_64.pkg)
     2. Setup MacPorts: https://www.macports.org/install.php
@@ -22,4 +22,3 @@
     ```
     sudo port install tbb
     ```    
-- For Windows 10: Use MSI installer    

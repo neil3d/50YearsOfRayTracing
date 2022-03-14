@@ -31,9 +31,9 @@ add_library(RTKit2
 
 target_include_directories(RTKit2 PRIVATE ${STB_INCLUDE_DIRS})
 target_link_libraries(RTKit2 PUBLIC 
-                        glm
+                        glm::glm
                         embree
-                        SDL2::SDL2main SDL2::SDL2-static
+                        SDL2::SDL2main SDL2::SDL2
                         tinyobjloader::tinyobjloader
                     )
 
