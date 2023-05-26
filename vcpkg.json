@@ -1,0 +1,26 @@
+{
+  "name" : "50yearsofraytracing",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "c6592ce60ff394049905365865f59e3a4d93d35b",
+  "dependencies" : [ {
+    "name" : "embree3",
+    "version>=" : "3.13.5#2",
+    "$comment" : "    find_package(embree 3 CONFIG REQUIRED)\n\n    target_link_libraries(main PRIVATE embree)\n"
+  }, {
+    "name" : "glm",
+    "version>=" : "0.9.9.8#2",
+    "$comment" : "    # this is heuristically generated, and may not be correct\n\n    find_package(glm CONFIG REQUIRED)\n\n    target_link_libraries(main PRIVATE glm::glm)\n"
+  }, {
+    "name" : "sdl2",
+    "version>=" : "2.26.5",
+    "$comment" : "    find_package(SDL2 CONFIG REQUIRED)\n\n    target_link_libraries(main\n\n        PRIVATE\n\n        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>\n\n        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>\n\n    )\n"
+  }, {
+    "name" : "tinyobjloader",
+    "version>=" : "2.0.0-rc9",
+    "$comment" : "    # this is heuristically generated, and may not be correct\n\n    find_package(tinyobjloader CONFIG REQUIRED)\n\n    target_link_libraries(main PRIVATE tinyobjloader::tinyobjloader)\n"
+  }, {
+    "name" : "stb",
+    "version>=" : "2023-04-11#1",
+    "$comment" : "    find_package(Stb REQUIRED)\n\n    target_include_directories(main PRIVATE ${Stb_INCLUDE_DIR})\n"
+  } ]
+}
